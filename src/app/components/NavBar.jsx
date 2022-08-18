@@ -1,12 +1,13 @@
 import { AppBar, Toolbar, IconButton, Grid, Typography } from "@mui/material";
 import { LogoutOutlined, MenuOutlined } from "@mui/icons-material";
 import { startLogoutAuth } from '../../redux/auth';
+import { useDispatch } from "react-redux";
 
 export const NavBar = ({ drawerWidth = 240 }) => {
   const dispatch = useDispatch();
 
   const onLogout = () => {
-   dispatch(startLogoutAuth());
+    dispatch(startLogoutAuth());
   };
 
   return (
@@ -28,13 +29,13 @@ export const NavBar = ({ drawerWidth = 240 }) => {
         <Grid
           container
           direction="row"
-          justifyContent="space-between"
+          justifyContent="end"
           alignItems="center"
         >
-          <Typography variant="h6" noWrap component="div">
+          {/* <Typography variant="h6" noWrap component="div">
             {" "}
             Menu de Plataforma{" "}
-          </Typography>
+          </Typography> */}
           <IconButton color="error" onClick={onLogout}>
             <LogoutOutlined />
           </IconButton>
