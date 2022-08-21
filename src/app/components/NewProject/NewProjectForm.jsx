@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage, useField } from 'formik';
-import { Grid } from '@mui/material';
+import { Grid, Input } from '@mui/material';
 
 const styleInput = {
     width: "100%",
@@ -18,17 +18,93 @@ const initialValues = {
     responsable: "",
     checked: [],
     zona: "",
+}
+
+const defaultState = {
     vertice: "",
     lado: "",
     dist: "",
     angulo: "",
-    retiros: "",
-}
+    retiros: ""
+};
+
+
 
 const NewProjectForm = () => {
+    const [rows, setRows] = useState([defaultState]);
     const [form, setForm] = useState(true);
     const [dataForm1, setDataForm1] = useState();
-    console.log(dataForm1);
+
+    function Row({ onChange, onRemove, vertice, lado, dist, angulo, retiros }) {
+        return (
+            <Grid container spacing={1}>
+                <Grid item xs={2}>
+                    <input
+                        value={vertice}
+                        onChange={e => onChange("vertice", e.target.value)}
+                    // placeholder="Nombre del contacto"
+                    />
+                </Grid>
+                <Grid item xs={2}>
+
+                    <input
+                        // placeholder="Email"
+                        value={lado}
+                        onChange={e => onChange("lado", e.target.value)}
+                    />
+                </Grid>
+
+                <Grid item xs={2}>
+
+                    <input
+
+                        value={dist}
+                        onChange={e => onChange("dist", e.target.value)}
+                    />
+                </Grid>
+
+                <Grid item xs={4}>
+
+                    <input
+                        value={angulo}
+                        onChange={e => onChange("angulo", e.target.value)}
+                    />
+                </Grid>
+                {/* <Grid item xs={2}>
+
+                    <input
+                        value={retiros}
+                        onChange={e => onChange("retiros", e.target.value)}
+                    />
+                </Grid> */}
+
+                <button onClick={onRemove}>Eliminar</button>
+            </Grid>
+        );
+    }
+
+    console.log(rows)
+
+    const handleOnChange = (index, name, value) => {
+        const copyRows = [...rows];
+        copyRows[index] = {
+            ...copyRows[index],
+            [name]: value
+        };
+        setRows(copyRows);
+    };
+
+    const handleOnAdd = () => {
+        setRows(rows.concat(defaultState));
+    };
+
+    const handleOnRemove = index => {
+        const copyRows = [...rows];
+        copyRows.splice(index, 1);
+        setRows(copyRows);
+    };
+
+
     const MySelect = ({ label, ...props }) => {
         const [field, meta] = useField(props);
         return (
@@ -44,6 +120,7 @@ const NewProjectForm = () => {
     const onSubmit = (values) => {
         setDataForm1(values);
     }
+
 
     return (
         <div>
@@ -156,37 +233,39 @@ const NewProjectForm = () => {
 
                         ) : (
                             <div>
-                                <Grid container spacing={1} >
-                                    <Grid item xs={2}>
-                                        <span>VERTICE</span><br />
-                                        <Field style={{ ...styleInput, textAlign: "center" }} type="text" name="vertice" />
+                                <Grid container spacing={1} sx={{ width: "100%" }}>
+                                    <Grid item xs={2} >
+                                        <span >VERTICE</span>
                                     </Grid>
                                     <Grid item xs={2}>
-                                        <span>LADO</span><br />
-                                        <Field style={{ ...styleInput, textAlign: "center" }} type="text" name="lado" />
-
-                                        {/* <ErrorMessage name="email" component="div" /> */}
+                                        <span>LADO</span>
                                     </Grid>
                                     <Grid item xs={2}>
-                                        <span>DIST.</span><br />
-                                        <Field style={styleInput} type="text" name="dist" />
-                                        {/* <ErrorMessage name="email" component="div" /> */}
+                                        <span>DIST.</span>
                                     </Grid>
                                     <Grid item xs={4}>
-                                        <span>ANGULO:</span><br />
-                                        <Field style={styleInput} type="text" name="angulo" />
-                                        {/* <ErrorMessage name="email" component="div" /> */}
+                                        <span>ÁNGULO</span>
                                     </Grid>
                                     <Grid item xs={2}>
-                                        <span>RETIROS:</span><br />
-                                        <Field style={styleInput} type="text" name="retiros" />
-                                        {/* <ErrorMessage name="email" component="div" /> */}
+                                        <span>RETIROS:</span>
                                     </Grid>
 
 
-
+                                    {rows.map((row, index) => (
+                                        <Row
+                                            {...row}
+                                            onChange={(name, value) => handleOnChange(index, name, value)}
+                                            onRemove={() => handleOnRemove(index)}
+                                            key={index}
+                                        />
+                                    ))}
+                                    <button onClick={handleOnAdd}>Agregar</button>
                                 </Grid>
 
+
+                                <button onClick={() => setForm(true)}>
+                                    Regresar
+                                </button>
                                 <button type="submit">
                                     Guardar
                                 </button>
