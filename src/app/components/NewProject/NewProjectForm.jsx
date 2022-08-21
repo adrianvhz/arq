@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Formik, Form, Field, ErrorMessage, useField } from 'formik';
-import { Grid, Input } from '@mui/material';
+import { Alert, Button, Checkbox, FormControlLabel, Grid, Input, Radio, RadioGroup } from '@mui/material';
+import * as XLSX from 'xlsx';
 
 const styleInput = {
     width: "100%",
@@ -18,72 +19,138 @@ const initialValues = {
     responsable: "",
     checked: [],
     zona: "",
+    aforoInicial: 0,
+    aforoPrimaria: 0,
+    aforoSecundaria: 0,
 }
 
-const defaultState = {
-    vertice: "",
-    lado: "",
-    dist: "",
-    angulo: "",
-    retiros: ""
-};
+
+
+function Row({ onChange, onRemove, vertice, lado, dist, angulo, retiros }) {
+
+    return (
+        <Grid container spacing={1} sx={{ marginBottom: ".5rem" }}>
+            <Grid item xs={2}>
+                <input
+                    value={vertice}
+                    // onChange={e => onChange("vertice", e.target.value)}
+                    disabled
+                    style={{ ...styleInput, textAlign: "center" }}
+                // placeholder="Nombre del contacto"
+                />
+            </Grid>
+            <Grid item xs={2}>
+
+                <input
+                    // placeholder="Email"
+                    style={{ ...styleInput, textAlign: "center" }}
+
+                    value={lado}
+                    onChange={e => onChange("lado", e.target.value)}
+
+                />
+            </Grid>
+
+            <Grid item xs={2}>
+
+                <input
+                    style={{ ...styleInput, textAlign: "center" }}
+
+                    value={dist}
+                    onChange={e => onChange("dist", e.target.value)}
+                />
+            </Grid>
+
+            <Grid item xs={4}>
+
+                <input
+                    style={{ ...styleInput, textAlign: "center" }}
+
+                    value={angulo}
+                    onChange={e => onChange("angulo", e.target.value)}
+                />
+            </Grid>
+            <Grid item xs={2}>
+
+                <input
+                    style={{ ...styleInput, textAlign: "center" }}
+
+                    value={retiros}
+                    onChange={e => onChange("retiros", e.target.value)}
+                />
+            </Grid>
+        </Grid>
+    );
+}
 
 
 
 const NewProjectForm = () => {
+
+    const defaultState = {
+        vertice: "",
+        lado: "",
+        dist: "",
+        angulo: "",
+        retiros: ""
+    };
+
     const [rows, setRows] = useState([defaultState]);
-    const [form, setForm] = useState(true);
     const [dataForm1, setDataForm1] = useState();
 
-    function Row({ onChange, onRemove, vertice, lado, dist, angulo, retiros }) {
-        return (
-            <Grid container spacing={1}>
-                <Grid item xs={2}>
-                    <input
-                        value={vertice}
-                        onChange={e => onChange("vertice", e.target.value)}
-                    // placeholder="Nombre del contacto"
-                    />
-                </Grid>
-                <Grid item xs={2}>
 
-                    <input
-                        // placeholder="Email"
-                        value={lado}
-                        onChange={e => onChange("lado", e.target.value)}
-                    />
-                </Grid>
+    const [value, setValue] = useState("unidocente");
+    const [aforoInicial, setAforoInicial] = useState(0)
+    const [aulaInicial, setAulaInicial] = useState(0)
+    const [aforoPrimaria, setAforoPrimaria] = useState(0)
+    const [aulaPrimaria, setAulaPrimaria] = useState(0)
+    const [aforoSecundaria, setAforoSecundaria] = useState(0)
+    const [aulaSecundaria, setAulaSecundaria] = useState(0)
+    const [dataExcel, setDataExcel] = useState();
+    const [inicial, setInicial] = useState(false);
+    const [primaria, setPrimaria] = useState(false);
+    const [secundaria, setSecundaria] = useState(false);
 
-                <Grid item xs={2}>
+    useEffect(() => {
+        if (dataExcel) {
+            setAforoInicial(dataExcel[3].__EMPTY_2)
+            setAulaInicial(Math.round(dataExcel[3].__EMPTY_6))
+            if (dataExcel[3].__EMPTY_2 > 0 || dataExcel[3].__EMPTY_6 > 0) {
+                setInicial(true)
+                console.log("inicial")
+            }
+            setAforoPrimaria(dataExcel[12].__EMPTY_2)
+            setAulaPrimaria(Math.round(dataExcel[12].__EMPTY_6))
+            if (dataExcel[12].__EMPTY_2 > 0 && dataExcel[12].__EMPTY_6 > 0) {
+                setPrimaria(true)
+            }
+            setAforoSecundaria(dataExcel[21].__EMPTY_2)
+            setAulaSecundaria(Math.round(dataExcel[21].__EMPTY_6))
+            if (dataExcel[21].__EMPTY_2 > 0 && dataExcel[21].__EMPTY_6 > 0) {
+                setSecundaria(true)
+            }
+        }
+    }, [dataExcel])
 
-                    <input
+    // Se agrega automaticamente el lado y el vertice segun se agregue nuevo campo
+    for (let index = 0; index < rows.length; index++) {
 
-                        value={dist}
-                        onChange={e => onChange("dist", e.target.value)}
-                    />
-                </Grid>
+        if (rows.length === 1) {
+            rows[index].lado = `P1`;
+            rows[index].vertice = `P${index + 1}`;
+            break
+        }
+        if (rows.length !== 0) {
+            rows[index].vertice = `P${index + 1}`;
+            rows[index].lado = `P${index + 1} - P${index + 2}`;
+        }
 
-                <Grid item xs={4}>
+        if (index === rows.length - 1 && index !== 0) {
+            rows[index].lado = `P${index + 1} - P1`;
+        }
 
-                    <input
-                        value={angulo}
-                        onChange={e => onChange("angulo", e.target.value)}
-                    />
-                </Grid>
-                {/* <Grid item xs={2}>
-
-                    <input
-                        value={retiros}
-                        onChange={e => onChange("retiros", e.target.value)}
-                    />
-                </Grid> */}
-
-                <button onClick={onRemove}>Eliminar</button>
-            </Grid>
-        );
     }
 
-    console.log(rows)
 
     const handleOnChange = (index, name, value) => {
         const copyRows = [...rows];
@@ -119,9 +186,59 @@ const NewProjectForm = () => {
     };
     const onSubmit = (values) => {
         setDataForm1(values);
+        console.log(values)
     }
 
+    const handleChange = (event) => {
+        setValue((event.target.value))
+    };
 
+    const onImportExcel = file => {
+        // Obtener el objeto del archivo cargado
+        const { files } = file.target;
+
+        // Leer el archivo a través del objeto FileReader
+        const fileReader = new FileReader();
+        fileReader.onload = event => {
+            try {
+                const { result } = event.target;
+                // Leer en secuencia binaria para obtener todo el objeto de tabla de Excel
+                const workbook = XLSX.read(result, { type: 'binary' });
+                let data = []; // almacena los datos obtenidos
+                // recorre cada hoja de trabajo para leer (aquí solo se lee la primera tabla por defecto)
+                for (const sheet in workbook.Sheets) {
+                    if (workbook.Sheets.hasOwnProperty(sheet)) {
+                        // usa el método sheet_to_json para convertir Excel a datos json
+                        data = data.concat(XLSX.utils.sheet_to_json(workbook.Sheets[sheet]));
+                        // break; // Si solo se toma la primera tabla, descomenta esta línea
+                    }
+                }
+                setDataExcel(data);
+            } catch (e) {
+                // Aquí puede lanzar una solicitud relacionada para un error de tipo de archivo incorrecto
+                <Alert severity="error">Archivo Incorrecto</Alert>
+                return;
+            }
+        };
+        // Abre el archivo en modo binario
+        fileReader.readAsBinaryString(files[0]);
+    }
+
+    const nivelGrid = (label, aforo, aula) => {
+        return (
+            <Grid container spacing={2} marginBottom=".5rem">
+                <Grid item xs={4}>
+                    <Field style={{ ...styleInput, textAlign: "center", fontSize: "16px" }} type="text" value={label} disabled />
+                </Grid>
+                <Grid item xs={4}>
+                    <Field style={{ ...styleInput, textAlign: "center", fontSize: "16px" }} value={aforo} disabled />
+                </Grid>
+                <Grid item xs={4}>
+                    <Field style={{ ...styleInput, textAlign: "center", fontSize: "16px" }} value={aula} disabled />
+                </Grid>
+            </Grid>
+        )
+    }
     return (
         <div>
             <h2>Crear proyecto nuevo</h2>
@@ -131,8 +248,8 @@ const NewProjectForm = () => {
             >
                 {() => (
                     <Form>
-                        {form ? (
-                            <div>
+                        <Grid container spacing={4}>
+                            <Grid item xs={6}>
                                 <Grid container spacing={1} >
                                     <Grid item xs={12}>
                                         <span>NOMBRE:</span><br />
@@ -163,38 +280,68 @@ const NewProjectForm = () => {
                                         <div role="group" aria-labelledby="my-radio-group" style={{ display: "flex", flexDirection: "column", marginBottom: "10px" }}>
 
                                             <label>
-                                                <Field type="checkbox" name="checked" value="inicial" />
+                                                <Checkbox checked={inicial} onClick={() => setInicial(!inicial)} />
                                                 Inicial
                                             </label>
                                             <label>
-                                                <Field type="checkbox" name="checked" value="primaria" />
+                                                <Checkbox checked={primaria} onClick={() => setPrimaria(!primaria)} />
                                                 Primaria
                                             </label>
                                             <label>
-                                                <Field type="checkbox" name="checked" value="secundaria" />
+                                                <Checkbox checked={secundaria} onClick={() => setSecundaria(!secundaria)} />
                                                 Secundaria
                                             </label>
                                         </div>
 
                                     </Grid>
                                     <Grid item xs={7}>
-                                        <div role="group" aria-labelledby="my-radio-group" style={{ display: "flex", flexDirection: "column", }}>
-                                            <label>
-                                                <Field type="checkbox" name="checked" value="unidocente" />
-                                                Unidocente
-                                            </label>
-                                            <label>
-                                                <Field type="checkbox" name="checked" value="multigrado" />
-                                                Polidocente Multigrado
-                                            </label>
-                                            <label>
-                                                <Field type="checkbox" name="checked" value="completo" />
-                                                Polidocente Completo
-                                            </label>
-                                        </div>
+                                        <RadioGroup
+                                            aria-labelledby="demo-radio-buttons-group-label"
+                                            defaultValue="female"
+                                            name="radio-buttons-group"
+                                            onChange={handleChange}
+                                            value={value}
+
+                                        >
+                                            <FormControlLabel value="unidocente" control={<Radio />} label="UNIDOCENTE" />
+                                            <FormControlLabel value="polidocente" control={<Radio />} label="POLIDOCENTE MULTIGRADO" />
+                                            <FormControlLabel value="completo" control={<Radio />} label="POLIDOCENTE COMPLETO" />
+                                        </RadioGroup>
 
                                     </Grid>
+
+
                                 </Grid>
+                                {(inicial || primaria || secundaria) && (
+                                    <Grid container>
+                                        <Grid item xs={4} textAlign="center" >
+                                            <span>GRADO</span>
+                                        </Grid>
+                                        <Grid item xs={4} textAlign="center">
+                                            <span>AFORO POR GRADO</span>
+                                        </Grid>
+                                        <Grid item xs={4} textAlign="center">
+                                            <span>CANTIDAD DE AULAS</span>
+                                        </Grid>
+                                    </Grid>
+                                )}
+
+                                {(inicial && aforoInicial) > 0 && (nivelGrid("INICIAL", aforoInicial, aulaInicial))}
+                                {(primaria && aforoPrimaria) > 0 && (nivelGrid("PRIMARIA", aforoPrimaria, aulaPrimaria))}
+                                {(secundaria && aforoSecundaria) > 0 && (nivelGrid("SECUNDARIA", aforoSecundaria, aulaSecundaria))}
+
+
+                                {/* <Button> */}
+                                <Input color='primary' type='file' accept='.xlsx, .xls' onChange={(e) => onImportExcel(e)} />
+                                {/* </Button> */}
+                                {/* descargar excel */}
+                                <a href="/descargas/test.xlsx" download="Centros de Educacion.xlsx">
+                                    <Button variant="contained" color="primary" onClick={() => downloadExcel()}>
+                                        Descargar Excel
+                                    </Button>
+                                </a>
+                                <br /> <br />
+
                                 UBICACIÓN
 
                                 <Grid container spacing={1} >
@@ -225,14 +372,10 @@ const NewProjectForm = () => {
 
 
                                 </Grid>
+                            </Grid>
 
-                                <button onClick={() => setForm(false)}>
-                                    Continuar
-                                </button>
-                            </div>
 
-                        ) : (
-                            <div>
+                            <Grid item xs={6}>
                                 <Grid container spacing={1} sx={{ width: "100%" }}>
                                     <Grid item xs={2} >
                                         <span >VERTICE</span>
@@ -259,18 +402,14 @@ const NewProjectForm = () => {
                                             key={index}
                                         />
                                     ))}
-                                    <button onClick={handleOnAdd}>Agregar</button>
+                                    <Button variant='outlined' onClick={handleOnAdd}>Agregar</Button>
                                 </Grid>
-
-
-                                <button onClick={() => setForm(true)}>
-                                    Regresar
-                                </button>
-                                <button type="submit">
+                                <Button variant="contained" type="submit">
                                     Guardar
-                                </button>
-                            </div>
-                        )}
+                                </Button>
+                            </Grid>
+                        </Grid>
+
                     </Form>
                 )}
             </Formik>
