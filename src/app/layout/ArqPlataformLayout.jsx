@@ -10,7 +10,7 @@ export const ArqPlataformLayout = ({ children }) => {
       < NavBar drawerWidth={drawerWidth} />
       {/* Sidebar */}
       <SideBar drawerWidth={drawerWidth} />
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+      <Box component="main" sx={{ flexGrow: 1, p: 3, backgroundColor: "#F1F1F1" }}>
         {/* Toolbar */}
         <Toolbar />
         {children}

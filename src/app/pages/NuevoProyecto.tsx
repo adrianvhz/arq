@@ -2,10 +2,10 @@ import React from 'react';
 import NewProjectForm from '../components/NewProject/NewProjectForm';
 import { ArqPlataformLayout } from '../layout';
 
-const NuevoProyecto = () => {
+const NuevoProyecto = ({ proyecto }) => {
   return (
     <ArqPlataformLayout>
-      <NewProjectForm></NewProjectForm>
+      <NewProjectForm proyecto={proyecto} />
     </ArqPlataformLayout>
   );
 };

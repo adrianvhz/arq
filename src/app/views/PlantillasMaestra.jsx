@@ -10,6 +10,11 @@ const PlantillasMaestra = () => {
                 sx={{
                     display: 'flex',
                     flexWrap: 'wrap',
+                    width: '100%',
+                    height: '500px',
+                    justifyContent: 'space-around',
+                    alignItems: 'center',
+                    alignContent: 'center',
                     textDecoration: 'none',
                     '& > :not(style)': {
                         m: 1,
@@ -18,9 +23,10 @@ const PlantillasMaestra = () => {
 
                 }}
             >
-                {plantillas.map(plantilla => (
+                {plantillas.map((plantilla, idx) => (
                     <Link
                         component={RouterLink}
+                        key={idx}
                         color="inherit"
                         to={plantilla.to}
                         sx={{ mt: 2 }}>
@@ -33,9 +39,9 @@ const PlantillasMaestra = () => {
                             fontSize: '2rem',
                             width: 350,
                             height: 200,
-                            // fontWeight: 'bold',
+                            borderRadius: '20px',
                             textAlign: 'center',
-                        }} onClick={() => console.log("hola")} elevation={5}>
+                        }} elevation={5}>
                             <span>{plantilla.nombre.toUpperCase()}</span>
                         </Paper>
                     </Link>
