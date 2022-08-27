@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Formik, Form, Field, ErrorMessage, useField } from 'formik';
-import { Alert, Button, Card, Checkbox, Container, FormControlLabel, Grid, Input, Radio, RadioGroup } from '@mui/material';
+import { Button, Card, Checkbox, Container, FormControlLabel, Grid, Input, Radio, RadioGroup } from '@mui/material';
 import * as XLSX from 'xlsx';
 import { plataformAxios } from '../../../services/zonesService';
 import { UpperLowerCase } from '../../../utils/utils';
 import { RowForm } from './RowForm';
 import * as yup from 'yup';
+import { RowFormAC } from './RowFormAC';
+import CircularProgress from '@mui/material/CircularProgress';
+import { Label } from '@mui/icons-material';
 
 export const styleInput = {
     width: "100%",
@@ -14,53 +17,11 @@ export const styleInput = {
     boxShadow: "2px 2px 2px 1px rgba(0, 0, 0, 0.2)",
 }
 
-const initialValues = {
-    name: "",
-    tipologia: "",
-    ubication: "",
-    distrito: "",
-    client: "",
-    manager: "",
-    zone: "",
-    parent_id: 0,
-    capacity: 0,
-    student: 0,
-    room: 0,
-    height: 0,
-    width: 0,
-    type: 1
-}
-
-//  capturar errores con yup
-const validationSchema = yup.object({
-    name: yup.string().required('El nombre es requerido'),
-    tipologia: yup.string().required('La tipologia es requerida'),
-    ubication: yup.string().required('La ubicacion es requerida'),
-    distrito: yup.string().required('El distrito es requerido'),
-    client: yup.string().required('El cliente es requerido'),
-    manager: yup.string().required('El responsable es requerido'),
-    zone: yup.string().required('La zona es requerida'),
-    parent_id: yup.number().required('El padre es requerido'),
-    capacity: yup.number().required('La capacidad es requerida'),
-    student: yup.number().required('La capacidad de estudiantes es requerida'),
-    room: yup.number().required('La capacidad de aulas es requerida'),
-    height: yup.number().required('La altura es requerida'),
-    width: yup.number().required('La anchura es requerida'),
-}).defined();
-
-const defaultState = {
-    vertice: "",
-    lado: "",
-    dist: "",
-    angulo: "",
-    retiros: "",
-    disabled: false,
-};
 
 const NewProjectForm = ({ proyecto }) => {
 
     const [rows, setRows] = useState([defaultState]);
-    // const [dataForm1, setDataForm1] = useState();
+    const [rowsAC, setRowsAC] = useState(ambientesComplementarios || []);
     const [tipo, setTipo] = useState("unidocente");
     const [aforoInicial, setAforoInicial] = useState(0)
     const [aulaInicial, setAulaInicial] = useState(0)
@@ -73,6 +34,7 @@ const NewProjectForm = ({ proyecto }) => {
     const [primaria, setPrimaria] = useState(false);
     const [secundaria, setSecundaria] = useState(false);
     const [zonas, setZonas] = useState();
+    const hiddenFileInput = useRef(null);
 
     //Obtener las zonas
     const getZones = async () => {
@@ -80,6 +42,15 @@ const NewProjectForm = ({ proyecto }) => {
         setZonas(data.data.zones);
     }
 
+
+
+    const FileUploader = () => {
+        return (
+            <>
+                <input type="file" style={{ display: 'none' }} />
+            </>
+        );
+    };
 
     useEffect(() => {
         getZones();
@@ -113,8 +84,6 @@ const NewProjectForm = ({ proyecto }) => {
         rows[index].lado = `P${index + 1} - P${index + 2}`;
     }
 
-
-
     const handleOnChange = (index, name, value) => {
         const copyRows = [...rows];
         copyRows[index] = {
@@ -124,22 +93,35 @@ const NewProjectForm = ({ proyecto }) => {
         setRows(copyRows);
     };
 
+    const handleOnChangeAC = (index, name, value) => {
+        const copyRowsAC = [...rowsAC];
+        copyRowsAC[index] = {
+            ...copyRowsAC[index],
+            [name]: value
+        };
+        setRowsAC(copyRowsAC);
+    }
+
+
+
     const handleOnAdd = () => {
         var ultimo = rows.length;
         if (rows[ultimo - 1].lado === "P" + ultimo + " - P" + (ultimo + 1)) {
             setRows([...rows, { ...defaultState, lado: `P${ultimo + 1} - P${ultimo + 2}`, vertice: `P${ultimo + 1}`, }]);
-        } else {
-            setRows([...rows, { ...defaultState, lado: `P${ultimo + 1} - P${ultimo + 2}`, vertice: `P${ultimo + 1}`, }]);
         }
     }
-    //     setRows(rows.concat(defaultState));
-    // };
 
     const handleOnRemove = index => {
         const copyRows = [...rows];
         copyRows.splice(index, 1);
         setRows(copyRows);
     };
+
+    const handleOnRemoveAC = index => {
+        const copyRowsAC = [...rowsAC];
+        copyRowsAC.splice(index, 1);
+        setRowsAC(copyRowsAC);
+    }
 
     const MySelect = ({ label, ...props }) => {
         const [field, meta] = useField(props);
@@ -153,19 +135,25 @@ const NewProjectForm = ({ proyecto }) => {
             </div>
         );
     };
+
+    // Add file with field name "file"
     const onSubmit = async (values) => {
         // setDataForm1(values);
         const dataComplete = {
             ...values,
             ubication: `${values.ubication} ${values.distrito}`,
             level: `${aulaInicial ? "Inicial" : ""} ${aulaPrimaria ? "Primaria" : ""} ${aulaSecundaria ? "Secundaria" : ""}`,
-            // rows,
-            // aforoInicial, aulaInicial, aforoPrimaria, aulaPrimaria, aforoSecundaria, aulaSecundaria, 
+            rows,
+            aforoInicial, aulaInicial, aforoPrimaria, aulaPrimaria, aforoSecundaria, aulaSecundaria,
+            ambientesComplementarios: rowsAC,
             sublevel: tipo
         };
-        console.log(dataComplete);
         const data = await plataformAxios.post(`projects`, dataComplete);
-        console.log(data);
+
+        if (!!data.data.project) {
+            alert("Proyecto creado con exito");
+            window.location.href = "/";
+        }
 
     }
 
@@ -210,6 +198,8 @@ const NewProjectForm = ({ proyecto }) => {
             </Grid>
         )
     }
+
+
     return (
         <Card sx={{ height: "100%" }}>
             <Container>
@@ -252,7 +242,10 @@ const NewProjectForm = ({ proyecto }) => {
                                             </MySelect>
                                         </Grid>
                                     </Grid>
-                                    Nivel
+                                    <br />
+                                    <span>NIVEL:</span>
+                                    <br />
+
                                     <Grid container spacing={2} >
 
 
@@ -312,17 +305,20 @@ const NewProjectForm = ({ proyecto }) => {
                                     {(primaria) > 0 && (nivelGrid("PRIMARIA", aforoPrimaria, aulaPrimaria))}
                                     {(secundaria) > 0 && (nivelGrid("SECUNDARIA", aforoSecundaria, aulaSecundaria))}
 
+                                    <Grid container spacing={2} alignItems="center">
+                                        <Grid item xs={6} spacing={2}>
 
-                                    {/* <Button> */}
-                                    <Input color='primary' type='file' accept='.xlsx, .xls' onChange={(e) => onImportExcel(e)} />
-                                    {/* </Button> */}
-                                    {/* descargar excel */}
-                                    <a href="/descargas/test.xlsx" download="Centros de Educaclientcion.xlsx">
-                                        <Button variant="contained" color="primary" onClick={() => downloadExcel()}>
-                                            Descargar Excel
-                                        </Button>
-                                    </a>
-                                    <br /> <br />
+                                            <a href="/descargas/test.xlsx" download="Centros de Educaclientcion.xlsx">
+                                                <Button variant="contained" color="primary" onClick={() => downloadExcel()}>
+                                                    Descargar Excel
+                                                </Button>
+                                            </a>
+                                        </Grid>
+                                        <Grid item xs={6} spacing={2}>
+                                            <Input style={{ ...styleInput, width: "auto", height: "80px", }} type='file' accept='.xlsx, .xls' onChange={(e) => onImportExcel(e)} />
+                                        </Grid>
+                                    </Grid>
+
 
                                     UBICACIÓN
 
@@ -370,7 +366,6 @@ const NewProjectForm = ({ proyecto }) => {
                                     </Grid>
                                 </Grid>
 
-
                                 <Grid item xs={6}>
                                     <Grid container spacing={1} sx={{ width: "100%" }}>
                                         <Grid item xs={2} >
@@ -382,7 +377,7 @@ const NewProjectForm = ({ proyecto }) => {
                                         <Grid item xs={2}>
                                             <span>DIST.</span>
                                         </Grid>
-                                        <Grid item xs={4}>
+                                        <Grid item xs={3}>
                                             <span>ÁNGULO</span>
                                         </Grid>
                                         <Grid item xs={2}>
@@ -396,14 +391,48 @@ const NewProjectForm = ({ proyecto }) => {
                                                 onChange={(name, value) => handleOnChange(index, name, value)}
                                                 onRemove={() => handleOnRemove(index)}
                                                 key={index}
+                                                disabledDeleted={index}
                                             />
 
                                         ))}
+
                                         <Button variant='outlined' onClick={handleOnAdd}>Agregar</Button>
                                     </Grid>
-                                    <Button variant="contained" type="submit">
+
+
+                                    {false ? (
+                                        <CircularProgress />
+                                    ) : (
+
+                                        <Grid item xs={12} marginTop="1rem">
+                                            <Grid container spacing={1} sx={{ width: "100%" }}>
+                                                <Grid item xs={6} >
+                                                    <span >AMBIENTES COMPLEMENTARIOS</span>
+                                                </Grid>
+                                                <Grid item xs={3}>
+                                                    <span>AFORO MAXIMO</span>
+                                                </Grid>
+                                                {rowsAC.map((row, index) => (
+                                                    <RowFormAC
+                                                        {...row}
+                                                        onChange={(name, value) => handleOnChangeAC(index, name, value)}
+                                                        onRemove={() => handleOnRemoveAC(index)}
+                                                        key={index}
+                                                        disabledDeleted={index}
+                                                    />
+                                                ))}
+                                            </Grid>
+
+
+                                        </Grid>
+                                    )}
+                                    <Button variant="contained" type="submit" sx={{ marginTop: "2rem" }}>
                                         Guardar
                                     </Button>
+
+
+
+
                                 </Grid>
                             </Grid>
 
@@ -417,3 +446,54 @@ const NewProjectForm = ({ proyecto }) => {
 };
 
 export default NewProjectForm;
+
+const initialValues = {
+    name: "",
+    tipologia: "",
+    ubication: "",
+    distrito: "",
+    client: "",
+    manager: "",
+    zone: "",
+    parent_id: 0,
+    capacity: 0,
+    student: 0,
+    room: 0,
+    height: 0,
+    width: 0,
+    type_id: 1
+}
+
+
+const ambientesComplementarios = [
+    { capacidad: 0, ambienteComplementario: "Aula" },
+    { capacidad: 0, ambienteComplementario: "Laboratorio" },
+    { capacidad: 0, ambienteComplementario: "Sala de Clases" },
+    { capacidad: 0, ambienteComplementario: "Sala de Juntas" },
+    { capacidad: 0, ambienteComplementario: "Sala de Reuniones" },
+    { capacidad: 0, ambienteComplementario: "Sala de Trabajo" },
+]
+
+const validationSchema = yup.object({
+    name: yup.string().required('El nombre es requerido'),
+    tipologia: yup.string().required('La tipologia es requerida'),
+    ubication: yup.string().required('La ubicacion es requerida'),
+    distrito: yup.string().required('El distrito es requerido'),
+    client: yup.string().required('El cliente es requerido'),
+    manager: yup.string().required('El responsable es requerido'),
+    zone: yup.string().required('La zona es requerida'),
+    parent_id: yup.number().required('El padre es requerido'),
+    capacity: yup.number().required('La capacidad es requerida'),
+    student: yup.number().required('La capacidad de estudiantes es requerida'),
+    room: yup.number().required('La capacidad de aulas es requerida'),
+    height: yup.number().required('La altura es requerida'),
+    width: yup.number().required('La anchura es requerida'),
+}).defined();
+
+const defaultState = {
+    vertice: "",
+    lado: "",
+    dist: "",
+    angulo: "",
+    retiros: "",
+};

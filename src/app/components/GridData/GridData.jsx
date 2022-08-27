@@ -12,15 +12,9 @@ import { Button } from '@mui/material';
 
 const rowStyle = { background: 'black' };
 
-// set background colour on even rows again, this looks bad, should be using CSS classes
-// const getRowStyle = params => {
-//     if (params.node.rowIndex % 2 === 0) {
-//         return { background: 'red' };
-//     }
-// };
-
 
 const GridData = (data) => {
+
     const containerStyle = useMemo(() => ({ width: '100%', height: '100%' }), []);
 
 
@@ -47,7 +41,7 @@ const GridData = (data) => {
                 )
             }
         },
-        { headerName: "Nombre del proyecto", field: "name", filter: true, width: 160 },
+        { headerName: "Nombre del proyecto", field: "name", filter: true, width: 160, showRouwGroup: true, },
         { headerName: "Ubicacion", field: "ubication", filter: true, width: 100 },
         { headerName: "Responsable", field: "manager", filter: true, width: 150 },
         { headerName: "Fecha de elaboracion", field: "createdAt", filter: true, width: 160, valueFormatter: formatDate },

@@ -1,9 +1,9 @@
-import { Grid } from '@mui/material';
+import { Button, Grid, IconButton } from '@mui/material';
 import React from 'react'
 import { styleInput } from './NewProjectForm';
+import DeleteIcon from '@mui/icons-material/Delete';
 
-export function RowForm({ onChange, onRemove, vertice, lado, dist, angulo, retiros, disabled }) {
-
+export function RowForm({ onChange, onRemove, vertice, lado, dist, angulo, retiros, disabled, disabledDeleted }) {
     return (
         <Grid container spacing={1} sx={{ marginBottom: ".5rem" }}>
             <Grid item xs={2}>
@@ -36,7 +36,7 @@ export function RowForm({ onChange, onRemove, vertice, lado, dist, angulo, retir
                 />
             </Grid>
 
-            <Grid item xs={4}>
+            <Grid item xs={3}>
 
                 <input
                     style={{ ...styleInput, textAlign: "center" }}
@@ -56,6 +56,11 @@ export function RowForm({ onChange, onRemove, vertice, lado, dist, angulo, retir
                     onChange={e => onChange("retiros", e.target.value)}
                 />
             </Grid>
+
+
+            <IconButton disabled={!disabledDeleted} onClick={() => onRemove()} aria-label="delete">
+                <DeleteIcon />
+            </IconButton>
         </Grid>
     );
 }
