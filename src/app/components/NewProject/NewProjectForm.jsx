@@ -17,9 +17,10 @@ export const styleInput = {
     boxShadow: "2px 2px 2px 1px rgba(0, 0, 0, 0.2)",
 }
 
+const titleExcel = "ENTROS DE EDUCACIÓN BÁSICA REGULAR: INICIAL, PRIMARIA, SECUNDARIA"
+
 
 const NewProjectForm = ({ proyecto }) => {
-
     const [rows, setRows] = useState([defaultState]);
     const [rowsAC, setRowsAC] = useState(ambientesComplementarios || []);
     const [tipo, setTipo] = useState("unidocente");
@@ -35,29 +36,18 @@ const NewProjectForm = ({ proyecto }) => {
     const [secundaria, setSecundaria] = useState(false);
     const [zonas, setZonas] = useState();
     const hiddenFileInput = useRef(null);
+    const [nameExcel, setNameExcel] = useState("");
 
     //Obtener las zonas
     const getZones = async () => {
         const data = await plataformAxios.get(`zones`);
         setZonas(data.data.zones);
     }
-
-
-
-    const FileUploader = () => {
-        return (
-            <>
-                <input type="file" style={{ display: 'none' }} />
-            </>
-        );
-    };
-
     useEffect(() => {
         getZones();
     }, []);
 
 
-    // Leer el excel para obtener 
     useEffect(() => {
         if (dataExcel) {
             setAforoInicial(dataExcel[3].__EMPTY_2)
@@ -182,6 +172,12 @@ const NewProjectForm = ({ proyecto }) => {
         };
         fileReader.readAsBinaryString(files[0]);
     }
+
+
+
+
+
+
 
     const nivelGrid = (label, aforo, aula) => {
         return (
