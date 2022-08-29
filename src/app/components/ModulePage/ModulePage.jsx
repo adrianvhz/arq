@@ -49,13 +49,7 @@ const ModulePage = ({ pagina }) => {
                     <span>
                         Puedes crear desde 0 o escoger una plantilla del proyecto
                     </span>
-                    <Link
-                        component={RouterLink}
-                        color="inherit"
-                        to={`/home/${pagina}/nuevo-proyecto`}
-                        sx={{ mt: 2, textDecoration: "none" }}>
-                        <Button variant="contained" >+ Nuevo</Button>
-                    </Link>
+                    <NewProject />
                 </Box>
 
                 <h4>
@@ -64,10 +58,11 @@ const ModulePage = ({ pagina }) => {
                 <span>
                     Revisa los ultimos diseños realizados
                 </span>
-                <GridData data={project}></GridData>
-
-
             </Container>
+
+            <GridData data={project}></GridData>
+
+
 
 
         </Card>

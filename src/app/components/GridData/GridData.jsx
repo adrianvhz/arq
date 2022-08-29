@@ -5,109 +5,107 @@ import SchoolIcon from '@mui/icons-material/School';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import GroupsIcon from '@mui/icons-material/Groups';
-import { Button, Grid } from '@mui/material';
+import { Box, Button, Grid, Modal } from '@mui/material';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import { Link } from "react-router-dom";
+import NewProjectForm from '../NewProject/NewProjectForm';
+import NewProject from '../NewProject/NewProject';
+import Backdrop from '@mui/material/Backdrop';
+import Fade from '@mui/material/Fade';
 
+const styleGrid = {
+    border: "1.5px solid #AFAFAF",
+    width: "100%",
+    fontSize: "14px",
+    padding: "8px 6px",
+}
+
+const containerCustom = {
+    marginLeft: "2rem",
+    marginRight: "2rem",
+}
 const GridData = (data) => {
-
-    //crear tablas y columnas
-
-
 
     const [rowData] = useState(
         data.data.proyectos
     );
 
-
-    //agrupar los datos que tengan el mismo parent_id
-    // const groupBy = (xs, key) => {
-    //     return xs.reduce((rv, x) => {
-    //         (rv[x[key]] = rv[x[key]] || []).push(x);
-    //         return rv;
-    //     }, {});
-    // }
-    // const groupedData = groupBy(rowData, 'parent_id');
-    // console.log(groupedData)
-
-    // //introducir objetos en un objeto padre
-    // const groupedData2 = Object.keys(groupedData).map(key => {
-    //     return {
-    //         parent_id: key,
-    //         children: groupedData[key]
-    //     }
-    // }
-    // )
-    // console.log(groupedData2)
-
-    // crear nuevo array con los datos agrupados
-    const groupedData = useMemo(() => {
-        return rowData.reduce((acc, curr) => {
-            if (acc[curr.parent_id]) {
-                acc[curr.parent_id].push(curr);
-            } else {
-                acc[curr.parent_id] = [curr];
-            }
-            return acc;
-        }, {});
-    }, [rowData]);
-
-    //conectar hijos con padre
-    const groupedData2 = useMemo(() => {
-        return Object.keys(groupedData).map(key => {
-            return {
-                parent_id: key,
-                children: groupedData[key]
-            }
-        }
-        )
+    const formatDate = (date) => {
+        return moment(date).format('DD/MM/YYYY');
     }
-        , [groupedData]);
-
-    console.log(groupedData2)
-
-    //crear componente para cada grupo de datos
-    //renderizar los dato
 
     const rowList = () => {
         return rowData.map((row, index) => {
+
+            const [show, setShow] = useState(false);
+
             return (
                 <div key={index}>
                     {row.parent_id === 0 &&
-                        <tr>
+                        <Grid container>
 
-                            <td>{row.id}</td>
-                            <td>{row.type_id}</td>
-                            <td>{row.name}</td>
-                            <td>{row.ubication}</td>
-                            <td>{row.manager}</td>
-                            <td>{row.createdAt}</td>
-                            <td>{row.updatedAt}</td>
-                            <td>{row.client}</td>
-                        </tr>
+                            <Grid item xs={0.5} sx={styleGrid}>{row.id}</Grid>
+                            <Grid item xs={0.5} sx={styleGrid}>{row.type_id == 1 &&
+                                <SchoolIcon />
+                            }</Grid>
+                            <Grid item xs={2} sx={styleGrid} >
+                                <div style={{
+                                    display: "flex", justifyContent: "space-between",
+                                }}>
+                                    <span>{row.name}</span>
+                                    {!show ? <KeyboardArrowDownIcon onClick={() => setShow(!show)} sx={{ cursor: "pointer" }} /> :
+                                        <KeyboardArrowLeftIcon onClick={() => setShow(!show)} sx={{ cursor: "pointer" }} />}
+
+                                </div>
+
+
+                            </Grid>
+                            <Grid item xs={1} sx={styleGrid}>{row.ubication}</Grid>
+                            <Grid item xs={1.5} sx={styleGrid}>{row.manager}</Grid>
+                            <Grid item xs={1.5} sx={styleGrid}>{formatDate(row.updatedAt)}</Grid>
+                            <Grid item xs={1.5} sx={styleGrid}>{formatDate(row.updatedAt)}</Grid>
+                            <Grid item xs={2} sx={styleGrid}>{row.client}</Grid>
+                            <Grid item xs={1.5} sx={styleGrid} >
+
+                                <NewProject onRow data={row} />
+                                <GroupsIcon />
+                                <DeleteIcon />
+                            </Grid>
+                        </Grid>
                     }
-                    {rowData.map((
+                    {show && rowData.map((
                         row2, index) => {
                         return (
-                            <div>
+                            <div key={index}>
                                 {row2.parent_id == row.id &&
 
-                                    <tr>
+                                    <Grid container>
 
-                                        <td>{row2.id}</td>
-                                        <td>{row2.type_id}</td>
-                                        <td>{row2.name}</td>
-                                        <td>{row2.ubication}</td>
-                                        <td>{row2.manager}</td>
-                                        <td>{row2.createdAt}</td>
-                                        <td>{row2.updatedAt}</td>
-                                        <td>{row2.client}</td>
-                                        <td>{row2.parent_id}</td>
-                                    </tr>
+                                        <Grid item xs={0.5} sx={{ ...styleGrid, background: "#C8C8C8" }}>{row2.id}</Grid>
+                                        <Grid item xs={0.5} sx={{ ...styleGrid, background: "#C8C8C8" }}>{row.type_id == 1 &&
+                                            <SchoolIcon />
+                                        }</Grid>
+                                        <Grid item xs={2} sx={{ ...styleGrid, background: "#C8C8C8" }}>{row2.name}</Grid>
+                                        <Grid item xs={1} sx={{ ...styleGrid, background: "#C8C8C8" }}>{row2.ubication}</Grid>
+                                        <Grid item xs={1.5} sx={{ ...styleGrid, background: "#C8C8C8" }}>{row2.manager}</Grid>
+                                        <Grid item xs={1.5} sx={{ ...styleGrid, background: "#C8C8C8" }}>{formatDate(row.createdAt)}</Grid>
+                                        <Grid item xs={1.5} sx={{ ...styleGrid, background: "#C8C8C8" }}>{formatDate(row.updatedAt)}</Grid>
+                                        <Grid item xs={2} sx={{ ...styleGrid, background: "#C8C8C8" }}>{row2.client}</Grid>
+                                        <Grid item xs={1.5} sx={{ ...styleGrid, background: "#C8C8C8" }}>
+                                            <NewProject onRow data={row} />
+
+                                            <GroupsIcon />
+
+                                            <DeleteIcon />
+                                        </Grid>
+                                    </Grid>
                                 }
                             </div>
                         )
                     }
                     )}
-                </div>
+                </div >
             )
         }
         )
@@ -117,74 +115,45 @@ const GridData = (data) => {
 
 
     return (
-        <div >
-            {/* <Grid container>
-                <Grid item xs={1} sx={{ border: "2px black " }}>
+        <div style={containerCustom} >
+            <Grid container>
+                <Grid item xs={0.5} sx={{ ...styleGrid, fontWeight: 600 }}>
+                    {/* <Box width="100%" sx={styleGrid}> */}
                     ID
+
+                    {/* </Box> */}
                 </Grid>
-                <Grid item xs={1}>
+                <Grid item xs={0.5} sx={{ ...styleGrid, fontWeight: 600 }}>
+
                     Tipo
                 </Grid>
-                <Grid item xs={2}>
-                   Nombre del proyecto
+                <Grid item xs={2} sx={{ ...styleGrid, fontWeight: 600 }}>
+                    Nombre del proyecto
                 </Grid>
-                <Grid item xs={1}>
-                    Tipo
+                <Grid item xs={1} sx={{ ...styleGrid, fontWeight: 600 }}>
+                    Ubicacion
                 </Grid>
-                <Grid item xs={1}>
-                    ID
+                <Grid item xs={1.5} sx={{ ...styleGrid, fontWeight: 600 }}>
+                    Responsable
                 </Grid>
-                <Grid item xs={1}>
-                    Tipo
+                <Grid item xs={1.5} sx={{ ...styleGrid, fontWeight: 600 }}>
+                    Fecha de Elab.
                 </Grid>
-                <Grid item xs={1}>
-                    ID
+                <Grid item xs={1.5} sx={{ ...styleGrid, fontWeight: 600 }}>
+                    Fecha de Act.
                 </Grid>
-                <Grid item xs={2}>
-                    Tipo
+                <Grid item xs={2} sx={{ ...styleGrid, fontWeight: 600 }}>
+                    Nombe del cliente
                 </Grid>
-                <Grid item xs={2}>
-                    ID
+                <Grid item xs={1.5} sx={{ ...styleGrid, fontWeight: 600 }}>
+                    Acciones
                 </Grid>
 
 
 
 
-            </Grid> */}
-            <tr >
-
-                <th>ID</th>
-                <th>Tipo</th>
-                <th>Nombre del proyecto</th>
-                <th>Ubicacion</th>
-                <th>Responsable</th>
-                <th>Fecha de elaboracion</th>
-                <th>Fecha de actualizacion</th>
-                <th>Nombre del cliente</th>
-                <th>Acciones</th>
-
-
-
-            </tr>
+            </Grid>
             {rowList()}
-
-            {/* <td>Soleado</td>
-
-                <td>Mayormente soleado</td>
-
-                <td>Parcialmente nublado</td>
-
-                <td>Soleado</td>
-
-                <td>Mayormente soleado</td>
-
-                <td>Parcialmente nublado</td>
-
-                <td>Soleado</td>
-
-                <td>Mayormente soleado</td>
-
-                <td>Parcialmente nublado</td> */}
 
 
 
