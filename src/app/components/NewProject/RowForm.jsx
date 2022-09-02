@@ -1,4 +1,6 @@
-import { Button, Grid, IconButton } from '@mui/material';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
 import React from 'react'
 import { styleInput } from './NewProjectForm';
 import DeleteIcon from '@mui/icons-material/Delete';

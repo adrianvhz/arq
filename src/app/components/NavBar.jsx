@@ -1,5 +1,10 @@
-import { AppBar, Toolbar, IconButton, Grid, Typography } from "@mui/material";
-import { LogoutOutlined, MenuOutlined } from "@mui/icons-material";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
+import MenuOutlined from "@mui/icons-material/MenuOutlined";
+import LogoutOutlined from "@mui/icons-material/LogoutOutlined";
 import { startLogoutAuth } from '../../redux/auth';
 import { useDispatch } from "react-redux";
 

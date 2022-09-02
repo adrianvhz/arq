@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Formik, Form, Field, useField } from 'formik';
-import { Button, Card, Checkbox, Container, FormControlLabel, Grid, Input, Radio, RadioGroup } from '@mui/material';
+import Button from '@mui/material/Button';
+import Card from "@mui/material/Card";
+import Checkbox from "@mui/material/Checkbox";
+import Container from "@mui/material/Container";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Grid from "@mui/material/Grid";
+import Input from "@mui/material/Input";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
 import * as XLSX from 'xlsx';
 import { plataformAxios } from '../../../services/zonesService';
 import { UpperLowerCase } from '../../../utils/utils';

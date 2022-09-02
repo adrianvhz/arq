@@ -1,4 +1,6 @@
-import { Box, Link, Paper } from '@mui/material'
+import Box from '@mui/material/Box';
+import Link from '@mui/material/Link';
+import Paper from '@mui/material/Paper';
 import React from 'react'
 import { Link as RouterLink } from "react-router-dom";
 

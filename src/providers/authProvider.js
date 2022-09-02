@@ -1,24 +1,28 @@
+import { login, register } from './../services/authService';
 
-import { login } from './../services/authService';
-export const LoginWithEmailPassword = async(email,password) => {
+export const LoginWithEmailPassword = (email, password) => {
+	return login(email, password).then(res => res);
+	//  try {
 
-    try {
+	//     const resp = await login(email,password)
+			
+	//     console.log(resp)
 
-       const resp = await login(email,password)
-       
-       console.log(resp)
-
-    //    return { 
-    //     ok: true,
-    //     uid, photoURL,email, displayName
-    //    }
-      
-        
-    } catch (error) {
-        return { ok: false, errorMessage:'Usuario o Contraseña invalido' }
-    }
+		//    return { 
+		//     ok: true,
+		//     uid, photoURL,email, displayName
+		//    }
+		
+			
+	//  } catch (error) {
+	//      return { ok: false, errorMessage:'Usuario o Contraseña invalido' }
+	//  }
 }
 
+
+export const registerUser = (name, email, password) => {
+	return register(name, email, password).then(res => res);
+}
 
 
 // export const registerUserWithEmailPassword = async({email,password, displayName}) => {

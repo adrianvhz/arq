@@ -1,12 +1,10 @@
-import { TurnedInNot } from "@mui/icons-material";
-import {
-  Drawer,
-  Box,
-  Toolbar,
-  Typography,
-  Divider,
-  List
-} from "@mui/material";
+import TurnedInNot from "@mui/icons-material/TurnedInNot";
+import Drawer from "@mui/material/Drawer";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import Divider from "@mui/material/Divider";
+import List from "@mui/material/List";
 import ModalTests from "../views/Modal";
 import PlantillasMaestra from "../views/PlantillasMaestra";
 import { SideBarItem } from "./SideBarItem";
