@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-
 import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
+import styled from '@mui/material/styles/styled';
 import Typography from '@mui/material/Typography';
 import NewProjectForm from './NewProjectForm';
 import AddIcon from '@mui/icons-material/Add';
@@ -30,7 +30,7 @@ const NewProject = ({ onRow, data }) => {
 
     return (
         <>
-            {onRow ? <AddIcon onClick={handleOpen} sx={{ cursor: "pointer" }} /> : <Button variant="contained" color="primary" onClick={handleOpen}> + Nuevo </Button>}
+            {onRow ? <AddIcon onClick={handleOpen} sx={{ cursor: "pointer" }} /> : <ColorButton variant="contained" onClick={handleOpen} size="large"><AddIcon />&nbsp; Nuevo</ColorButton>}
             {/* <Button variant="contained" onClick={handleOpen}>+ Nuevo</Button> */}
             <Modal
                 aria-labelledby="transition-modal-title"
@@ -52,5 +52,21 @@ const NewProject = ({ onRow, data }) => {
         </>
     )
 }
+
+const ColorButton = styled(Button)({
+	borderRadius: ".42rem",
+	color: "#ffffff",
+	padding: ".60rem 1rem",
+	fontFamily: "inherit",
+	textTransform: "none",
+	border: "1px solid #1BC5BD",
+	boxShadow: "none",
+	backgroundColor: "#1BC5BD",
+	'&:hover': {
+		backgroundColor: "#2cb4ad",
+		boxShadow: "none"
+	}
+});
+
 
 export default NewProject
