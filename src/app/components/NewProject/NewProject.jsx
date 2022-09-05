@@ -28,10 +28,7 @@ const style = {
     '@media (max-width: 1024px)': {
         width: '85%',
         height: '100%',
-        // top: '25%',
         left: '50%',
-        // transform: 'translate(0, 0)',
-        // borderRadius: '0',
     }
 
 
@@ -67,10 +64,6 @@ const NewProject = ({ onRow, data }) => {
                 open={open}
                 onClose={handleClose}
                 closeAfterTransition
-                BackdropComponent={Backdrop}
-                BackdropProps={{
-                    timeout: 500,
-                }}
             >
                 <Fade in={open}>
                     <Box sx={style}>
