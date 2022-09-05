@@ -24,7 +24,9 @@ export function UserPopover() {
 	const handleClose = () => {
 		setAnchorEl(null);
 	};
-	console.log(name)
+	const onRedirecPerfil = () =>{
+		console.log('hola')
+	}
 	const open = Boolean(anchorEl);
 	const id = open ? 'simple-popover' : undefined;
 
@@ -59,7 +61,7 @@ export function UserPopover() {
 					}}
 				>
 					<ButtonGroup orientation="vertical" variant="container" color="secondary" sx={{width: "138px"}} fullWidth>
-						<Option>
+						<Option  onClick={onRedirecPerfil}>
 							<PersonOutlineOutlinedIcon />
 							<span>Mi Perfil</span>
 						</Option>

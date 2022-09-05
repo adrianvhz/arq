@@ -9,7 +9,7 @@ import NewProject from '../components/NewProject/NewProject'
 import { ArqPlataformLayout } from '../layout'
 
 
-const ModuloInfraestructura = () => {
+export const ModuloInfraestructura = () => {
 
     return (
         <ArqPlataformLayout>
@@ -20,4 +20,3 @@ const ModuloInfraestructura = () => {
 
 
 
-export default ModuloInfraestructura

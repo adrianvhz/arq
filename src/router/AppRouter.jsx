@@ -7,7 +7,8 @@ import { SnackbarProvider } from "notistack"
 // import { useCheckAuth } from './../hooks';
 
 export const  AppRouter = ()=> {
-	const isAutheticate = useSelector((state) => state.auth.status) === "authenticated"
+	//const isAutheticate = useSelector((state) => state.auth.status) === "authenticated"
+	const isAutheticate = true
 //  const {status} = useCheckAuth()
 
   //if( status=== 'checking' ) return <CheckingAuth />
@@ -17,17 +18,21 @@ export const  AppRouter = ()=> {
 
 		<Routes>
 			{/*Login y Register */}
-			<Route path="/" element={isAutheticate ? <Navigate to="/home" /> : <AuthLayout />} />
+			{
+				(isAutheticate)
+				? <Route path="/*" element={<ArqPlataformRouter />} />
+				:  <Route path="/auth/*" element={<AuthLayout />} />
+
+        	}
+        	<Route path="/*" element={<Navigate to='/auth/' />} />
+
+			{/* <Route path="/" element={isAutheticate ? <Navigate to="/home" /> : <AuthLayout />} />
 			
 
-			<Route path="/*" element={isAutheticate ? <ArqPlataformRouter /> : <AuthLayout />} />
+			<Route path="/*" element={isAutheticate ? <ArqPlataformRouter /> : <AuthLayout />} /> */}
 
 
-			{/* <Route path="/*" element={<ArqPlataformRouter />} />
-			<Route path="/auth/*" element={<AuthRoutes />} /> */}
-
-			{/*Journal App */}
-			{/* <Route path="/*" element={<JournalRoutes />} /> */}
+			
 		</Routes>
 		</SnackbarProvider>
 	)

@@ -3,7 +3,7 @@ import ModulePage from '../components/ModulePage/ModulePage'
 import { ArqPlataformLayout } from '../layout'
 import PlantillasMaestra from '../views/PlantillasMaestra'
 
-const ModuloSalud = () => {
+export const ModuloSalud = () => {
     return (
         <ArqPlataformLayout>
             <ModulePage pagina="salud"></ModulePage>
@@ -11,4 +11,3 @@ const ModuloSalud = () => {
     )
 }
 
-export default ModuloSalud
