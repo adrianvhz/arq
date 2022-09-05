@@ -13,12 +13,15 @@ export function RowForm({ onChange, onRemove, vertice, lado, dist, angulo, retir
                     value={vertice}
                     disabled
                     style={{ ...styleInput, textAlign: "center" }}
+
                 />
+                {/* {error.error && touched.error ? (
+                    <div>{errors.client}</div>
+                ) : null} */}
             </Grid>
             <Grid item xs={2}>
 
                 <input
-                    // placeholder="Email"
                     style={{ ...styleInput, textAlign: "center" }}
                     disabled
                     value={lado}
@@ -43,7 +46,6 @@ export function RowForm({ onChange, onRemove, vertice, lado, dist, angulo, retir
                 <input
                     style={{ ...styleInput, textAlign: "center" }}
                     disabled={disabled}
-
                     value={angulo}
                     onChange={e => onChange("angulo", e.target.value)}
                 />
@@ -60,7 +62,7 @@ export function RowForm({ onChange, onRemove, vertice, lado, dist, angulo, retir
             </Grid>
 
 
-            <IconButton disabled={!disabledDeleted} onClick={() => onRemove()} aria-label="delete">
+            <IconButton disabled={disabledDeleted === 0 || disabledDeleted === 1 || disabledDeleted === 2} onClick={() => onRemove()} aria-label="delete">
                 <DeleteIcon />
             </IconButton>
         </Grid>

@@ -16,19 +16,24 @@ import { RowForm } from './RowForm';
 import * as yup from 'yup';
 import { RowFormAC } from './RowFormAC';
 import CircularProgress from '@mui/material/CircularProgress';
+import GoogleMaps from "simple-react-google-maps"
+import { Box } from '@mui/system';
+import { Link } from '@mui/material';
+import { Link as RouterLink } from "react-router-dom";
+
 
 export const styleInput = {
     width: "100%",
-    padding: "5px",
-    borderRadius: "5px",
-    boxShadow: "2px 2px 2px 1px rgba(0, 0, 0, 0.2)",
 }
 
-// const titleExcel = "ENTROS DE EDUCACIÓN BÁSICA REGULAR: INICIAL, PRIMARIA, SECUNDARIA"
+const styleError = {
+    color: "red",
+    marginTop: "0.25rem",
+}
 
 
 const NewProjectForm = ({ data, onClose }) => {
-    const [rows, setRows] = useState([defaultState]);
+    const [rows, setRows] = useState([defaultState].concat(defaultState).concat(defaultState));
     const [rowsAC, setRowsAC] = useState(ambientesComplementarios || []);
     const [tipo, setTipo] = useState("unidocente");
     const [aforoInicial, setAforoInicial] = useState(0)
@@ -42,7 +47,8 @@ const NewProjectForm = ({ data, onClose }) => {
     const [primaria, setPrimaria] = useState(false);
     const [secundaria, setSecundaria] = useState(false);
     const [zonas, setZonas] = useState();
-    const [step1, setStep1] = useState(true);
+
+    const [step, setStep] = useState(1);
 
     const initialValues = {
         name: data?.name || "",
@@ -143,7 +149,7 @@ const NewProjectForm = ({ data, onClose }) => {
                 <label htmlFor={props.id || props.name}>{label}</label>
                 <select {...field} {...props} />
                 {meta.touched && meta.error ? (
-                    <div className="error">{meta.error}</div>
+                    <div style={styleError}>{meta.error}</div>
                 ) : null}
             </div>
         );
@@ -164,7 +170,7 @@ const NewProjectForm = ({ data, onClose }) => {
         const data = await plataformAxios.post(`projects`, dataComplete);
 
         if (!!data.data.project) {
-            onClose()
+            setStep(2);
         }
 
     }
@@ -219,32 +225,28 @@ const NewProjectForm = ({ data, onClose }) => {
 
 
     return (
-        <Card sx={{ height: "100%" }}>
-            <Container>
+        <Card  >
+            {step === 1 &&
 
-                <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+                <Container >
                     <h2>Crear proyecto nuevo </h2>
-                    <Button onClick={() => setStep1(!step1)}>{step1 ? "Siguiente" : "Atras"}</Button>
-                </div>
 
+                    <Formik
+                        initialValues={initialValues}
+                        onSubmit={onSubmit}
+                        validationSchema={validationSchema}
+                    >
+                        {({ errors, touched }) => (
+                            <Form>
 
-                <Formik
-                    initialValues={initialValues}
-                    onSubmit={onSubmit}
-                    validationSchema={validationSchema}
-                >
-                    {({ errors, touched }) => (
-                        <Form>
-
-                            {step1 ? (
                                 <Grid container spacing={5}>
-                                    <Grid item xs={6}>
+                                    <Grid item xs={12} sm={6} lg={6}>
                                         <Grid container spacing={1} >
                                             <Grid item xs={12}>
                                                 <span>NOMBRE:</span><br />
                                                 <Field style={styleInput} type="text" name="name" />
                                                 {errors.name && touched.name ? (
-                                                    <div>{errors.name}</div>
+                                                    <div style={styleError}>{errors.name}</div>
                                                 ) : null}
                                                 {/* <ErrorMessage name="email" component="div" /> */}
                                             </Grid>
@@ -252,7 +254,7 @@ const NewProjectForm = ({ data, onClose }) => {
                                                 <span>TIPOLOGIA:</span> <br />
                                                 <Field style={styleInput} type="text" name="tipologia" />
                                                 {errors.tipologia && touched.tipologia ? (
-                                                    <div>{errors.tipologia}</div>
+                                                    <div style={styleError}>{errors.tipologia}</div>
                                                 ) : null}
                                             </Grid>
                                             <Grid item xs={12}>
@@ -271,207 +273,291 @@ const NewProjectForm = ({ data, onClose }) => {
 
 
 
-                                        UBICACIÓN
-
-                                        <Grid container spacing={1} sx={{ marginBottom: "2rem" }}>
-                                            <Grid item xs={12}>
-                                                <span>Provincia:</span> <br />
-                                                <Field style={styleInput} type="text" name="ubication" />
-                                                {errors.ubication && touched.ubication ? (
-                                                    <div>{errors.ubication}</div>
-                                                ) : null}
-                                                {/* <ErrorMessage name="email" component="div" /> */}
-
-                                            </Grid>
-                                            <Grid item xs={12}>
-                                                <span>Distrito:</span> <br />
-                                                <Field style={styleInput} type="text" name="distrito" />
-                                                {errors.distrito && touched.distrito ? (
-                                                    <div>{errors.distrito}</div>
-                                                ) : null}
-
-                                                {/* <ErrorMessage name="email" component="div" /> */}
-
-                                            </Grid>
-                                            <Grid item xs={6}>
-                                                <span>Responsable:</span> <br />
-                                                <Field style={styleInput} type="text" name="manager" />
-                                                {errors.manager && touched.manager ? (
-                                                    <div>{errors.manager}</div>
-                                                ) : null}
-                                                {/* <ErrorMessage name="email" component="div" /> */}
-
-                                            </Grid>
-                                            <Grid item xs={6}>
-                                                <span>Cliente:</span> <br />
-                                                <Field style={styleInput} type="text" name="client" />
-                                                {errors.client && touched.client ? (
-                                                    <div>{errors.client}</div>
-                                                ) : null}
-
-                                                {/* <ErrorMessage name="email" component="div" /> */}
-
-                                            </Grid>
-
-
-                                        </Grid>
                                     </Grid>
                                     <Grid item xs={6}>
 
-                                        <span>NIVEL:</span>
-                                        <br />
+                                        {/* UBICACIÓN */}
 
-                                        <Grid container spacing={2} >
-
-
-                                            <Grid item xs={5}>
-                                                <div role="group" aria-labelledby="my-radio-group" style={{ display: "flex", flexDirection: "column", marginBottom: "10px" }}>
-
-                                                    <label>
-                                                        <Checkbox checked={inicial} onClick={() => setInicial(!inicial)} />
-                                                        Inicial
-                                                    </label>
-                                                    <label>
-                                                        <Checkbox checked={primaria} onClick={() => setPrimaria(!primaria)} />
-                                                        Primaria
-                                                    </label>
-                                                    <label>
-                                                        <Checkbox checked={secundaria} onClick={() => setSecundaria(!secundaria)} />
-                                                        Secundaria
-                                                    </label>
-                                                </div>
+                                        <Grid container spacing={1} sx={{ marginBottom: "2rem" }}>
+                                            <Grid item xs={12}>
+                                                <span>PROVINCIA:</span> <br />
+                                                <Field style={styleInput} type="text" name="ubication" />
+                                                {errors.ubication && touched.ubication ? (
+                                                    <div style={styleError}>{errors.ubication}</div>
+                                                ) : null}
+                                                {/* <ErrorMessage name="email" component="div" /> */}
 
                                             </Grid>
-                                            <Grid item xs={7}>
-                                                <RadioGroup
-                                                    aria-labelledby="demo-radio-buttons-group-label"
-                                                    defaultValue="female"
-                                                    name="radio-buttons-group"
-                                                    // name="tipo"
-                                                    onChange={handleChange}
-                                                    value={tipo}
+                                            <Grid item xs={12}>
+                                                <span>DISTRITO:</span> <br />
+                                                <Field style={styleInput} type="text" name="distrito" />
+                                                {errors.distrito && touched.distrito ? (
+                                                    <div style={styleError}>{errors.distrito}</div>
+                                                ) : null}
 
+                                                {/* <ErrorMessage name="email" component="div" /> */}
 
-                                                >
-                                                    <FormControlLabel value="unidocente" control={<Radio />} label="UNIDOCENTE" />
-                                                    <FormControlLabel value="polidocente multigrado" control={<Radio />} label="POLIDOCENTE MULTIGRADO" />
-                                                    <FormControlLabel value="polidocente completo" control={<Radio />} label="POLIDOCENTE COMPLETO" />
-                                                </RadioGroup>
+                                            </Grid>
+                                            <Grid item xs={6}>
+                                                <span>RESPONSABLE:</span> <br />
+                                                <Field style={styleInput} type="text" name="manager" />
+                                                {errors.manager && touched.manager ? (
+                                                    <div style={styleError}>{errors.manager}</div>
+                                                ) : null}
+                                                {/* <ErrorMessage name="email" component="div" /> */}
+
+                                            </Grid>
+                                            <Grid item xs={6}>
+                                                <span>CLIENTE:</span> <br />
+                                                <Field style={styleInput} type="text" name="client" />
+                                                {errors.client && touched.client ? (
+                                                    <div style={styleError}>{errors.client}</div>
+                                                ) : null}
+
+                                                {/* <ErrorMessage name="email" component="div" /> */}
 
                                             </Grid>
 
 
                                         </Grid>
-                                        {(inicial || primaria || secundaria) && (
-                                            <Grid container>
-                                                <Grid item xs={4} textAlign="center" >
-                                                    <span>GRADO</span>
-                                                </Grid>
-                                                <Grid item xs={4} textAlign="center">
-                                                    <span>AFORO POR GRADO</span>
-                                                </Grid>
-                                                <Grid item xs={4} textAlign="center">
-                                                    <span>CANTIDAD DE AULAS</span>
-                                                </Grid>
-                                            </Grid>
-                                        )}
 
-                                        {inicial && (nivelGrid("INICIAL", aforoInicial, aulaInicial))}
-                                        {(primaria) > 0 && (nivelGrid("PRIMARIA", aforoPrimaria, aulaPrimaria))}
-                                        {(secundaria) > 0 && (nivelGrid("SECUNDARIA", aforoSecundaria, aulaSecundaria))}
 
-                                        <Grid container spacing={2} alignItems="center">
-                                            <Grid item xs={6} spacing={2}>
+                                    </Grid>
+                                </Grid>
 
-                                                <a href="/descargas/test.xlsx" download="Centros de Educaclientcion.xlsx">
-                                                    <Button variant="contained" color="primary" onClick={() => downloadExcel()}>
-                                                        Descargar Excel
-                                                    </Button>
-                                                </a>
+                                {/* <GoogleMaps
+                                    apiKey={"AIzaSyBK3B2WV4WUTyWDE4dCyi-WkhNlL0P1-WI"}
+                                    style={{ height: "400px", width: "100%" }}
+                                    zoom={6}
+                                    center={{ lat: 37.4224764, lng: -122.0842499 }}
+                                // markers={{ lat: 37.4224764, lng: -122.0842499 }} //optional
+                                />
+
+                                <Grid item xs={6}>
+                                    <span>LATITUD:</span> <br />
+                                    <Field style={styleInput} type="text" name="latitud" />
+                                    {errors.latitud && touched.latitud ? (
+                                        <div style={styleError}>{errors.latitud}</div>
+                                    ) : null}
+
+                                </Grid> */}
+                                <Grid item xs={12}>
+
+                                    <span>NIVEL:</span>
+                                    <br />
+
+                                    <Grid container spacing={2} >
+
+
+                                        <Grid item xs={5}>
+                                            <div role="group" aria-labelledby="my-radio-group" style={{ display: "flex", flexDirection: "column", marginBottom: "10px" }}>
+
+                                                <label>
+                                                    <Checkbox checked={inicial} onClick={() => setInicial(!inicial)} />
+                                                    Inicial
+                                                </label>
+                                                <label>
+                                                    <Checkbox checked={primaria} onClick={() => setPrimaria(!primaria)} />
+                                                    Primaria
+                                                </label>
+                                                <label>
+                                                    <Checkbox checked={secundaria} onClick={() => setSecundaria(!secundaria)} />
+                                                    Secundaria
+                                                </label>
+                                            </div>
+
+                                        </Grid>
+                                        <Grid item xs={7}>
+                                            <RadioGroup
+                                                aria-labelledby="demo-radio-buttons-group-label"
+                                                defaultValue="female"
+                                                name="radio-buttons-group"
+                                                // name="tipo"
+                                                onChange={handleChange}
+                                                value={tipo}
+
+
+                                            >
+                                                <FormControlLabel value="unidocente" control={<Radio />} label="UNIDOCENTE" />
+                                                <FormControlLabel value="polidocente multigrado" control={<Radio />} label="POLIDOCENTE MULTIGRADO" />
+                                                <FormControlLabel value="polidocente completo" control={<Radio />} label="POLIDOCENTE COMPLETO" />
+                                            </RadioGroup>
+
+                                        </Grid>
+
+
+
+                                        {/* Input for lat and lng */}
+
+
+                                    </Grid>
+                                    {(inicial || primaria || secundaria) && (
+                                        <Grid container>
+                                            <Grid item xs={4} textAlign="center" >
+                                                <span>GRADO</span>
                                             </Grid>
-                                            <Grid item xs={6} spacing={2}>
-                                                <Input style={{ ...styleInput, width: "auto", height: "80px", }} type='file' accept='.xlsx, .xls' onChange={(e) => onImportExcel(e)} />
+                                            <Grid item xs={4} textAlign="center">
+                                                <span>AFORO POR GRADO</span>
                                             </Grid>
+                                            <Grid item xs={4} textAlign="center">
+                                                <span>CANTIDAD DE AULAS</span>
+                                            </Grid>
+                                        </Grid>
+                                    )}
+
+                                    {inicial && (nivelGrid("INICIAL", aforoInicial, aulaInicial))}
+                                    {(primaria) > 0 && (nivelGrid("PRIMARIA", aforoPrimaria, aulaPrimaria))}
+                                    {(secundaria) > 0 && (nivelGrid("SECUNDARIA", aforoSecundaria, aulaSecundaria))}
+
+                                    <Grid container spacing={2} alignItems="center">
+                                        <Grid item xs={6}>
+
+                                            <a href="/descargas/test.xlsx" download="Centros de Educaclientcion.xlsx">
+                                                <Button variant="contained" color="primary" onClick={() => downloadExcel()}>
+                                                    Descargar Excel
+                                                </Button>
+                                            </a>
+                                        </Grid>
+                                        <Grid item xs={6}>
+                                            <Input style={{ ...styleInput, width: "auto", height: "80px", }} type='file' accept='.xlsx, .xls' onChange={(e) => onImportExcel(e)} />
                                         </Grid>
                                     </Grid>
+                                    <Grid container spacing={1} sx={{ width: "100%" }}>
+                                        <Grid item xs={2} >
+                                            <span >VERTICE</span>
+                                        </Grid>
+                                        <Grid item xs={2}>
+                                            <span>LADO</span>
+                                        </Grid>
+                                        <Grid item xs={2}>
+                                            <span>DIST.</span>
+                                        </Grid>
+                                        <Grid item xs={3}>
+                                            <span>ÁNGULO</span>
+                                        </Grid>
+                                        <Grid item xs={2}>
+                                            <span>RETIROS:</span>
+                                        </Grid>
+
+
+
+                                        {rows.map((row, index) => (
+                                            <RowForm
+                                                {...row}
+                                                onChange={(name, value) => handleOnChange(index, name, value)}
+                                                onRemove={() => handleOnRemove(index)}
+                                                key={index}
+                                                disabledDeleted={index}
+                                                error={errors.rows && errors.rows[index]}
+                                            />
+
+                                        ))}
+
+                                        <Button variant='outlined' onClick={handleOnAdd}>Agregar</Button>
+                                    </Grid>
+
+
+                                    {false ? (
+                                        <CircularProgress />
+                                    ) : (
+
+                                        <Grid item xs={12} marginTop="1rem">
+                                            <Grid container spacing={1} sx={{ width: "100%" }}>
+                                                <Grid item xs={6} >
+                                                    <span >AMBIENTES COMPLEMENTARIOS</span>
+                                                </Grid>
+                                                <Grid item xs={3}>
+                                                    <span>AFORO MAXIMO</span>
+                                                </Grid>
+                                                {rowsAC.map((row, index) => (
+                                                    <RowFormAC
+                                                        {...row}
+                                                        onChange={(name, value) => handleOnChangeAC(index, name, value)}
+                                                        onRemove={() => handleOnRemoveAC(index)}
+                                                        key={index}
+                                                        disabledDeleted={index}
+                                                    />
+                                                ))}
+                                            </Grid>
+
+
+                                        </Grid>
+                                    )}
+                                    <Button variant="contained" type="submit" sx={{ marginTop: "2rem", marginBottom: "2rem" }}>
+                                        Guardar
+                                    </Button>
+
+
+
+
                                 </Grid>
-                            ) :
-                                (
-                                    <Grid item xs={12}>
-                                        <Grid container spacing={1} sx={{ width: "100%" }}>
-                                            <Grid item xs={2} >
-                                                <span >VERTICE</span>
-                                            </Grid>
-                                            <Grid item xs={2}>
-                                                <span>LADO</span>
-                                            </Grid>
-                                            <Grid item xs={2}>
-                                                <span>DIST.</span>
-                                            </Grid>
-                                            <Grid item xs={3}>
-                                                <span>ÁNGULO</span>
-                                            </Grid>
-                                            <Grid item xs={2}>
-                                                <span>RETIROS:</span>
-                                            </Grid>
+                                {/* )} */}
 
+                            </Form>
+                        )}
+                    </Formik>
+                </Container>
+            }
+            {step === 2 &&
+                <Container maxWidth="lg" sx={{ marginTop: "2rem" }}>
+                    <Box  >
+                        <Button onClick={() => setStep(3)}>Continuar</Button>
 
-                                            {rows.map((row, index) => (
-                                                <RowForm
-                                                    {...row}
-                                                    onChange={(name, value) => handleOnChange(index, name, value)}
-                                                    onRemove={() => handleOnRemove(index)}
-                                                    key={index}
-                                                    disabledDeleted={index}
-                                                />
+                    </Box>
 
-                                            ))}
+                    <img src="/images/cuadro1.jpg" alt="img" style={{ display: "flex", width: "70%", margin: "0 auto" }} />
+                </Container>
+            }
 
-                                            <Button variant='outlined' onClick={handleOnAdd}>Agregar</Button>
-                                        </Grid>
+            {step === 3 &&
+                <Container maxWidth="lg" sx={{ marginTop: "2rem" }}>
+                    <Box  >
+                        <Button onClick={() => setStep(4)}>Continuar 3</Button>
 
+                    </Box>
 
-                                        {false ? (
-                                            <CircularProgress />
-                                        ) : (
+                    <img src="/images/cuadro1.jpg" alt="img" style={{ display: "flex", width: "70%", margin: "0 auto" }} />
+                </Container>
+            }
 
-                                            <Grid item xs={12} marginTop="1rem">
-                                                <Grid container spacing={1} sx={{ width: "100%" }}>
-                                                    <Grid item xs={6} >
-                                                        <span >AMBIENTES COMPLEMENTARIOS</span>
-                                                    </Grid>
-                                                    <Grid item xs={3}>
-                                                        <span>AFORO MAXIMO</span>
-                                                    </Grid>
-                                                    {rowsAC.map((row, index) => (
-                                                        <RowFormAC
-                                                            {...row}
-                                                            onChange={(name, value) => handleOnChangeAC(index, name, value)}
-                                                            onRemove={() => handleOnRemoveAC(index)}
-                                                            key={index}
-                                                            disabledDeleted={index}
-                                                        />
-                                                    ))}
-                                                </Grid>
+            {step === 4 &&
+                <Container maxWidth="lg" sx={{ marginTop: "2rem" }}>
+                    <Box  >
+                        <Button onClick={() => setStep(5)}>Continuar 4</Button>
 
+                    </Box>
 
-                                            </Grid>
-                                        )}
-                                        <Button variant="contained" type="submit" sx={{ marginTop: "2rem", marginBottom: "2rem" }}>
-                                            Guardar
-                                        </Button>
+                    <img src="/images/cuadro1.jpg" alt="img" style={{ display: "flex", width: "70%", margin: "0 auto" }} />
+                </Container>
+            }
 
+            {step === 5 &&
+                <Container maxWidth="lg" sx={{ marginTop: "2rem" }}>
+                    <Box  >
+                        <Button onClick={() => setStep(6)}>Continuar 5</Button>
 
+                    </Box>
 
+                    <img src="/images/cuadro1.jpg" alt="img" style={{ display: "flex", width: "70%", margin: "0 auto" }} />
+                </Container>
+            }
 
-                                    </Grid>
-                                )}
+            {step === 6 &&
+                <Container maxWidth="lg" sx={{ marginTop: "2rem" }}>
+                    <Box  >
+                        <Link
+                            component={RouterLink}
+                            color="inherit"
+                            to={"/home"}
+                            sx={{ mt: 2 }}>
+                            <Button>Continuar fin</Button>
+                        </Link>
 
-                        </Form>
-                    )}
-                </Formik>
-            </Container>
+                    </Box>
 
+                    <img src="/images/cuadro1.jpg" alt="img" style={{ display: "flex", width: "70%", margin: "0 auto" }} />
+                </Container>
+            }
         </Card>
     )
 };
@@ -504,12 +590,24 @@ const validationSchema = yup.object({
     room: yup.number().required('La capacidad de aulas es requerida'),
     height: yup.number().required('La altura es requerida'),
     width: yup.number().required('La anchura es requerida'),
+    //array de objetos
+    rows: yup.array().of(
+        yup.object().shape({
+            vertice: yup.string().required('El vertice es requerido'),
+            lado: yup.string().required('El lado es requerido'),
+            distancia: yup.string().required('La distancia es requerida'),
+            angulo: yup.string().required('El angulo es requerido'),
+            retiros: yup.string().required('Los retiros son requeridos'),
+        })
+    ),
+
+
 }).defined();
 
 const defaultState = {
     vertice: "",
     lado: "",
-    dist: "",
-    angulo: "",
-    retiros: "",
+    dist: 0,
+    angulo: 0,
+    retiros: 0,
 };
