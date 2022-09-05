@@ -1,21 +1,7 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import moment from 'moment';
-import './styles.css';
-import SchoolIcon from '@mui/icons-material/School';
-import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
-import GroupsIcon from '@mui/icons-material/Groups';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
-import Modal from '@mui/material/Modal';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import { Link } from "react-router-dom";
-import NewProjectForm from '../NewProject/NewProjectForm';
-import NewProject from '../NewProject/NewProject';
-import Backdrop from '@mui/material/Backdrop';
-import Fade from '@mui/material/Fade';
+import { RowList } from './RowList';
 
 const styleGrid = {
     border: "1.5px solid #AFAFAF",
@@ -25,100 +11,138 @@ const styleGrid = {
 }
 
 const containerCustom = {
-    marginLeft: "2rem",
-    marginRight: "2rem",
+    marginLeft: "auto",
+    marginRight: "auto",
+    width: "1000px",
+    // overflowX: "scroll",
+
+    '@media (max-width: 1024px)': {
+        width: '85%',
+        height: '100%',
+        // top: '25%',
+
+        // transform: 'translate(0, 0)',
+        // borderRadius: '0',
+    }
+
+
+
 }
 const GridData = (data) => {
 
-    const [rowData] = useState(
-        data.data.proyectos
-    );
+    const [dataCompleta] = useState(data.data)
+    const [dataFiltrada, setDataFiltrada] = useState([])
+    const [fechaInicio, setFechaInicio] = useState('')
+    const [fechaFin, setFechaFin] = useState('')
 
-    const formatDate = (date) => {
-        return moment(date).format('DD/MM/YYYY');
-    }
+    console.log(dataFiltrada, "dataFiltrada")
 
-    const rowList = () => {
-        return rowData.map((row, index) => {
+    // useEffect(() => {
+    //     setDataFiltrada(data.data)
+    // }, [])
 
-            const [show, setShow] = useState(false);
+    const options = (e) => {
+        switch (e) {
+            case "0":
+                setDataFiltrada(dataCompleta)
+                break;
+            case "10":
+                const dataCortada = dataFiltrada.slice(0, 10)
+                setDataFiltrada(dataCortada)
+                break
+            case "50":
+                const dataCortada2 = dataFiltrada.slice(0, 50)
+                setDataFiltrada(dataCortada2)
+                break
+            case "100":
+                const dataCortada3 = dataFiltrada.slice(0, 100)
+                setDataFiltrada(dataCortada3)
+                break
 
-            return (
-                <div key={index}>
-                    {row.parent_id === 0 &&
-                        <Grid container>
-
-                            <Grid item xs={0.5} sx={styleGrid}>{row.id}</Grid>
-                            <Grid item xs={0.5} sx={styleGrid}>{row.type_id == 1 &&
-                                <SchoolIcon />
-                            }</Grid>
-                            <Grid item xs={2} sx={styleGrid} >
-                                <div style={{
-                                    display: "flex", justifyContent: "space-between",
-                                }}>
-                                    <span>{row.name}</span>
-                                    {!show ? <KeyboardArrowDownIcon onClick={() => setShow(!show)} sx={{ cursor: "pointer" }} /> :
-                                        <KeyboardArrowLeftIcon onClick={() => setShow(!show)} sx={{ cursor: "pointer" }} />}
-
-                                </div>
-
-
-                            </Grid>
-                            <Grid item xs={1} sx={styleGrid}>{row.ubication}</Grid>
-                            <Grid item xs={1.5} sx={styleGrid}>{row.manager}</Grid>
-                            <Grid item xs={1.5} sx={styleGrid}>{formatDate(row.updatedAt)}</Grid>
-                            <Grid item xs={1.5} sx={styleGrid}>{formatDate(row.updatedAt)}</Grid>
-                            <Grid item xs={2} sx={styleGrid}>{row.client}</Grid>
-                            <Grid item xs={1.5} sx={styleGrid} >
-
-                                <NewProject onRow data={row} />
-                                <GroupsIcon />
-                                <DeleteIcon />
-                            </Grid>
-                        </Grid>
-                    }
-                    {show && rowData.map((
-                        row2, index) => {
-                        return (
-                            <div key={index}>
-                                {row2.parent_id == row.id &&
-
-                                    <Grid container>
-
-                                        <Grid item xs={0.5} sx={{ ...styleGrid, background: "#C8C8C8" }}>{row2.id}</Grid>
-                                        <Grid item xs={0.5} sx={{ ...styleGrid, background: "#C8C8C8" }}>{row.type_id == 1 &&
-                                            <SchoolIcon />
-                                        }</Grid>
-                                        <Grid item xs={2} sx={{ ...styleGrid, background: "#C8C8C8" }}>{row2.name}</Grid>
-                                        <Grid item xs={1} sx={{ ...styleGrid, background: "#C8C8C8" }}>{row2.ubication}</Grid>
-                                        <Grid item xs={1.5} sx={{ ...styleGrid, background: "#C8C8C8" }}>{row2.manager}</Grid>
-                                        <Grid item xs={1.5} sx={{ ...styleGrid, background: "#C8C8C8" }}>{formatDate(row.createdAt)}</Grid>
-                                        <Grid item xs={1.5} sx={{ ...styleGrid, background: "#C8C8C8" }}>{formatDate(row.updatedAt)}</Grid>
-                                        <Grid item xs={2} sx={{ ...styleGrid, background: "#C8C8C8" }}>{row2.client}</Grid>
-                                        <Grid item xs={1.5} sx={{ ...styleGrid, background: "#C8C8C8" }}>
-                                            <NewProject onRow data={row} />
-
-                                            <GroupsIcon />
-
-                                            <DeleteIcon />
-                                        </Grid>
-                                    </Grid>
-                                }
-                            </div>
-                        )
-                    }
-                    )}
-                </div >
-            )
+            default:
+                console.log("error")
+                break;
         }
-        )
     }
 
+    const dataFilter = (value) => {
+        const filtro = dataCompleta.filter((item) => item.name.toLowerCase().includes(value.toLowerCase()))
+        setDataFiltrada(filtro)
+    }
+
+    function toMs(dateStr) {
+        let parts = dateStr.split("/")
+        return new Date(parts[2], parts[1] - 1, parts[0]).getTime()
+    }
+
+
+    //filtro por rango de fechas
+    const dataFilterDateRange = () => {
+
+        if (fechaInicio && fechaFin) {
+            const filtro = dataCompleta.filter((item) => {
+                let date = moment(item.createdAt).format('DD/MM/YYYY')
+                date = toMs(date)
+                return date >= toMs(fechaInicio) && date <= toMs(fechaFin)
+            })
+            setDataFiltrada(filtro)
+
+        }
+    }
+    useEffect(() => {
+
+        if (fechaInicio && fechaFin && fechaInicio !== 'Invalid date' && fechaFin !== 'Invalid date') {
+            dataFilterDateRange()
+            return
+        }
+        // if (fechaInicio === 'Invalid date' || fechaFin === 'Invalid date') {
+        //     setDataFiltrada(data.data)
+        //     return
+        // }
+        if (!fechaInicio || !fechaFin || fechaInicio === 'Invalid date' || fechaFin === 'Invalid date') {
+            setDataFiltrada(data.data)
+            return
+        }
+
+
+    }, [fechaInicio, fechaFin])
 
 
 
     return (
         <div style={containerCustom} >
+
+            <Grid container spacing={3} sx={{ marginBottom: "1.75rem" }}>
+                <Grid item xs={4}>
+                    <label>Buscar</label>
+                    <input type="text" placeholder="Escribe aquí" style={{ width: "100%" }} onChange={(e) => dataFilter(e.target.value)} />
+                </Grid>
+                <Grid item xs={3}>
+                    <label>Desde</label>
+                    <input type="date" className="" style={{ width: "100%" }}
+                        // onChange={(e) => dataFilterDate(moment(e.target.value).format('DD/MM/YYYY'))} 
+                        onChange={(e) => setFechaInicio(moment(e.target.value).format('DD/MM/YYYY'))}
+
+                    />
+
+                </Grid>
+                <Grid item xs={3}>
+                    <label>Hasta</label>
+                    <input type="date" className="" style={{ width: "100%" }}
+                        onChange={(e) => setFechaFin(moment(e.target.value).format('DD/MM/YYYY'))}
+
+                    />
+                </Grid>
+                <Grid item xs={2}>
+                    <label>Mostrar</label>
+                    <select style={{ width: "100%" }} onChange={(e) => options(e.target.value)}>
+                        <option value="0">Todos</option>
+                        <option value="10">10</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </Grid>
+            </Grid>
             <Grid container>
                 <Grid item xs={0.5} sx={{ ...styleGrid, fontWeight: 600 }}>
                     {/* <Box width="100%" sx={styleGrid}> */}
@@ -156,7 +180,10 @@ const GridData = (data) => {
 
 
             </Grid>
-            {rowList()}
+            {dataFiltrada.map((row, index) =>
+                <RowList key={index} row={row} index={index} data={dataFiltrada} />
+            )}
+
 
 
 

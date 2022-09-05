@@ -8,6 +8,8 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import NewProjectForm from './NewProjectForm';
 import AddIcon from '@mui/icons-material/Add';
+import { styled } from '@mui/material/styles';
+
 
 
 const style = {
@@ -15,13 +17,40 @@ const style = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: '850px',
+    width: '950px',
     bgcolor: 'background.paper',
-    // border: '2px solid #000',
+    height: '700px',
+    overflowY: "scroll",
     borderRadius: '10px',
     boxShadow: 24,
     p: 4,
+    // responsive
+    '@media (max-width: 1024px)': {
+        width: '85%',
+        height: '100%',
+        // top: '25%',
+        left: '50%',
+        // transform: 'translate(0, 0)',
+        // borderRadius: '0',
+    }
+
+
 };
+
+const ColorButton = styled(Button)({
+    borderRadius: ".42rem",
+    color: "#ffffff",
+    padding: ".60rem 1rem",
+    fontFamily: "inherit",
+    textTransform: "none",
+    border: "1px solid #1BC5BD",
+    boxShadow: "none",
+    backgroundColor: "#1BC5BD",
+    '&:hover': {
+        backgroundColor: "#2cb4ad",
+        boxShadow: "none"
+    }
+})
 
 const NewProject = ({ onRow, data }) => {
     const [open, setOpen] = useState(false);
