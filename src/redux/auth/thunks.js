@@ -56,7 +56,8 @@ export const startLoginWithEmailPassword = (
 
 		if (res.status === 200) {
 			handleBackdrop({ message: res.data.message, variant: "success" });
-			dispatch(login({}));
+			var { data: { data } } = res;
+			dispatch(login({ name: data.name, email: data.email }));
 		} 
 		else if (res.response.status > 0) {
 			handleBackdrop({ message: "Error: " + res.response.data.error, variant: "error" });

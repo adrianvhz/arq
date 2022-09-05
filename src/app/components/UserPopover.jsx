@@ -9,12 +9,13 @@ import Box from '@mui/material/Box';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { logout } from "../../redux/auth/authSlice";
 
 export function UserPopover() {
 	const dispatch = useDispatch();
 	const [anchorEl, setAnchorEl] = React.useState(null);
+	const name = useSelector((state) => state.auth.name);
 
 	const handleClick = (event) => {
 		setAnchorEl(event.currentTarget);
@@ -23,16 +24,15 @@ export function UserPopover() {
 	const handleClose = () => {
 		setAnchorEl(null);
 	};
-
+	console.log(name)
 	const open = Boolean(anchorEl);
 	const id = open ? 'simple-popover' : undefined;
-	const username = "Master";
 
 	return (
 		<div>
 			<ButtonPopever aria-describedby={id} variant="contained" onClick={handleClick} >
 				<span style={{color: "#B5B5C3", fontWeight: "500", marginRight: "0.25rem"}}>Hola,</span>
-				<span style={{color: "#7E8299", fontWeight: "600", marginRight: "0.75rem"}}>{username}</span>
+				<span style={{color: "#7E8299", fontWeight: "600", marginRight: "0.75rem"}}>{name}</span>
 				<div style={{backgroundColor: "#dee9fd", borderRadius: "6px", width: "35px", height: "35px"}} >
 					<PersonIcon sx={{color: "#3699FF", fontSize: "2.4rem"}} />
 				</div>

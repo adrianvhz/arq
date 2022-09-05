@@ -8,8 +8,10 @@ export const AuthView = () => {
 	var authView = useSelector((state) => state.auth.authView);
 	
 	return (
-		<SnackbarProvider maxSnack={3}>
+		<>
+			{/* <SnackbarProvider maxSnack={3}> */}
 			{authView === "login" ? <LoginView /> : <RegisterView />}
-		</SnackbarProvider>
+			{/* </SnackbarProvider> */}
+		</>
 	)
 }

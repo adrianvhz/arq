@@ -1,17 +1,17 @@
 import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-// import { Link as RouterLink } from "react-router-dom";
+import { startLoginWithEmailPassword, setAuthView, setAuthModal } from "../../../redux/auth";
+import { useSnackbar } from "notistack";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import "./Login.css";
+import LoadingBackdrop from "../../components/LoadingBackdrop";
+// import { useForm } from "../../../hooks";
+// import { Link as RouterLink } from "react-router-dom";
 // import Link from "@mui/material/Link";
 // import Alert from "@mui/material/Alert";
-import { startLoginWithEmailPassword, setAuthView, setAuthModal } from "../../../redux/auth";
-// import { useForm } from "../../../hooks";
-import "./Login.css";
-import Typography from "@mui/material/Typography";
-import AuthModal from "../../../app/components/AuthModal";
-import { useSnackbar } from "notistack";
 
 // const formDate = { 
 // 	email: "",
@@ -19,32 +19,23 @@ import { useSnackbar } from "notistack";
 // }
 
 export const LoginView = () => {
-	const handleOpenModal = () => dispatch(setAuthModal({ authModal: true }));
 	const dispatch = useDispatch();
-	// const { email, password, onInputChange } = useForm(formDate);
+	const { enqueueSnackbar } = useSnackbar();
 	const { status, errorMessage } = useSelector((state) => state.auth);
 	const isAutheticate = useMemo(() => status === "authenticated", [status]);
-	const { enqueueSnackbar } = useSnackbar();
+	// const { email, password, onInputChange } = useForm(formDate);
 
 	const handleBackdrop = ({ message, variant }) => {
 		// variant could be success, error, warning, info, or default
 		enqueueSnackbar(message, { variant });
 	}
-	console.log(status)	
+
 	const onSubmit = (evt) => {
 		evt.preventDefault();
 		var { email, password } = Object.fromEntries(new FormData(evt.target));
-		// handleOpenModal();
 		dispatch(startLoginWithEmailPassword(email, password, handleBackdrop));
 	}
 
-	useEffect(() => {
-		if (status === "checking") {
-			handleOpenModal();
-		} else {
-			dispatch(setAuthModal({ authModal: false }))
-		}
-	}, [status]);
 	// const onGoogleSigIn = () => {
 	// 	dispatch(startGoogleSignIn(email, password));
 	// };
@@ -52,7 +43,7 @@ export const LoginView = () => {
 	return (
 		// <AuthLayout title="Login">
 		<>
-			<AuthModal /> 
+			<LoadingBackdrop />
 			<form onSubmit={onSubmit}>
 				<Grid justifyContent={"center"} container spacing={3}>
 					<Grid>
@@ -67,7 +58,7 @@ export const LoginView = () => {
 							type="email"
 							placeholder="email@domain.com"
 							fullWidth
-							autoComplete="off"
+							// autoComplete="off"
 							name="email"
 							// value={email}
 							// onChange={onInputChange}

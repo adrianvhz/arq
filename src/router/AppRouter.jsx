@@ -2,6 +2,7 @@ import { Navigate, Route, Routes, } from "react-router-dom";
 import { ArqPlataformRouter } from './../app/router';
 import { AuthLayout } from "../auth/layouts/AuthLayout";
 import { useSelector } from "react-redux";
+import { SnackbarProvider } from "notistack"
 // import { AuthRoutes } from './../auth/routes';
 // import { useCheckAuth } from './../hooks';
 
@@ -12,6 +13,8 @@ export const  AppRouter = ()=> {
   //if( status=== 'checking' ) return <CheckingAuth />
 	console.log(isAutheticate)
 	return (
+		<SnackbarProvider maxSnack={3}>
+
 		<Routes>
 			{/*Login y Register */}
 			<Route path="/" element={isAutheticate ? <Navigate to="/home" /> : <AuthLayout />} />
@@ -26,5 +29,6 @@ export const  AppRouter = ()=> {
 			{/*Journal App */}
 			{/* <Route path="/*" element={<JournalRoutes />} /> */}
 		</Routes>
+		</SnackbarProvider>
 	)
 }

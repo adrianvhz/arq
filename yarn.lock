@@ -1335,7 +1335,7 @@ promise@^7.1.1:
   dependencies:
     asap "~2.0.3"
 
-prop-types@^15.5.8, prop-types@^15.6.2, prop-types@^15.7.2, prop-types@^15.8.1:
+prop-types@^15.5.8, prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.2, prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://registry.npmjs.org/prop-types/-/prop-types-15.8.1.tgz"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -1541,6 +1541,14 @@ setimmediate@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/setimmediate/-/setimmediate-1.0.5.tgz#290cbb232e306942d7d7ea9b83732ab7856f8285"
   integrity sha512-MATJdZp8sLqDl/68LfQmbP8zKPLQNV6BIZoIgrscFDQ+RsvK/BxeDQOgyxKKoh0y/8h3BqVFnCqQ/gd+reiIXA==
+
+simple-react-google-maps@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/simple-react-google-maps/-/simple-react-google-maps-1.1.2.tgz#9b124e9ab024551a843eb9969ffabf6da0bf31b7"
+  integrity sha512-RHaN7gkVvtmlhK0ppX3ZfHs2R+KNNUrZyOLG4CgvgLGlc4KPrOwhK76VXm/tV+Byxlz3ajQjF27A6FOD4PfuDg==
+  dependencies:
+    prop-types "^15.6.1"
+    scriptjs "^2.5.8"
 
 source-map-js@^1.0.2:
   version "1.0.2"

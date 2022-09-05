@@ -1,14 +1,14 @@
 import React, { useState } from 'react'
-
 import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
+import styled from '@mui/material/styles/styled';
 import Typography from '@mui/material/Typography';
 import NewProjectForm from './NewProjectForm';
 import AddIcon from '@mui/icons-material/Add';
-import { styled } from '@mui/material/styles';
+// import { styled } from '@mui/material/styles';
 
 
 
@@ -56,7 +56,7 @@ const NewProject = ({ onRow, data }) => {
 
     return (
         <>
-            {onRow ? <AddIcon onClick={handleOpen} sx={{ cursor: "pointer" }} /> : <Button variant="contained" color="primary" onClick={handleOpen}> + Nuevo </Button>}
+            {onRow ? <AddIcon onClick={handleOpen} sx={{ cursor: "pointer" }} /> : <ColorButton variant="contained" onClick={handleOpen} size="large"><AddIcon />&nbsp; Nuevo</ColorButton>}
             {/* <Button variant="contained" onClick={handleOpen}>+ Nuevo</Button> */}
             <Modal
                 aria-labelledby="transition-modal-title"
@@ -74,5 +74,6 @@ const NewProject = ({ onRow, data }) => {
         </>
     )
 }
+
 
 export default NewProject

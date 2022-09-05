@@ -6,7 +6,7 @@ import Container from '@mui/material/Container';
 import React, { useEffect, useState } from 'react';
 import GridData from '../GridData/GridData';
 import AddIcon from '@mui/icons-material/Add';
-import { styled } from '@mui/material/styles';
+import styled from '@mui/material/styles/styled';
 import NewProject from '../NewProject/NewProject'
 import { plataformAxios } from '../../../services/zonesService';
 
@@ -92,20 +92,20 @@ const ModulePage = ({ pagina }) => {
 
 
 
-const ColorButton = styled(Button)({
-	borderRadius: ".42rem",
-	color: "#ffffff",
-	padding: ".60rem 1rem",
-	fontFamily: "inherit",
-	textTransform: "none",
-	border: "1px solid #1BC5BD",
-	boxShadow: "none",
-	backgroundColor: "#1BC5BD",
-	'&:hover': {
-		backgroundColor: "#2cb4ad",
-		boxShadow: "none"
-	}
-})
+// const ColorButton = styled(Button)({
+// 	borderRadius: ".42rem",
+// 	color: "#ffffff",
+// 	padding: ".60rem 1rem",
+// 	fontFamily: "inherit",
+// 	textTransform: "none",
+// 	border: "1px solid #1BC5BD",
+// 	boxShadow: "none",
+// 	backgroundColor: "#1BC5BD",
+// 	'&:hover': {
+// 		backgroundColor: "#2cb4ad",
+// 		boxShadow: "none"
+// 	}
+// })
 
 
 export default ModulePage
