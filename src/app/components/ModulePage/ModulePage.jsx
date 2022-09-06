@@ -14,30 +14,30 @@ import { plataformAxios } from '../../../services/zonesService';
 const ModulePage = ({ pagina }) => {
 	const [project, setProject] = useState(null)
 
-
 	const dataFilterType = (data) => {
-		switch (pagina) {
+		switch (pagina) {	
 			case 'educacion':
-				setProject(data.filter((item) => item.type_id == '1'))
+				setProject(data.filter((item) => item.type_id == 1))
 				break;
 			case 'salud':
-				setProject(data.filter((item) => item.type_id == '2'))
+				setProject(data.filter((item) => item.type_id == 1))
 				break;
 			case 'infraestructura':
-				setProject(data.filter((item) => item.type_id == '3'))
+				setProject(data.filter((item) => item.type_id == 1))
 				break;
 			default:
-				setProject(data)
+				// setProject(data)
 				break;
 		}
 	}
+
 
 	const getProjects = async () => {
 		const data = await plataformAxios.get(`projects`);
 		if (data) {
 			dataFilterType(data.data.proyectos)
-
 		}
+		// setProject(data.data.proyectos.filter((item) => item.type_id == '1'))
 	}
 
 	useEffect(() => {
@@ -52,7 +52,7 @@ const ModulePage = ({ pagina }) => {
 			width: '100%',
 			height: '100%',
 		}}>
-			<Container>
+			<div style={{margin: "0 2rem"}}>
 
 				{/* CLEAR */}
 				<div className="flex" style={{ marginBottom: "1.75rem", marginTop: "2rem" }}>
@@ -78,7 +78,7 @@ const ModulePage = ({ pagina }) => {
 						<span>Revisa los últimos diseños realizados</span>
 					</div>
 				</div>
-			</Container>
+			</div>
 
 
 			<GridData data={project}></GridData>

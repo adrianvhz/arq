@@ -59,16 +59,16 @@ export default PlantillasMaestra
 const plantillas = [{
     nombre: 'Educacion',
     route: '/educacion',
-    to: '/home/educacion',
+    to: '/educacion',
 
 },
 {
     nombre: 'Salud',
     route: '/salud',
-    to: '/home/salud',
+    to: '/salud',
 },
 {
     nombre: "Infraestructura Urbana",
     route: '/infraestructura-urbana',
-    to: '/home/infraestructura',
+    to: '/infraestructura',
 }]

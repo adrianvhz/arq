@@ -54,8 +54,8 @@ import { setView } from '../../redux/main/mainSlice';
 import Typography from '@mui/material/Typography';
 
 
-const drawerWidth = 265;
 
+const drawerWidth = 265;
 
 export const ArqPlataformLayout = ({ children }) => {
 	const theme = useTheme();

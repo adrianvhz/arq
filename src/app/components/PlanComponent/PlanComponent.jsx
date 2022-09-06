@@ -1,5 +1,5 @@
 import { CardComponent } from "../CardComponent";
-import { Grid } from '@mui/material';
+import Grid from '@mui/material/Grid';
 
 
 export const PlanComponent = () => {

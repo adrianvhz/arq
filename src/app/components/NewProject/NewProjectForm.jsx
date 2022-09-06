@@ -17,8 +17,8 @@ import * as yup from 'yup';
 import { RowFormAC } from './RowFormAC';
 import CircularProgress from '@mui/material/CircularProgress';
 import GoogleMaps from "simple-react-google-maps"
-import { Box } from '@mui/system';
-import { Link } from '@mui/material';
+import Box from '@mui/system/Box';
+import Link from '@mui/material/Link';
 import { Link as RouterLink } from "react-router-dom";
 
 
