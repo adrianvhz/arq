@@ -9,9 +9,7 @@ export const AuthView = () => {
 	
 	return (
 		<>
-			{/* <SnackbarProvider maxSnack={3}> */}
 			{authView === "login" ? <LoginView /> : <RegisterView />}
-			{/* </SnackbarProvider> */}
 		</>
 	)
 }

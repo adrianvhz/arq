@@ -14,7 +14,6 @@ import { plataformAxios } from '../../../services/zonesService';
 const ModulePage = ({ pagina }) => {
 	const [project, setProject] = useState(null)
 
-
 	const dataFilterType = (data) => {
 		const projectExist = data.filter((item) => item.deleted_at !== null)
 
@@ -72,8 +71,6 @@ const ModulePage = ({ pagina }) => {
 					</div>
 				</div>
 
-
-
 				<div>
 					<div style={{ marginBottom: "1.75rem" }}>
 						<h4>MIS DISEÑOS</h4>
@@ -84,9 +81,6 @@ const ModulePage = ({ pagina }) => {
 
 
 			<GridData data={project}></GridData>
-
-
-
 
 		</Card>
 	)

@@ -9,6 +9,7 @@ import { ArqPlataformPage,
 // import ModuloSalud from "../pages/ModuloSalud";
 
 export const ArqPlataformRouter = () => {
+	
   return (
     <Routes>
       <Route path="/" element={<ArqPlataformPage />} />

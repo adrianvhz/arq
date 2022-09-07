@@ -174,7 +174,7 @@ const NewProjectForm = ({ data, onClose }) => {
             setStep(2);
         }
     }
-
+    
     const handleChange = (event) => {
         setTipo((event.target.value))
     };
@@ -201,356 +201,335 @@ const NewProjectForm = ({ data, onClose }) => {
         fileReader.readAsBinaryString(files[0]);
     }
 
-    const nivelGrid = (label, aforo, aula) => {
-        return (
+      const nivelGrid = (label, aforo, aula) => {
+         return (
             <Grid container spacing={2} marginBottom=".5rem">
-                <Grid item xs={4}>
-                    <Field style={{ ...styleInput, textAlign: "center", fontSize: "16px" }} type="text" value={label} disabled />
-                </Grid>
-                <Grid item xs={4}>
-                    <Field style={{ ...styleInput, textAlign: "center", fontSize: "16px" }} value={aforo} disabled />
-                </Grid>
-                <Grid item xs={4}>
-                    <Field style={{ ...styleInput, textAlign: "center", fontSize: "16px" }} value={aula} disabled />
-                </Grid>
+               <Grid item xs={4}>
+                  <Field style={{ ...styleInput, textAlign: "center", fontSize: "16px" }} type="text" value={label} disabled />
+               </Grid>
+               <Grid item xs={4}>
+                  <Field style={{ ...styleInput, textAlign: "center", fontSize: "16px" }} value={aforo} disabled />
+               </Grid>
+               <Grid item xs={4}>
+                  <Field style={{ ...styleInput, textAlign: "center", fontSize: "16px" }} value={aula} disabled />
+               </Grid>
             </Grid>
-        )
-    }
+         )
+      }
 
 
-    return (
-        <Card  >
+      return (
+         <Card>
             {step === 1 &&
+               <Container >
+                  <h2>Crear proyecto nuevo</h2>
+                  <Formik
+                     initialValues={initialValues}
+                     onSubmit={onSubmit}
+                     validationSchema={validationSchema}
+                  >
+                     {({ errors, touched }) => (
+                        <Form>
+                           <Grid container spacing={5}>
+                              <Grid item xs={12} sm={6} lg={12}>
+                                    <Grid container spacing={1} >
+                                       <Grid item xs={12}>
+                                          <span>NOMBRE:</span><br />
+                                          <Field style={styleInput} type="text" name="name" />
+                                          {errors.name && touched.name ? (
+                                                <div style={styleError}>{errors.name}</div>
+                                          ) : null}
+                                          {/* <ErrorMessage name="email" component="div" /> */}
+                                       </Grid>
 
-                <Container >
-                    <h2>Crear proyecto nuevo </h2>
+                                       <Grid item xs={12}>
+                                          <span>TIPOLOGIA:</span> <br />
+                                          <Field style={styleInput} type="text" name="tipologia" />
+                                          {errors.tipologia && touched.tipologia ? (
+                                                <div style={styleError}>{errors.tipologia}</div>
+                                          ) : null}
+                                       </Grid>
 
-                    <Formik
-                        initialValues={initialValues}
-                        onSubmit={onSubmit}
-                        validationSchema={validationSchema}
-                    >
-                        {({ errors, touched }) => (
-                            <Form>
+                                       <Grid item xs={12}>
+                                          <MySelect style={styleInput} name="zone" label="ZONA" >
+                                             <option value="">Seleccione una zona</option>
 
-                                <Grid container spacing={5}>
-                                    <Grid item xs={12} sm={6} lg={6}>
-                                        <Grid container spacing={1} >
-                                            <Grid item xs={12}>
-                                                <span>NOMBRE:</span><br />
-                                                <Field style={styleInput} type="text" name="name" />
-                                                {errors.name && touched.name ? (
-                                                    <div style={styleError}>{errors.name}</div>
-                                                ) : null}
-                                                {/* <ErrorMessage name="email" component="div" /> */}
-                                            </Grid>
-                                            <Grid item xs={12}>
-                                                <span>TIPOLOGIA:</span> <br />
-                                                <Field style={styleInput} type="text" name="tipologia" />
-                                                {errors.tipologia && touched.tipologia ? (
-                                                    <div style={styleError}>{errors.tipologia}</div>
-                                                ) : null}
-                                            </Grid>
-                                            <Grid item xs={12}>
+                                             {zonas?.map(zona => (
+                                                <option key={zona.id} value={zona.name}>{UpperLowerCase(zona.name)}</option>
+                                             ))}
+                                          </MySelect>
+                                       </Grid>
 
-                                                <MySelect style={styleInput} name="zone" label="ZONA" >
-                                                    <option value="">Seleccione una zona</option>
+                                       <Grid item xs={12}>
+                                          <span>NIVEL:</span>
+                                          <br />
 
-                                                    {zonas?.map(zona => (
-                                                        <option key={zona.id} value={zona.name}>{UpperLowerCase(zona.name)}</option>
-                                                    ))}
+                                          <Grid container spacing={2} >
 
-                                                </MySelect>
-                                            </Grid>
-                                        </Grid>
-                                        <br />
-                                    </Grid>
-                                    <Grid item xs={6}>
+                                             <Grid item xs={5}>
+                                                <div role="group" aria-labelledby="my-radio-group" style={{ display: "flex", flexDirection: "column", marginBottom: "10px" }}>
+                                                   <label>
+                                                      <Checkbox checked={inicial} onClick={() => setInicial(!inicial)} />
+                                                      Inicial
+                                                   </label>
+                                                   <label>
+                                                      <Checkbox checked={primaria} onClick={() => setPrimaria(!primaria)} />
+                                                      Primaria
+                                                   </label>
+                                                   <label>
+                                                      <Checkbox checked={secundaria} onClick={() => setSecundaria(!secundaria)} />
+                                                      Secundaria
+                                                   </label>
+                                                </div>
+                                             </Grid>
 
-                                        {/* UBICACIÓN */}
+                                             <Grid item xs={7}>
+                                                <RadioGroup
+                                                   aria-labelledby="demo-radio-buttons-group-label"
+                                                   defaultValue="female"
+                                                   name="radio-buttons-group"
+                                                   // name="tipo"
+                                                   onChange={handleChange}
+                                                   value={tipo}
+                                                >
+                                                   <FormControlLabel value="unidocente" control={<Radio />} label="UNIDOCENTE" />
+                                                   <FormControlLabel value="polidocente multigrado" control={<Radio />} label="POLIDOCENTE MULTIGRADO" />
+                                                   <FormControlLabel value="polidocente completo" control={<Radio />} label="POLIDOCENTE COMPLETO" />
+                                                </RadioGroup>
+                                             </Grid>
 
-                                        <Grid container spacing={1} sx={{ marginBottom: "2rem" }}>
-                                            <Grid item xs={12}>
-                                                <span>PROVINCIA:</span> <br />
-                                                <Field style={styleInput} type="text" name="ubication" />
-                                                {errors.ubication && touched.ubication ? (
-                                                    <div style={styleError}>{errors.ubication}</div>
-                                                ) : null}
-                                                {/* <ErrorMessage name="email" component="div" /> */}
+                                             {/* Input for lat and lng */}
 
-                                            </Grid>
-                                            <Grid item xs={12}>
-                                                <span>DISTRITO:</span> <br />
-                                                <Field style={styleInput} type="text" name="distrito" />
-                                                {errors.distrito && touched.distrito ? (
-                                                    <div style={styleError}>{errors.distrito}</div>
-                                                ) : null}
+                                          </Grid>
 
-                                                {/* <ErrorMessage name="email" component="div" /> */}
+                                          {(inicial || primaria || secundaria) && (
+                                             <Grid container>
+                                                <Grid item xs={4} textAlign="center" >
+                                                   <span>GRADO</span>
+                                                </Grid>
+                                                <Grid item xs={4} textAlign="center">
+                                                   <span>AFORO POR GRADO</span>
+                                                </Grid>
+                                                <Grid item xs={4} textAlign="center">
+                                                   <span>CANTIDAD DE AULAS</span>
+                                                </Grid>
+                                             </Grid>
+                                          )}
 
-                                            </Grid>
-                                            <Grid item xs={6}>
-                                                <span>RESPONSABLE:</span> <br />
-                                                <Field style={styleInput} type="text" name="manager" />
-                                                {errors.manager && touched.manager ? (
-                                                    <div style={styleError}>{errors.manager}</div>
-                                                ) : null}
-                                                {/* <ErrorMessage name="email" component="div" /> */}
+                                          {inicial && (nivelGrid("INICIAL", aforoInicial, aulaInicial))}
+                                          {(primaria) > 0 && (nivelGrid("PRIMARIA", aforoPrimaria, aulaPrimaria))}
+                                          {(secundaria) > 0 && (nivelGrid("SECUNDARIA", aforoSecundaria, aulaSecundaria))}
 
-                                            </Grid>
-                                            <Grid item xs={6}>
-                                                <span>CLIENTE:</span> <br />
-                                                <Field style={styleInput} type="text" name="client" />
-                                                {errors.client && touched.client ? (
-                                                    <div style={styleError}>{errors.client}</div>
-                                                ) : null}
-
-                                                {/* <ErrorMessage name="email" component="div" /> */}
-
-                                            </Grid>
-
-
-                                        </Grid>
-
-
-                                    </Grid>
-                                </Grid>
-
-                                <iframe class="iframe"
-                                    src={`https://maps.google.com/?ll=${coordenadas}&z=16&t=m&output=embed`}
-                                    height="600" width="100%" frameborder="0" style={{ border: 0 }} allowfullscreen></iframe>
-
-
-
-                                <Grid item xs={12}>
-                                    <span>Coordenadas:</span> <br />
-                                    <Field style={styleInput} type="text" value={coordenadas} onChange={e => setCoordenadas(e.target.value)} name="coordenadas" />
-                                    {errors.coordenadas && touched.coordenadas ? (
-                                        <div style={styleError}>{errors.coordenadas}</div>
-                                    ) : null}
-                                    {/* <ErrorMessage name="email" component="div" /> */}
-
-                                </Grid>
-                                <Grid item xs={12}>
-
-                                    <span>NIVEL:</span>
-                                    <br />
-
-                                    <Grid container spacing={2} >
-
-
-                                        <Grid item xs={5}>
-                                            <div role="group" aria-labelledby="my-radio-group" style={{ display: "flex", flexDirection: "column", marginBottom: "10px" }}>
-
-                                                <label>
-                                                    <Checkbox checked={inicial} onClick={() => setInicial(!inicial)} />
-                                                    Inicial
+                                          <Grid container spacing={2} alignItems="center">
+                                             <Grid item xs={6}>
+                                                <a href="/descargas/test.xlsx" download="Centros de Educaclientcion.xlsx">
+                                                   <Button variant="contained" color="primary" onClick={() => downloadExcel()}>
+                                                      Descargar Excel
+                                                   </Button>
+                                                </a>
+                                             </Grid>
+                                             <Grid item xs={6}>
+                                                <Input style={{ ...styleInput, width: "auto", height: "80px", }} type='file' accept='.xlsx, .xls' onChange={(e) => onImportExcel(e)} sx={{display: "none"}} id="button_file" />
+                                                <label htmlFor="button_file">
+                                                   <Button variant="contained" component="span">
+                                                      Upload
+                                                   </Button>
                                                 </label>
-                                                <label>
-                                                    <Checkbox checked={primaria} onClick={() => setPrimaria(!primaria)} />
-                                                    Primaria
-                                                </label>
-                                                <label>
-                                                    <Checkbox checked={secundaria} onClick={() => setSecundaria(!secundaria)} />
-                                                    Secundaria
-                                                </label>
-                                            </div>
+                                             </Grid>
+                                          </Grid>
 
-                                        </Grid>
-                                        <Grid item xs={7}>
-                                            <RadioGroup
-                                                aria-labelledby="demo-radio-buttons-group-label"
-                                                defaultValue="female"
-                                                name="radio-buttons-group"
-                                                // name="tipo"
-                                                onChange={handleChange}
-                                                value={tipo}
+                                          <Grid container spacing={1} sx={{ width: "100%" }}>
+                                             <Grid item xs={2} >
+                                                <span >VERTICE</span>
+                                             </Grid>
+                                             <Grid item xs={2}>
+                                                <span>LADO</span>
+                                             </Grid>
+                                             <Grid item xs={2}>
+                                                <span>DIST.</span>
+                                             </Grid>
+                                             <Grid item xs={3}>
+                                                <span>ÁNGULO</span>
+                                             </Grid>
+                                             <Grid item xs={2}>
+                                                <span>RETIROS:</span>
+                                             </Grid>
 
-
-                                            >
-                                                <FormControlLabel value="unidocente" control={<Radio />} label="UNIDOCENTE" />
-                                                <FormControlLabel value="polidocente multigrado" control={<Radio />} label="POLIDOCENTE MULTIGRADO" />
-                                                <FormControlLabel value="polidocente completo" control={<Radio />} label="POLIDOCENTE COMPLETO" />
-                                            </RadioGroup>
-
-                                        </Grid>
-
-
-
-                                        {/* Input for lat and lng */}
-
-
-                                    </Grid>
-                                    {(inicial || primaria || secundaria) && (
-                                        <Grid container>
-                                            <Grid item xs={4} textAlign="center" >
-                                                <span>GRADO</span>
-                                            </Grid>
-                                            <Grid item xs={4} textAlign="center">
-                                                <span>AFORO POR GRADO</span>
-                                            </Grid>
-                                            <Grid item xs={4} textAlign="center">
-                                                <span>CANTIDAD DE AULAS</span>
-                                            </Grid>
-                                        </Grid>
-                                    )}
-
-                                    {inicial && (nivelGrid("INICIAL", aforoInicial, aulaInicial))}
-                                    {(primaria) > 0 && (nivelGrid("PRIMARIA", aforoPrimaria, aulaPrimaria))}
-                                    {(secundaria) > 0 && (nivelGrid("SECUNDARIA", aforoSecundaria, aulaSecundaria))}
-
-                                    <Grid container spacing={2} alignItems="center">
-                                        <Grid item xs={6}>
-
-                                            <a href="/descargas/test.xlsx" download="Centros de Educaclientcion.xlsx">
-                                                <Button variant="contained" color="primary" onClick={() => downloadExcel()}>
-                                                    Descargar Excel
-                                                </Button>
-                                            </a>
-                                        </Grid>
-                                        <Grid item xs={6}>
-                                            <Input style={{ ...styleInput, width: "auto", height: "80px", }} type='file' accept='.xlsx, .xls' onChange={(e) => onImportExcel(e)} />
-                                        </Grid>
-                                    </Grid>
-                                    <Grid container spacing={1} sx={{ width: "100%" }}>
-                                        <Grid item xs={2} >
-                                            <span >VERTICE</span>
-                                        </Grid>
-                                        <Grid item xs={2}>
-                                            <span>LADO</span>
-                                        </Grid>
-                                        <Grid item xs={2}>
-                                            <span>DIST.</span>
-                                        </Grid>
-                                        <Grid item xs={3}>
-                                            <span>ÁNGULO</span>
-                                        </Grid>
-                                        <Grid item xs={2}>
-                                            <span>RETIROS:</span>
-                                        </Grid>
-
-
-
-                                        {rows.map((row, index) => (
-                                            <RowForm
-                                                {...row}
-                                                onChange={(name, value) => handleOnChange(index, name, value)}
-                                                onRemove={() => handleOnRemove(index)}
-                                                key={index}
-                                                disabledDeleted={index}
-                                                error={errors.rows && errors.rows[index]}
-                                            />
-
-                                        ))}
-
-                                        <Button variant='outlined' onClick={handleOnAdd}>Agregar</Button>
-                                    </Grid>
-
+                                             {rows.map((row, index) => (
+                                                <RowForm
+                                                   {...row}
+                                                   onChange={(name, value) => handleOnChange(index, name, value)}
+                                                   onRemove={() => handleOnRemove(index)}
+                                                   key={index}
+                                                   disabledDeleted={index}
+                                                   error={errors.rows && errors.rows[index]}
+                                                />
+                                             ))}
+                                             <Button variant='outlined' onClick={handleOnAdd}>Agregar</Button>
+                                          </Grid>
 
                                     {false ? (
-                                        <CircularProgress />
-                                    ) : (
+                                       <CircularProgress />
+                                    ):(
+                                       <Grid item xs={12} marginTop="1rem">
+                                          <Grid container spacing={1} sx={{ width: "100%" }}>
+                                             <Grid item xs={6} >
+                                                <span >AMBIENTES COMPLEMENTARIOS</span>
+                                             </Grid>
+                                             <Grid item xs={3}>
+                                                <span>AFORO MAXIMO</span>
+                                             </Grid>
+                                             {rowsAC.map((row, index) => (
+                                                <RowFormAC
+                                                   {...row}
+                                                   onChange={(name, value) => handleOnChangeAC(index, name, value)}
+                                                   onRemove={() => handleOnRemoveAC(index)}
+                                                   key={index}
+                                                   disabledDeleted={index}
+                                                />
+                                             ))}
+                                          </Grid>
+                                       </Grid>
+                                       )}
+                                    </Grid>
+                                 </Grid>
+                              </Grid>
+                                    {/* UBICACIÓN */}
 
-                                        <Grid item xs={12} marginTop="1rem">
-                                            <Grid container spacing={1} sx={{ width: "100%" }}>
-                                                <Grid item xs={6} >
-                                                    <span >AMBIENTES COMPLEMENTARIOS</span>
-                                                </Grid>
-                                                <Grid item xs={3}>
-                                                    <span>AFORO MAXIMO</span>
-                                                </Grid>
-                                                {rowsAC.map((row, index) => (
-                                                    <RowFormAC
-                                                        {...row}
-                                                        onChange={(name, value) => handleOnChangeAC(index, name, value)}
-                                                        onRemove={() => handleOnRemoveAC(index)}
-                                                        key={index}
-                                                        disabledDeleted={index}
-                                                    />
-                                                ))}
-                                            </Grid>
+                                 {/* <Grid spacing={1} sx={{ marginBottom: "2rem" }} direction="column" xs={6}> */}
+                              <Grid item xs={12} container spacing={1} justifyContent="end">
+                                 <Grid sx={{ marginBottom: "2rem" }} xs={6} item>
+                                    <Grid item xs={12}>
+                                       <span>PROVINCIA:</span> <br />
+                                       <Field style={styleInput} type="text" name="ubication" />
+                                       {errors.ubication && touched.ubication ? (
+                                          <div style={styleError}>{errors.ubication}</div>
+                                       ) : null}
+                                       {/* <ErrorMessage name="email" component="div" /> */}
+                                    </Grid>
 
+                                    <Grid item xs={12}>
+                                       <span>DISTRITO:</span> <br />
+                                       <Field style={styleInput} type="text" name="distrito" />
+                                       {errors.distrito && touched.distrito ? (
+                                             <div style={styleError}>{errors.distrito}</div>
+                                       ) : null}
 
-                                        </Grid>
-                                    )}
-                                    <Button variant="contained" type="submit" sx={{ marginTop: "2rem", marginBottom: "2rem" }}>
-                                        Guardar
-                                    </Button>
+                                       {/* <ErrorMessage name="email" component="div" /> */}
+                                    </Grid>
 
+                                    <Grid item xs={12}>
+                                       <span>RESPONSABLE:</span> <br />
+                                       <Field style={styleInput} type="text" name="manager" />
+                                       {errors.manager && touched.manager ? (
+                                          <div style={styleError}>{errors.manager}</div>
+                                       ) : null}
+                                       {/* <ErrorMessage name="email" component="div" /> */}
+                                    </Grid>
 
+                                    <Grid item xs={12}>
+                                       <span>CLIENTE:</span> <br />
+                                       <Field style={styleInput} type="text" name="client" />
+                                       {errors.client && touched.client ? (
+                                          <div style={styleError}>{errors.client}</div>
+                                       ) : null}
 
+                                       {/* <ErrorMessage name="email" component="div" /> */}
+                                    </Grid>
+                                 </Grid>
 
-                                </Grid>
-                                {/* )} */}
+                                 {/* <Grid xs={6} item> */}
+                                    <Grid item xs={6}>
+                                       <iframe className="iframe"
+                                          src={`https://maps.google.com/?ll=${coordenadas}&z=16&t=m&output=embed`}
+                                          height="100%" width="100%" frameBorder="0" style={{ border: 0 }} allowFullScreen>
+                                       </iframe>
+                                    </Grid>
 
-                            </Form>
-                        )}
-                    </Formik>
+                                    <Grid item xs={6}>
+                                       <span>Coordenadas:</span> <br />
+                                       <Field style={styleInput} type="text" value={coordenadas} onChange={e => setCoordenadas(e.target.value)} name="coordenadas" />
+                                       {errors.coordenadas && touched.coordenadas ? (
+                                          <div style={styleError}>{errors.coordenadas}</div>
+                                       ) : null}
+                                       {/* <ErrorMessage name="email" component="div" /> */}
+                                    </Grid>
+                                 {/* </Grid> */}
 
-                </Container>
+                              </Grid>
+                           </Grid>
+
+                              <Button variant="contained" type="submit" sx={{ marginTop: "2rem", marginBottom: "2rem" }}>
+                                 Guardar
+                              </Button>
+                        </Form>
+                     )}
+                  </Formik>
+
+               </Container>
             }
             {step === 2 &&
-                <Container maxWidth="lg" sx={{ marginTop: "2rem" }}>
-                    <Box  >
-                        <Button onClick={() => setStep(3)}>Continuar</Button>
+               <Container maxWidth="lg" sx={{ marginTop: "2rem" }}>
+                  <Box  >
+                     <Button onClick={() => setStep(3)}>Continuar</Button>
 
-                    </Box>
+                  </Box>
 
-                    <img src="/images/cuadro1.jpg" alt="img" style={{ display: "flex", width: "70%", margin: "0 auto" }} />
-                </Container>
+                  <img src="/images/cuadro1.jpg" alt="img" style={{ display: "flex", width: "70%", margin: "0 auto" }} />
+               </Container>
             }
 
             {step === 3 &&
-                <Container maxWidth="lg" sx={{ marginTop: "2rem" }}>
-                    <Box  >
-                        <Button onClick={() => setStep(4)}>Continuar 3</Button>
+               <Container maxWidth="lg" sx={{ marginTop: "2rem" }}>
+                  <Box  >
+                     <Button onClick={() => setStep(4)}>Continuar 3</Button>
 
-                    </Box>
+                  </Box>
 
-                    <img src="/images/cuadro1.jpg" alt="img" style={{ display: "flex", width: "70%", margin: "0 auto" }} />
-                </Container>
+                  <img src="/images/cuadro1.jpg" alt="img" style={{ display: "flex", width: "70%", margin: "0 auto" }} />
+               </Container>
             }
 
             {step === 4 &&
-                <Container maxWidth="lg" sx={{ marginTop: "2rem" }}>
-                    <Box  >
-                        <Button onClick={() => setStep(5)}>Continuar 4</Button>
+               <Container maxWidth="lg" sx={{ marginTop: "2rem" }}>
+                  <Box  >
+                     <Button onClick={() => setStep(5)}>Continuar 4</Button>
 
-                    </Box>
+                  </Box>
 
-                    <img src="/images/cuadro1.jpg" alt="img" style={{ display: "flex", width: "70%", margin: "0 auto" }} />
-                </Container>
+                  <img src="/images/cuadro1.jpg" alt="img" style={{ display: "flex", width: "70%", margin: "0 auto" }} />
+               </Container>
             }
 
             {step === 5 &&
-                <Container maxWidth="lg" sx={{ marginTop: "2rem" }}>
-                    <Box  >
-                        <Button onClick={() => setStep(6)}>Continuar 5</Button>
+               <Container maxWidth="lg" sx={{ marginTop: "2rem" }}>
+                  <Box  >
+                     <Button onClick={() => setStep(6)}>Continuar 5</Button>
 
-                    </Box>
+                  </Box>
 
-                    <img src="/images/cuadro1.jpg" alt="img" style={{ display: "flex", width: "70%", margin: "0 auto" }} />
-                </Container>
+                  <img src="/images/cuadro1.jpg" alt="img" style={{ display: "flex", width: "70%", margin: "0 auto" }} />
+               </Container>
             }
 
             {step === 6 &&
-                <Container maxWidth="lg" sx={{ marginTop: "2rem" }}>
-                    <Box  >
-                        <Link
-                            component={RouterLink}
-                            color="inherit"
-                            to={"/"}
-                            sx={{ mt: 2 }}>
-                            <Button>Continuar fin</Button>
-                        </Link>
+               <Container maxWidth="lg" sx={{ marginTop: "2rem" }}>
+                  <Box  >
+                     <Link
+                        component={RouterLink}
+                        color="inherit"
+                        to={"/"}
+                        sx={{ mt: 2 }}>
+                        <Button>Continuar fin</Button>
+                     </Link>
 
-                    </Box>
+                  </Box>
 
-                    <img src="/images/cuadro1.jpg" alt="img" style={{ display: "flex", width: "70%", margin: "0 auto" }} />
-                </Container>
+                  <img src="/images/cuadro1.jpg" alt="img" style={{ display: "flex", width: "70%", margin: "0 auto" }} />
+               </Container>
             }
-        </Card>
-    )
+         </Card>
+      )
 };
 
 export default NewProjectForm;

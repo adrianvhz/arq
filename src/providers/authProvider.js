@@ -20,8 +20,8 @@ export const LoginWithEmailPassword = (email, password) => {
 }
 
 
-export const registerUser = (name, email, password) => {
-	return register(name, email, password).then(res => res);
+export const registerUser = (name, lastname, email, password) => {
+	return register(name, lastname, email, password).then(res => res);
 }
 
 

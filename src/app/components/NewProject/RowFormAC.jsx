@@ -29,9 +29,6 @@ export function RowFormAC({ onChange, onRemove, ambienteComplementario, capacida
                 />
             </Grid>
 
-
-
-
             <IconButton onClick={() => onRemove()} aria-label="delete">
                 <DeleteIcon />
             </IconButton>

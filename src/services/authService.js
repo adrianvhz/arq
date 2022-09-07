@@ -8,8 +8,8 @@ export const login = (email,password) => {
 		.catch(err => err)
 }
 
-export const register = (name, email, password) => {
-	return request({ url: "auth/register", method: "POST", data: { name, email, password } })
+export const register = (name, lastname, email, password) => {
+	return request({ url: "auth/register", method: "POST", data: { name, lastname, email, password } })
 		.then(res => res)
 		.catch(err => err)
 }

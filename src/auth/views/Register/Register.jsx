@@ -67,9 +67,9 @@ export const RegisterView = () => {
 
 	const onSubmit = (evt) => {
 		evt.preventDefault();
-		var { name, email, password } = Object.fromEntries(new FormData(evt.target));
-		console.log(name, email, password);
-		dispatch(startCreateUserWithEmailPassword({ name, email, password, handleBackdrop }));
+		var { name, email, lastname, password } = Object.fromEntries(new FormData(evt.target));
+		console.log(name, lastname, email, password);
+		dispatch(startCreateUserWithEmailPassword({ name, lastname, email, password, handleBackdrop }));
 
 	//  setFormSubmitted(true);
 
@@ -102,6 +102,20 @@ export const RegisterView = () => {
 							placeholder="Nombre"
 							fullWidth
 							name="name"
+							required
+							InputLabelProps={{ required: false }}
+							// value={name}
+							// onChange={onInputChange}
+						/>
+					</Grid>
+
+					<Grid item xs={11}>
+						<TextField
+							label="Apellido"
+							type="text"
+							placeholder="Apellido"
+							fullWidth
+							name="lastname"
 							required
 							InputLabelProps={{ required: false }}
 							// value={name}

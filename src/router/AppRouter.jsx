@@ -6,34 +6,35 @@ import { SnackbarProvider } from "notistack"
 // import { AuthRoutes } from './../auth/routes';
 // import { useCheckAuth } from './../hooks';
 
-export const  AppRouter = ()=> {
-	//const isAutheticate = useSelector((state) => state.auth.status) === "authenticated"
-	const isAutheticate = true
+export const AppRouter = () => {
+	const isAutheticate = useSelector((state) => state.auth.status) === "authenticated" || document.cookie.split(';').map((x)=>x.split('=')).reduce((accum,current) => { accum[current[0]]=current[1]; return accum;}, {})["token"];
+	// const isAutheticate = false;
+
 //  const {status} = useCheckAuth()
 
   //if( status=== 'checking' ) return <CheckingAuth />
-	console.log(isAutheticate)
+	// console.log(isAutheticate)
 	return (
 		<SnackbarProvider maxSnack={3}>
 
-		<Routes>
-			{/*Login y Register */}
-			{
-				(isAutheticate)
-				? <Route path="/*" element={<ArqPlataformRouter />} />
-				:  <Route path="/auth/*" element={<AuthLayout />} />
+			<Routes>
+				{/*Login y Register */}
+				{
+					(isAutheticate)
+					? <Route path="/*" element={<ArqPlataformRouter />} />
+					:  <Route path="/auth/*" element={<AuthLayout />} />
 
-        	}
-        	<Route path="/*" element={<Navigate to='/auth/' />} />
+				}
+				<Route path="/*" element={<Navigate to='/auth/' />} />
 
-			{/* <Route path="/" element={isAutheticate ? <Navigate to="/home" /> : <AuthLayout />} />
-			
+				{/* <Route path="/" element={isAutheticate ? <Navigate to="/home" /> : <AuthLayout />} />
+				
 
-			<Route path="/*" element={isAutheticate ? <ArqPlataformRouter /> : <AuthLayout />} /> */}
+				<Route path="/*" element={isAutheticate ? <ArqPlataformRouter /> : <AuthLayout />} /> */}
 
 
-			
-		</Routes>
+				
+			</Routes>
 		</SnackbarProvider>
 	)
 }

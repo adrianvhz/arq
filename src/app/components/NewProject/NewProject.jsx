@@ -20,6 +20,7 @@ const style = {
     width: '950px',
     bgcolor: 'background.paper',
     height: '700px',
+   //  overflowY: "scroll",
     overflowY: "scroll",
     borderRadius: '10px',
     boxShadow: 24,
@@ -64,6 +65,7 @@ const NewProject = ({ onRow, data }) => {
                 open={open}
                 onClose={handleClose}
                 closeAfterTransition
+					 componentsProps={{backdrop: {style: {overflowY: "scroll"}}}}
             >
                 <Fade in={open}>
                     <Box sx={style}>

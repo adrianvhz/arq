@@ -1,12 +1,11 @@
-import {
-  Button,
-  Card,
-  CardContent,
-  CardMedia,
-  Typography,
-  CardActions,
-  Box,
-} from "@mui/material";
+import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Typography from "@mui/material/Typography";
+import CardActions from "@mui/material/CardActions";
+import Box from "@mui/material/Box";
+
 
 export const CardComponent = () => {
   return (

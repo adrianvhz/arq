@@ -22,19 +22,22 @@ import { checkingCredentials, login, logout, loginFail } from "./authSlice";
 
 export const startCreateUserWithEmailPassword = ({
 	name,
+	lastname,
 	email,
 	password,
 	handleBackdrop
 }) => {
 	return async (dispatch) => {
 		dispatch(checkingCredentials());
-		var res = await registerUser(name, email, password);
+		var res = await registerUser(name, lastname, email, password);
+		console.log(res);
 		if (res.status === 201) {
-			console.log(res)
 			handleBackdrop({ message: "Registro exitoso!", variant: "success" });
 			dispatch(login({}));
 		} else {
-			handleBackdrop({ message: "Error: " + res.response.data.error, variant: "error" });
+			res.response.data.errors?.forEach(el => {
+				handleBackdrop({ message: "Error: " + el.msg, variant: "error" });
+			})
 			dispatch(loginFail());
 		}
 
@@ -54,13 +57,23 @@ export const startLoginWithEmailPassword = (
 		dispatch(checkingCredentials());
 		var res = await LoginWithEmailPassword(email, password);
 
+		console.log(res)
 		if (res.status === 200) {
-			handleBackdrop({ message: res.data.message, variant: "success" });
-			var { data: { data } } = res;
+			var { data: { data: { data, msg, token } } } = res;
+			
+			// delete this later
+			var d = new Date();
+			d.setTime(d.getTime() + (60 * 60 * 60 * 1000));
+			var expires = "expires="+ d.toUTCString();
+			document.cookie = "token=" + token + "; " + expires + "; path=/";
+			// delete this later
+
+			handleBackdrop({ message: msg, variant: "success" });
 			dispatch(login({ name: data.name, email: data.email }));
 		} 
 		else if (res.response.status > 0) {
-			handleBackdrop({ message: "Error: " + res.response.data.error, variant: "error" });
+			console.log(res)
+			handleBackdrop({ message: "Error: " + res.response.data.data.msg, variant: "error" });
 			dispatch(loginFail());
 		}
 		else {

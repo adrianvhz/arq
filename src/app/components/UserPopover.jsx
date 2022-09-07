@@ -9,6 +9,7 @@ import Box from '@mui/material/Box';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import LogoutIcon from '@mui/icons-material/Logout';
+import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from "../../redux/auth/authSlice";
 
@@ -16,6 +17,7 @@ export function UserPopover() {
 	const dispatch = useDispatch();
 	const [anchorEl, setAnchorEl] = React.useState(null);
 	const name = useSelector((state) => state.auth.name);
+	const navigate = useNavigate();
 
 	const handleClick = (event) => {
 		setAnchorEl(event.currentTarget);
@@ -25,7 +27,7 @@ export function UserPopover() {
 		setAnchorEl(null);
 	};
 	const onRedirecPerfil = () =>{
-		console.log('hola')
+		navigate("/perfil");
 	}
 	const open = Boolean(anchorEl);
 	const id = open ? 'simple-popover' : undefined;
@@ -61,7 +63,7 @@ export function UserPopover() {
 					}}
 				>
 					<ButtonGroup orientation="vertical" variant="container" color="secondary" sx={{width: "138px"}} fullWidth>
-						<Option  onClick={onRedirecPerfil}>
+						<Option onClick={onRedirecPerfil}>
 							<PersonOutlineOutlinedIcon />
 							<span>Mi Perfil</span>
 						</Option>
