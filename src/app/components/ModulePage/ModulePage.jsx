@@ -14,19 +14,22 @@ import { plataformAxios } from '../../../services/zonesService';
 const ModulePage = ({ pagina }) => {
 	const [project, setProject] = useState(null)
 
+
 	const dataFilterType = (data) => {
-		switch (pagina) {	
+		const projectExist = data.filter((item) => item.deleted_at !== null)
+
+		switch (pagina) {
 			case 'educacion':
-				setProject(data.filter((item) => item.type_id == 1))
+				setProject(projectExist.filter((item) => item.type_id == 1))
 				break;
 			case 'salud':
-				setProject(data.filter((item) => item.type_id == 1))
+				setProject(projectExist.filter((item) => item.type_id == 2))
 				break;
 			case 'infraestructura':
-				setProject(data.filter((item) => item.type_id == 1))
+				setProject(projectExist.filter((item) => item.type_id == 3))
 				break;
 			default:
-				// setProject(data)
+				setProject(projectExist)
 				break;
 		}
 	}
@@ -37,7 +40,6 @@ const ModulePage = ({ pagina }) => {
 		if (data) {
 			dataFilterType(data.data.proyectos)
 		}
-		// setProject(data.data.proyectos.filter((item) => item.type_id == '1'))
 	}
 
 	useEffect(() => {
@@ -52,7 +54,7 @@ const ModulePage = ({ pagina }) => {
 			width: '100%',
 			height: '100%',
 		}}>
-			<div style={{margin: "0 2rem"}}>
+			<div style={{ margin: "0 2rem" }}>
 
 				{/* CLEAR */}
 				<div className="flex" style={{ marginBottom: "1.75rem", marginTop: "2rem" }}>

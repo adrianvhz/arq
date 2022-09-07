@@ -16,10 +16,10 @@ import { RowForm } from './RowForm';
 import * as yup from 'yup';
 import { RowFormAC } from './RowFormAC';
 import CircularProgress from '@mui/material/CircularProgress';
-import GoogleMaps from "simple-react-google-maps"
 import Box from '@mui/system/Box';
 import Link from '@mui/material/Link';
 import { Link as RouterLink } from "react-router-dom";
+// import { MapContainer, TileLayer, useMap, Marker, Popup } from 'leaflet'
 
 
 export const styleInput = {
@@ -47,14 +47,14 @@ const NewProjectForm = ({ data, onClose }) => {
     const [primaria, setPrimaria] = useState(false);
     const [secundaria, setSecundaria] = useState(false);
     const [zonas, setZonas] = useState();
-
+    const [coordenadas, setCoordenadas] = useState(data?.coordenadas || "");
     const [step, setStep] = useState(1);
 
     const initialValues = {
         name: data?.name || "",
-        tipologia: "",
+        tipologia: data?.tipologia || "",
         ubication: data?.ubication || "",
-        distrito: "",
+        distrito: data?.distrito || "",
         client: data?.client || "",
         manager: data?.manager || "",
         zone: data?.zone || "",
@@ -65,9 +65,10 @@ const NewProjectForm = ({ data, onClose }) => {
         height: 0,
         width: 0,
         type_id: data?.type_id || 1,
+        coordenadas: "",
     }
 
-    //Obtener las zonas
+    //Obtener las zonas desde el api
     const getZones = async () => {
         const data = await plataformAxios.get(`zones`);
         setZonas(data.data.zones);
@@ -76,7 +77,7 @@ const NewProjectForm = ({ data, onClose }) => {
         getZones();
     }, []);
 
-
+    // Leer el excel y colocar en la columna de aulas
     useEffect(() => {
         if (dataExcel) {
             setAforoInicial(dataExcel[3].__EMPTY_2)
@@ -155,24 +156,23 @@ const NewProjectForm = ({ data, onClose }) => {
         );
     };
 
-    // Add file with field name "file"
     const onSubmit = async (values) => {
+
         const dataComplete = {
             ...values,
-            ubication: `${values.ubication} ${values.distrito}`,
+            ubication: values.zone,
             level: `${aulaInicial ? "Inicial" : ""} ${aulaPrimaria ? "Primaria" : ""} ${aulaSecundaria ? "Secundaria" : ""}`,
             rows,
             aforoInicial, aulaInicial, aforoPrimaria, aulaPrimaria, aforoSecundaria, aulaSecundaria,
             ambientesComplementarios: rowsAC,
-            sublevel: tipo
+            sublevel: tipo,
+            coordenadas: coordenadas,
         };
-        console.log(dataComplete);
         const data = await plataformAxios.post(`projects`, dataComplete);
 
         if (!!data.data.project) {
             setStep(2);
         }
-
     }
 
     const handleChange = (event) => {
@@ -200,12 +200,6 @@ const NewProjectForm = ({ data, onClose }) => {
         };
         fileReader.readAsBinaryString(files[0]);
     }
-
-
-
-
-
-
 
     const nivelGrid = (label, aforo, aula) => {
         return (
@@ -270,9 +264,6 @@ const NewProjectForm = ({ data, onClose }) => {
                                             </Grid>
                                         </Grid>
                                         <br />
-
-
-
                                     </Grid>
                                     <Grid item xs={6}>
 
@@ -325,22 +316,21 @@ const NewProjectForm = ({ data, onClose }) => {
                                     </Grid>
                                 </Grid>
 
-                                {/* <GoogleMaps
-                                    apiKey={"AIzaSyBK3B2WV4WUTyWDE4dCyi-WkhNlL0P1-WI"}
-                                    style={{ height: "400px", width: "100%" }}
-                                    zoom={6}
-                                    center={{ lat: 37.4224764, lng: -122.0842499 }}
-                                // markers={{ lat: 37.4224764, lng: -122.0842499 }} //optional
-                                />
+                                <iframe class="iframe"
+                                    src={`https://maps.google.com/?ll=${coordenadas}&z=16&t=m&output=embed`}
+                                    height="600" width="100%" frameborder="0" style={{ border: 0 }} allowfullscreen></iframe>
 
-                                <Grid item xs={6}>
-                                    <span>LATITUD:</span> <br />
-                                    <Field style={styleInput} type="text" name="latitud" />
-                                    {errors.latitud && touched.latitud ? (
-                                        <div style={styleError}>{errors.latitud}</div>
+
+
+                                <Grid item xs={12}>
+                                    <span>Coordenadas:</span> <br />
+                                    <Field style={styleInput} type="text" value={coordenadas} onChange={e => setCoordenadas(e.target.value)} name="coordenadas" />
+                                    {errors.coordenadas && touched.coordenadas ? (
+                                        <div style={styleError}>{errors.coordenadas}</div>
                                     ) : null}
+                                    {/* <ErrorMessage name="email" component="div" /> */}
 
-                                </Grid> */}
+                                </Grid>
                                 <Grid item xs={12}>
 
                                     <span>NIVEL:</span>
@@ -496,6 +486,7 @@ const NewProjectForm = ({ data, onClose }) => {
                             </Form>
                         )}
                     </Formik>
+
                 </Container>
             }
             {step === 2 &&
@@ -548,7 +539,7 @@ const NewProjectForm = ({ data, onClose }) => {
                         <Link
                             component={RouterLink}
                             color="inherit"
-                            to={"/home"}
+                            to={"/"}
                             sx={{ mt: 2 }}>
                             <Button>Continuar fin</Button>
                         </Link>
@@ -590,6 +581,7 @@ const validationSchema = yup.object({
     room: yup.number().required('La capacidad de aulas es requerida'),
     height: yup.number().required('La altura es requerida'),
     width: yup.number().required('La anchura es requerida'),
+    // coordenadas: yup.string().required('Las coordenadas son requeridas'),
     //array de objetos
     rows: yup.array().of(
         yup.object().shape({
