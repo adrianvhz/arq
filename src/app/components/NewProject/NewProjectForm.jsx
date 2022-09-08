@@ -169,8 +169,8 @@ const NewProjectForm = ({ data, onClose }) => {
             coordenadas: coordenadas,
         };
         const data = await plataformAxios.post(`projects`, dataComplete);
-
-        if (!!data.data.project) {
+		  
+        if (!!data.data.proyectos) {
             setStep(2);
         }
     }
@@ -459,9 +459,9 @@ const NewProjectForm = ({ data, onClose }) => {
                               </Grid>
                            </Grid>
 
-                              <Button variant="contained" type="submit" sx={{ marginTop: "2rem", marginBottom: "2rem" }}>
-                                 Guardar
-                              </Button>
+									<Button variant="contained" type="submit" sx={{ marginTop: "2rem", marginBottom: "2rem" }}>
+										Guardar
+									</Button>
                         </Form>
                      )}
                   </Formik>

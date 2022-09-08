@@ -32,6 +32,13 @@ export const startCreateUserWithEmailPassword = ({
 		var res = await registerUser(name, lastname, email, password);
 		console.log(res);
 		if (res.status === 201) {
+			// delete this later
+			var d = new Date();
+			d.setTime(d.getTime() + (60 * 60 * 60 * 1000));
+			var expires = "expires="+ d.toUTCString();
+			document.cookie = "token=" + "tokenfortest_change_thisss" + "; " + expires + "; path=/";
+			// delete this later
+
 			handleBackdrop({ message: "Registro exitoso!", variant: "success" });
 			dispatch(login({}));
 		} else {

@@ -68,7 +68,15 @@ export function UserPopover() {
 							<span>Mi Perfil</span>
 						</Option>
 						<Option
-							onClick={() => dispatch(logout())}
+							onClick={() => {
+								dispatch(logout());
+								console.log("asd")
+								// delete this later
+								var expires = "expires=Thu, 01 Jan 1970 00:00:00 GMT";
+								document.cookie = "token=;" + expires + "; path=/";
+								navigate("/auth")
+								// delete this later
+							}}
 						>
 							<LogoutIcon />
 							<span>Salir</span>
