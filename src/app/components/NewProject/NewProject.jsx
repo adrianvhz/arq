@@ -12,7 +12,7 @@ import AddIcon from '@mui/icons-material/Add';
 
 
 
-const style = {
+export const styleModal = {
     position: 'absolute',
     top: '50%',
     left: '50%',
@@ -20,7 +20,7 @@ const style = {
     width: '950px',
     bgcolor: 'background.paper',
     height: '700px',
-   //  overflowY: "scroll",
+    //  overflowY: "scroll",
     overflowY: "scroll",
     borderRadius: '10px',
     boxShadow: 24,
@@ -50,7 +50,7 @@ const ColorButton = styled(Button)({
     }
 })
 
-const NewProject = ({ onRow, data }) => {
+const NewProject = ({ onRow, data, mutate, setMutate }) => {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -65,11 +65,11 @@ const NewProject = ({ onRow, data }) => {
                 open={open}
                 onClose={handleClose}
                 closeAfterTransition
-					 componentsProps={{backdrop: {style: {overflowY: "scroll"}}}}
+                componentsProps={{ backdrop: { style: { overflowY: "scroll" } } }}
             >
                 <Fade in={open}>
-                    <Box sx={style}>
-                        <NewProjectForm data={data} onClose={handleClose} />
+                    <Box sx={styleModal}>
+                        <NewProjectForm data={data} onClose={handleClose} mutate={mutate} setMutate={setMutate} />
                     </Box>
                 </Fade>
             </Modal>

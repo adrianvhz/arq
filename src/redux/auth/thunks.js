@@ -35,7 +35,7 @@ export const startCreateUserWithEmailPassword = ({
 			// delete this later
 			var d = new Date();
 			d.setTime(d.getTime() + (60 * 60 * 60 * 1000));
-			var expires = "expires="+ d.toUTCString();
+			var expires = "expires=" + d.toUTCString();
 			document.cookie = "token=" + "tokenfortest_change_thisss" + "; " + expires + "; path=/";
 			// delete this later
 
@@ -50,11 +50,11 @@ export const startCreateUserWithEmailPassword = ({
 
 		// const { ok, uid, photoURL, errorMessage } =
 		// await registerUserWithEmailPassword({ email, password, displayName });
-	
+
 		// if (!ok) return dispatch(logout({ errorMessage }));
-	
+
 		// dispatch(login({ uid, photoURL, displayName, email }));
-  }
+	}
 }
 
 export const startLoginWithEmailPassword = (
@@ -67,17 +67,18 @@ export const startLoginWithEmailPassword = (
 		console.log(res)
 		if (res.status === 200) {
 			var { data: { data: { data, msg, token } } } = res;
-			
+
 			// delete this later
 			var d = new Date();
 			d.setTime(d.getTime() + (60 * 60 * 60 * 1000));
-			var expires = "expires="+ d.toUTCString();
+			var expires = "expires=" + d.toUTCString();
 			document.cookie = "token=" + token + "; " + expires + "; path=/";
 			// delete this later
 
 			handleBackdrop({ message: msg, variant: "success" });
-			dispatch(login({ name: data.name, email: data.email }));
-		} 
+
+			dispatch(login({ name: data.name, email: data.email, uid: data.id }));
+		}
 		else if (res.response.status > 0) {
 			console.log(res)
 			handleBackdrop({ message: "Error: " + res.response.data.data.msg, variant: "error" });
@@ -91,14 +92,14 @@ export const startLoginWithEmailPassword = (
 		// const { ok, uid, photoURL, displayName, errorMessage } =
 		//   await LoginWithEmailPassword(email, password);
 		// if (!ok) return dispatch(logout({ errorMessage }));
-		
+
 		// dispatch(login({ uid, photoURL, displayName, email }));
 	}
 }
 
 export const startLogoutAuth = () => {
-  return async (dispatch) => {
-    // await logoutFirebase();
-     dispatch(logout());
-  };
+	return async (dispatch) => {
+		// await logoutFirebase();
+		dispatch(logout());
+	};
 };

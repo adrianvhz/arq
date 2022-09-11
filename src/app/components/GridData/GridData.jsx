@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import moment from 'moment';
 import Grid from '@mui/material/Grid';
 import { RowList } from './RowList';
-import { Box } from '@mui/material';
+import { Box, Container } from '@mui/material';
 
 const styleGrid = {
     border: "1.5px solid #AFAFAF",
@@ -12,20 +12,21 @@ const styleGrid = {
 }
 
 const containerCustom = {
-    marginLeft: "auto",
-    marginRight: "auto",
-    width: "90%",
+    // marginLeft: "2rem",
+    // marginRight: "2rem",
+    width: "100%",
 }
 
 const dataBoxGrid = {
-    width: "1050px",
-    marginLeft: "auto",
-    marginRight: "auto",
+    // width: "1050px",
+    width: "100%",
+    // marginLeft: "2rem ",
+    // marginRight: "2rem",
 
 }
 const GridData = (data) => {
+    // const [dataCompleta] = useState(data.data)
 
-    const [dataCompleta] = useState(data.data)
     const [dataFiltrada, setDataFiltrada] = useState([])
     const [fechaInicio, setFechaInicio] = useState('')
     const [fechaFin, setFechaFin] = useState('')
@@ -33,7 +34,7 @@ const GridData = (data) => {
     const options = (e) => {
         switch (e) {
             case "0":
-                setDataFiltrada(dataCompleta)
+                setDataFiltrada(data.data)
                 break;
             case "10":
                 const dataCortada = dataFiltrada.slice(0, 10)
@@ -55,7 +56,7 @@ const GridData = (data) => {
     }
 
     const dataFilter = (value) => {
-        const filtro = dataCompleta.filter((item) => item.name.toLowerCase().includes(value.toLowerCase()))
+        const filtro = data.data.filter((item) => item.name.toLowerCase().includes(value.toLowerCase()))
         setDataFiltrada(filtro)
     }
 
@@ -65,11 +66,12 @@ const GridData = (data) => {
     }
 
 
+
     //filtro por rango de fechas
     const dataFilterDateRange = () => {
 
         if (fechaInicio && fechaFin) {
-            const filtro = dataCompleta.filter((item) => {
+            const filtro = data.data.filter((item) => {
                 let date = moment(item.createdAt).format('DD/MM/YYYY')
                 date = toMs(date)
                 return date >= toMs(fechaInicio) && date <= toMs(fechaFin)
@@ -78,25 +80,26 @@ const GridData = (data) => {
 
         }
     }
-    useEffect(() => {
 
+
+
+    useEffect(() => {
         if (fechaInicio && fechaFin && fechaInicio !== 'Invalid date' && fechaFin !== 'Invalid date') {
             dataFilterDateRange()
             return
         }
-
-        if (!fechaInicio || !fechaFin || fechaInicio === 'Invalid date' || fechaFin === 'Invalid date') {
+        else {
             setDataFiltrada(data.data)
-            return
         }
+    }, [fechaInicio && fechaFin])
 
 
-    }, [fechaInicio, fechaFin])
-
-
+    useEffect(() => {
+        setDataFiltrada(data.data)
+    }, [data.data])
 
     return (
-        <div style={containerCustom} >
+        <Container >
 
             <Grid container spacing={3} sx={{ marginBottom: "1.75rem" }}>
                 <Grid item xs={12} sm={6} lg={4}>
@@ -183,7 +186,7 @@ const GridData = (data) => {
 
 
 
-        </div>
+        </Container>
     )
 }
 
