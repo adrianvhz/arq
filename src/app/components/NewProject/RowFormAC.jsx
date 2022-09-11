@@ -8,7 +8,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 export function RowFormAC({ onChange, onRemove, ambienteComplementario, capacidad }) {
     return (
         <Grid container spacing={1} sx={{ marginBottom: ".5rem" }}>
-            <Grid item xs={6}>
+            <Grid item xs={5}>
                 <input
                     value={ambienteComplementario}
                     disabled
@@ -25,6 +25,8 @@ export function RowFormAC({ onChange, onRemove, ambienteComplementario, capacida
                     // disabled
                     value={capacidad}
                     onChange={e => onChange("capacidad", e.target.value)}
+                    required
+
 
                 />
             </Grid>

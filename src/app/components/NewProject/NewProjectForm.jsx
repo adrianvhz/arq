@@ -44,21 +44,16 @@ const styleModal = {
    bgcolor: 'white',
    borderRadius: '10px',
    boxShadow: 24,
+   width: "auto",
    p: 4,
-   '@media (max-width: 1024px)': {
-      width: '85%',
-      left: '50%',
-   }
-
-
 };
 
 
-const NewProjectForm = ({ data, onClose, mutate, setMutate }) => {
+const NewProjectForm = ({ data, onClose, setMutate }) => {
 
    const id = useSelector((state) => state.auth.uid);
-   const [rows, setRows] = useState([defaultState].concat(defaultState).concat(defaultState));
-   const [rowsAC, setRowsAC] = useState(ambientesComplementarios || []);
+   const [rows, setRows] = useState(data?.puntos ? JSON.parse(data?.puntos) : [{ ...defaultState, vertice: "P1" }].concat({ ...defaultState, vertice: "P2" }).concat({ ...defaultState, vertice: "P3" }));
+   const [rowsAC, setRowsAC] = useState(data?.ambientes ? JSON.parse(data?.ambientes) : ambientesComplementarios);
    const [tipo, setTipo] = useState("unidocente");
    const [aforoInicial, setAforoInicial] = useState(0)
    const [aulaInicial, setAulaInicial] = useState(0)
@@ -77,7 +72,6 @@ const NewProjectForm = ({ data, onClose, mutate, setMutate }) => {
    const handleOpen = () => setOpen(true);
    const handleClose = () => setOpen(false);
 
-   // setMutate("hola")
    const initialValues = {
       name: "",
       tipologia: data?.tipologia || "",
@@ -94,7 +88,6 @@ const NewProjectForm = ({ data, onClose, mutate, setMutate }) => {
       width: 0,
       type_id: data?.type_id || 1,
       coordenadas: "",
-
    }
 
    //Obtener las zonas desde el api
@@ -191,36 +184,30 @@ const NewProjectForm = ({ data, onClose, mutate, setMutate }) => {
          ...values,
          ubication: values.zone,
          level: `${aulaInicial ? "Inicial" : ""} ${aulaPrimaria ? "Primaria" : ""} ${aulaSecundaria ? "Secundaria" : ""}`,
-         rows,
+         puntos: JSON.stringify(rows),
          aforoInicial, aulaInicial, aforoPrimaria, aulaPrimaria, aforoSecundaria, aulaSecundaria,
-         ambientesComplementarios: rowsAC,
+         ambientes: JSON.stringify(rowsAC),
          sublevel: tipo,
          coordenadas: coordenadas,
          user_id: id
       };
+
       const data = await plataformAxios.post(`projects`, dataComplete);
-      setMutate(data.data.proyectos.coordenadas);
-
-
-      // console.log(data.data.proyectos)
 
       if (data.data.proyectos.parent_id == 0) {
 
          const dataHijo = await plataformAxios.post(`projects`, { ...dataComplete, parent_id: data.data.proyectos.id, name: "VERSION 1" });
-
-         // console.log(dataHijo)
          if (!!dataHijo.data.proyectos) {
             setMutate(data.data.proyectos.coordenadas);
-
             setStep(2);
          }
       }
 
       if (data.data.proyectos.parent_id != 0) {
-         console.log("hola")
 
          setStep(2);
       }
+
 
    }
 
@@ -229,6 +216,7 @@ const NewProjectForm = ({ data, onClose, mutate, setMutate }) => {
    };
 
    const onImportExcel = file => {
+      handleClose();
       const { files } = file.target;
       const fileReader = new FileReader();
       fileReader.onload = event => {
@@ -252,7 +240,7 @@ const NewProjectForm = ({ data, onClose, mutate, setMutate }) => {
 
    const nivelGrid = (label, aforo, aula) => {
       return (
-         <Grid container spacing={2} marginBottom=".5rem">
+         <Grid container spacing={2} marginBottom="1rem" >
             <Grid item xs={4}>
                <Field style={{ ...styleInput, textAlign: "center", fontSize: "16px" }} type="text" value={label} disabled />
             </Grid>
@@ -390,12 +378,12 @@ const NewProjectForm = ({ data, onClose, mutate, setMutate }) => {
                                                 <Grid item xs={6}>
                                                    <a href="/descargas/test.xlsx" download="Centros de Educaclientcion.xlsx">
                                                       <Button variant="contained" color="primary" onClick={() => downloadExcel()}>
-                                                         Descargar Excel
+                                                         Descargar
                                                       </Button>
                                                    </a>
                                                 </Grid>
                                                 <Grid item xs={6}>
-                                                   <Input style={{ ...styleInput, width: "auto", height: "80px", }} type='file' accept='.xlsx, .xls' onChange={(e) => onImportExcel(e)} sx={{ display: "none" }} id="button_file" />
+                                                   <Input style={{ ...styleInput, width: "auto" }} type='file' accept='.xlsx, .xls' onChange={(e) => onImportExcel(e)} sx={{ display: "none" }} id="button_file" />
                                                    <label htmlFor="button_file">
                                                       <Button variant="contained" component="span">
                                                          Upload
@@ -412,7 +400,7 @@ const NewProjectForm = ({ data, onClose, mutate, setMutate }) => {
 
 
 
-                                    <Grid container spacing={1} sx={{ width: "100%" }}>
+                                    <Grid container spacing={1} sx={{ width: "100%", marginTop: "10px" }}>
                                        <Grid item xs={2} >
                                           <span >VERTICE</span>
                                        </Grid>
@@ -447,7 +435,7 @@ const NewProjectForm = ({ data, onClose, mutate, setMutate }) => {
                                     ) : (
                                        <Grid item xs={12} marginTop="1rem">
                                           <Grid container spacing={1} sx={{ width: "100%" }}>
-                                             <Grid item xs={6} >
+                                             <Grid item xs={5} >
                                                 <span >AMBIENTES COMPLEMENTARIOS</span>
                                              </Grid>
                                              <Grid item xs={3}>
@@ -471,62 +459,60 @@ const NewProjectForm = ({ data, onClose, mutate, setMutate }) => {
                            {/* UBICACIÓN */}
 
                            {/* <Grid spacing={1} sx={{ marginBottom: "2rem" }} direction="column" xs={6}> */}
-                           <Grid item xs={12} container spacing={1} justifyContent="end">
-                              <Grid sx={{ marginBottom: "2rem" }} xs={6} item>
-                                 <Grid item xs={12}>
-                                    <span>PROVINCIA:</span> <br />
-                                    <Field style={styleInput} type="text" name="ubication" />
-                                    {errors.ubication && touched.ubication ? (
-                                       <div style={styleError}>{errors.ubication}</div>
-                                    ) : null}
-                                    {/* <ErrorMessage name="email" component="div" /> */}
-                                 </Grid>
+                           <Grid item xs={12} container spacing={2} justifyContent="end" >
+                              <Grid sx={{ marginBottom: "2rem" }} xs={12} lg={6} item>
+                                 {/* <Grid item xs={12}> */}
+                                 <span>PROVINCIA:</span> <br />
+                                 <Field style={styleInput} type="text" name="ubication" />
+                                 {errors.ubication && touched.ubication ? (
+                                    <div style={styleError}>{errors.ubication}</div>
+                                 ) : null}
+                                 {/* <ErrorMessage name="email" component="div" /> */}
+                                 {/* </Grid> */}
 
-                                 <Grid item xs={12}>
-                                    <span>DISTRITO:</span> <br />
-                                    <Field style={styleInput} type="text" name="distrito" />
-                                    {errors.distrito && touched.distrito ? (
-                                       <div style={styleError}>{errors.distrito}</div>
-                                    ) : null}
+                                 {/* <Grid item xs={12}> */}
+                                 <span>DISTRITO:</span> <br />
+                                 <Field style={styleInput} type="text" name="distrito" />
+                                 {errors.distrito && touched.distrito ? (
+                                    <div style={styleError}>{errors.distrito}</div>
+                                 ) : null}
 
-                                    {/* <ErrorMessage name="email" component="div" /> */}
-                                 </Grid>
+                                 {/* <ErrorMessage name="email" component="div" /> */}
+                                 {/* </Grid> */}
 
-                                 <Grid item xs={12}>
-                                    <span>RESPONSABLE:</span> <br />
-                                    <Field style={styleInput} type="text" name="manager" />
-                                    {errors.manager && touched.manager ? (
-                                       <div style={styleError}>{errors.manager}</div>
-                                    ) : null}
-                                    {/* <ErrorMessage name="email" component="div" /> */}
-                                 </Grid>
+                                 {/* <Grid item xs={12}> */}
+                                 <span>RESPONSABLE:</span> <br />
+                                 <Field style={styleInput} type="text" name="manager" />
+                                 {errors.manager && touched.manager ? (
+                                    <div style={styleError}>{errors.manager}</div>
+                                 ) : null}
+                                 {/* <ErrorMessage name="email" component="div" /> */}
+                                 {/* </Grid> */}
 
-                                 <Grid item xs={12}>
-                                    <span>CLIENTE:</span> <br />
-                                    <Field style={styleInput} type="text" name="client" />
-                                    {errors.client && touched.client ? (
-                                       <div style={styleError}>{errors.client}</div>
-                                    ) : null}
+                                 {/* <Grid item xs={12}> */}
+                                 <span>CLIENTE:</span> <br />
+                                 <Field style={styleInput} type="text" name="client" />
+                                 {errors.client && touched.client ? (
+                                    <div style={styleError}>{errors.client}</div>
+                                 ) : null}
 
-                                    {/* <ErrorMessage name="email" component="div" /> */}
-                                 </Grid>
+                                 {/* <ErrorMessage name="email" component="div" /> */}
+                                 {/* </Grid> */}
                               </Grid>
 
                               {/* <Grid xs={6} item> */}
-                              <Grid item xs={6}>
+                              <Grid item xs={12} lg={6}>
                                  <iframe className="iframe"
                                     src={`https://maps.google.com/?ll=${coordenadas}&z=16&t=m&output=embed`}
                                     height="100%" width="100%" frameBorder="0" style={{ border: 0 }} allowFullScreen>
                                  </iframe>
                               </Grid>
 
-                              <Grid item xs={6}>
+                              <Grid item xs={12} lg={6}>
                                  <span>Coordenadas:</span> <br />
-                                 <Field style={styleInput} type="text" value={coordenadas} onChange={e => setCoordenadas(e.target.value)} name="coordenadas" />
-                                 {errors.coordenadas && touched.coordenadas ? (
-                                    <div style={styleError}>{errors.coordenadas}</div>
-                                 ) : null}
-                                 {/* <ErrorMessage name="email" component="div" /> */}
+                                 <Field style={styleInput} type="text" value={coordenadas} onChange={e => setCoordenadas(e.target.value)} name="coordenadas"
+                                    required
+                                 />
                               </Grid>
                               {/* </Grid> */}
 
