@@ -15,9 +15,6 @@ export function RowForm({ onChange, onRemove, vertice, lado, dist, angulo, retir
                     style={{ ...styleInput, textAlign: "center" }}
 
                 />
-                {/* {error.error && touched.error ? (
-                    <div>{errors.client}</div>
-                ) : null} */}
             </Grid>
             <Grid item xs={2}>
 
@@ -35,6 +32,7 @@ export function RowForm({ onChange, onRemove, vertice, lado, dist, angulo, retir
                 <input
                     style={{ ...styleInput, textAlign: "center" }}
                     disabled={disabled}
+                    required
 
                     value={dist}
                     onChange={e => onChange("dist", e.target.value)}
@@ -48,6 +46,8 @@ export function RowForm({ onChange, onRemove, vertice, lado, dist, angulo, retir
                     disabled={disabled}
                     value={angulo}
                     onChange={e => onChange("angulo", e.target.value)}
+                    required
+
                 />
             </Grid>
             <Grid item xs={2}>
@@ -55,7 +55,7 @@ export function RowForm({ onChange, onRemove, vertice, lado, dist, angulo, retir
                 <input
                     style={{ ...styleInput, textAlign: "center" }}
                     disabled={disabled}
-
+                    required
                     value={retiros}
                     onChange={e => onChange("retiros", e.target.value)}
                 />
