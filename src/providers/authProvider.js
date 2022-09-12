@@ -1,7 +1,7 @@
-import { login, register } from './../services/authService';
+import { login, register, isCheckTokenService } from './../services/authService';
 
-export const LoginWithEmailPassword = (email, password) => {
-	return login(email, password).then(res => res);
+export const LoginWithEmailPassword = async (email, password) => {
+	return await login(email, password)
 	//  try {
 
 	//     const resp = await login(email,password)
@@ -22,6 +22,11 @@ export const LoginWithEmailPassword = (email, password) => {
 
 export const registerUser = (name, lastname, email, password) => {
 	return register(name, lastname, email, password).then(res => res);
+}
+
+
+export const isCheckToken = async (token, ) => {
+	return await isCheckTokenService(token);
 }
 
 

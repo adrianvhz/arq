@@ -1,12 +1,20 @@
 
-import React from 'react';
+
 import { BasicTabs } from './../../components/BasicTabs';
 import { Grid } from '@mui/material';
 import { StarOutline } from '@mui/icons-material';
 import { Typography } from '@mui/material';
 import { DatosComponent } from './../../components/DatosComponent/DatosComponent';
 import { PlanComponent } from '../../components/PlanComponent/PlanComponent';
+import { useDispatch, useSelector } from 'react-redux';
+
 export const PerfilView = () => {
+
+    const {planes} = useSelector(status => status.plan)
+    const user = useSelector(status => status.auth)
+
+    const  { data } = planes
+   
     const titulo =['Persona','Plan de pago']
     return (
         <Grid
@@ -17,8 +25,8 @@ export const PerfilView = () => {
     >
             <Grid item xs={12}>
                 <BasicTabs titulo={titulo} >
-                    <DatosComponent key={0}   />
-                    <PlanComponent  key={1} />
+                    <DatosComponent user={user} key={0}   />
+                    <PlanComponent  key={1} planes={data} />
                 </BasicTabs>
 
             </Grid>

@@ -14,7 +14,7 @@ import { plataformAxios } from '../../../services/zonesService';
 const ModulePage = ({ pagina }) => {
 	const [project, setProject] = useState(null)
 
-	const dataFilterType = (data) => {
+	const dataFilterType = (data = '') => {
 		const projectExist = data.filter((item) => item.deleted_at !== null)
 
 		switch (pagina) {

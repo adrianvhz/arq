@@ -24,6 +24,7 @@ export const useForm = ( initialForm = {} , formValidations = {}) => {
         });
     }
 
+
     const onResetForm = () => {
         setFormState( initialForm );
     }

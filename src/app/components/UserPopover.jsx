@@ -29,6 +29,12 @@ export function UserPopover() {
 	const onRedirecPerfil = () =>{
 		navigate("/perfil");
 	}
+
+	const onLogout = () => {
+			localStorage.clear()
+			dispatch(logout());
+			navigate("/auth")
+	}
 	const open = Boolean(anchorEl);
 	const id = open ? 'simple-popover' : undefined;
 
@@ -68,15 +74,7 @@ export function UserPopover() {
 							<span>Mi Perfil</span>
 						</Option>
 						<Option
-							onClick={() => {
-								dispatch(logout());
-								console.log("asd")
-								// delete this later
-								var expires = "expires=Thu, 01 Jan 1970 00:00:00 GMT";
-								document.cookie = "token=;" + expires + "; path=/";
-								navigate("/auth")
-								// delete this later
-							}}
+							onClick={onLogout}
 						>
 							<LogoutIcon />
 							<span>Salir</span>

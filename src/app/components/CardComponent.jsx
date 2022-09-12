@@ -7,28 +7,34 @@ import CardActions from "@mui/material/CardActions";
 import Box from "@mui/material/Box";
 
 
-export const CardComponent = () => {
+export const CardComponent = ({data}) => {
+
+  const {plan,permisos} = data
+  console.log(plan)
   return (
     <Card  sx={{
         width: "calc(100%/3.2)",
         backgroundColor: "#FFF",
         padding: "20px",
         borderRadius: 3,
-        boxShadow: " rgba(100, 100, 111, 0.2) 0px 7px 29px 0px",
+        boxShadow: "rgb(100 100 111) 0px 7px 29px 0px",
       }}>
       <CardContent
        
       >
         <Typography variant="h5" component="div">
-          SOLIOCITA UNA PRUEBA DEMO
+          {plan.descripcion}
         </Typography>
         <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-          15 Días
+          {plan.vigencia} Días
         </Typography>
 
         <ul>
-          <li>ACCESO ILIMITADO A TODOS LOS COMANDOS DE TRABAJO</li>
-          <li>VÁLIDO PARA UN SOLO USUARIO</li>
+            {
+              permisos.map(p=>(
+                  <li key={p.id}>{p.descripcion}</li>
+              ) )
+            }
         </ul>
       </CardContent>
     </Card>

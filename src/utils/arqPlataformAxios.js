@@ -1,19 +1,34 @@
-import axios from "axios"
+import axios from "axios";
 
-const BASE_URL = 'http://localhost:8000/api/v1/';
+const BASE_URL = "http://localhost:8000/api/v1/";
 
 export const arqPlataformAxios = axios.create({
-	baseURL: BASE_URL
+  baseURL: BASE_URL,
 });
 
 /**
  * @param {import("axios").AxiosRequestConfig} param0
- * @returns 
+ * @returns
  */
-export const request = ({...options}) => {
-    arqPlataformAxios.defaults.headers.common.Authorization = `Bearer token`
-    const onSuccess = (response) => response
-    const onError = (error) => error
+export const request = ({ ...options }) => {
+//   arqPlataformAxios.defaults.headers.common.Authorization 
+//   = `Bearer ${localStorage.getItem(
+//     "token"
+//   )}`;
 
-    return arqPlataformAxios(options).then(onSuccess).catch(onError)
-}
+  arqPlataformAxios.interceptors.request.use(
+    config=>{
+        config.headers = {
+             ...config.headers,
+            'x-token':`${localStorage.getItem(
+                "token"
+              )}`  }
+              return config;
+    })
+
+  
+  const onSuccess = (response) => response;
+  const onError = (error) => error;
+
+  return arqPlataformAxios(options).then(onSuccess).catch(onError);
+};
