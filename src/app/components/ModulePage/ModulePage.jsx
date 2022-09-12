@@ -9,10 +9,13 @@ import AddIcon from '@mui/icons-material/Add';
 import styled from '@mui/material/styles/styled';
 import NewProject from '../NewProject/NewProject'
 import { plataformAxios } from '../../../services/zonesService';
+import { useSelector, useDispatch } from 'react-redux';
 
 
 const ModulePage = ({ pagina }) => {
 	const [project, setProject] = useState(null)
+	const id = useSelector((state) => state.auth.uid);
+	const [mutate, setMutate] = useState("init")
 
 	const dataFilterType = (data = '') => {
 		const projectExist = data.filter((item) => item.deleted_at !== null)
@@ -35,7 +38,7 @@ const ModulePage = ({ pagina }) => {
 
 
 	const getProjects = async () => {
-		const data = await plataformAxios.get(`projects`);
+		const data = await plataformAxios.get(`projects/${id}`);
 		if (data) {
 			dataFilterType(data.data.proyectos)
 		}
@@ -43,7 +46,7 @@ const ModulePage = ({ pagina }) => {
 
 	useEffect(() => {
 		getProjects();
-	}, []);
+	}, [mutate]);
 
 
 	if (!project) { return <div>Cargando...</div> }
@@ -64,7 +67,7 @@ const ModulePage = ({ pagina }) => {
 								<span>Puedes crear desde cero o escoger una plantilla de proyecto</span>
 							</div>
 							<div style={{ alignSelf: "end" }}>
-								<NewProject />
+								<NewProject mutate={mutate} setMutate={setMutate} />
 							</div>
 						</div>
 						<div style={{ marginBottom: "3.75rem" }}></div>
@@ -80,7 +83,7 @@ const ModulePage = ({ pagina }) => {
 			</div>
 
 
-			<GridData data={project}></GridData>
+			<GridData data={project} ></GridData>
 
 		</Card>
 	)

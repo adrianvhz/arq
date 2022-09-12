@@ -34,28 +34,28 @@ export const startCreateUserWithEmailPassword = ({
       // delete this later
       var d = new Date();
       d.setTime(d.getTime() + 60 * 60 * 60 * 1000);
-      var expires = "expires=" + d.toUTCString();
+      var expires = "expires="  + d.toUTCString();
       document.cookie =
         "token=" + "tokenfortest_change_thisss" + "; " + expires + "; path=/";
       // delete this later
 
-      handleBackdrop({ message: "Registro exitoso!", variant: "success" });
-      dispatch(login({}));
-    } else {
-      res.response.data.errors?.forEach((el) => {
-        handleBackdrop({ message: "Error: " + el.msg, variant: "error" });
-      });
-      dispatch(loginFail());
-    }
+			handleBackdrop({ message: "Registro exitoso!", variant: "success" });
+			dispatch(login({}));
+		} else {
+			res.response.data.errors?.forEach(el => {
+				handleBackdrop({ message: "Error: " + el.msg, variant: "error" });
+			})
+			dispatch(loginFail());
+		}
 
-    // const { ok, uid, photoURL, errorMessage } =
-    // await registerUserWithEmailPassword({ email, password, displayName });
+		// const { ok, uid, photoURL, errorMessage } =
+		// await registerUserWithEmailPassword({ email, password, displayName });
 
-    // if (!ok) return dispatch(logout({ errorMessage }));
+		// if (!ok) return dispatch(logout({ errorMessage }));
 
-    // dispatch(login({ uid, photoURL, displayName, email }));
-  };
-};
+		// dispatch(login({ uid, photoURL, displayName, email }));
+	}
+}
 
 export const startLoginWithEmailPassword = (
   email,
@@ -94,8 +94,8 @@ export const startLoginWithEmailPassword = (
 };
 
 export const startLogoutAuth = () => {
-  return async (dispatch) => {
-    // await logoutFirebase();
-    dispatch(logout());
-  };
+	return async (dispatch) => {
+		// await logoutFirebase();
+		dispatch(logout());
+	};
 };
