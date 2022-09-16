@@ -17,24 +17,16 @@ import * as yup from 'yup';
 import { RowFormAC } from './RowFormAC';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/system/Box';
-import Link from '@mui/material/Link';
-import { Link as RouterLink } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import { Fade, Modal } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-
-// import { MapContainer, TileLayer, useMap, Marker, Popup } from 'leaflet'
-
 
 export const styleInput = {
    width: "100%",
 }
-
 const styleError = {
    color: "red",
    marginTop: "0.25rem",
 }
-
 
 const styleModal = {
    position: 'absolute',
@@ -44,8 +36,11 @@ const styleModal = {
    bgcolor: 'white',
    borderRadius: '10px',
    boxShadow: 24,
-   width: "auto",
+   width: "400px",
    p: 4,
+   "@media (max-width: 768px)": {
+      width: "auto",
+   }
 };
 
 
@@ -53,24 +48,52 @@ const NewProjectForm = ({ data, onClose, setMutate }) => {
 
    const id = useSelector((state) => state.auth.uid);
    const [rows, setRows] = useState(data?.puntos ? JSON.parse(data?.puntos) : [{ ...defaultState, vertice: "P1" }].concat({ ...defaultState, vertice: "P2" }).concat({ ...defaultState, vertice: "P3" }));
-   const [rowsAC, setRowsAC] = useState(data?.ambientes ? JSON.parse(data?.ambientes) : ambientesComplementarios);
-   const [tipo, setTipo] = useState("unidocente");
-   const [aforoInicial, setAforoInicial] = useState(0)
-   const [aulaInicial, setAulaInicial] = useState(0)
-   const [aforoPrimaria, setAforoPrimaria] = useState(0)
-   const [aulaPrimaria, setAulaPrimaria] = useState(0)
-   const [aforoSecundaria, setAforoSecundaria] = useState(0)
-   const [aulaSecundaria, setAulaSecundaria] = useState(0)
+   const [rowsAC, setRowsAC] = useState(data?.ambientes ? JSON.parse(data?.ambientes) : []);
+   const [tipo, setTipo] = useState(data?.sublevel || "unidocente");
+   const [aforoInicial, setAforoInicial] = useState(data?.aforo ? JSON.parse(data?.aforo).aforoInicial : 0);
+   const [aulaInicial, setAulaInicial] = useState(data?.aforo ? JSON.parse(data?.aforo).aulaInicial : 0);
+   const [aforoPrimaria, setAforoPrimaria] = useState(data?.aforo ? JSON.parse(data?.aforo).aforoPrimaria : 0);
+   const [aulaPrimaria, setAulaPrimaria] = useState(data?.aforo ? JSON.parse(data?.aforo).aulaPrimaria : 0);
+   const [aforoSecundaria, setAforoSecundaria] = useState(data?.aforo ? JSON.parse(data?.aforo).aforoSecundaria : 0);
+   const [aulaSecundaria, setAulaSecundaria] = useState(data?.aforo ? JSON.parse(data?.aforo).aulaSecundaria : 0);
    const [dataExcel, setDataExcel] = useState();
-   const [inicial, setInicial] = useState(false);
-   const [primaria, setPrimaria] = useState(false);
-   const [secundaria, setSecundaria] = useState(false);
+   const [inicial, setInicial] = useState(data?.aforo ? !!JSON.parse(data?.aforo).aforoInicial : false);
+   const [primaria, setPrimaria] = useState(data?.aforo ? !!JSON.parse(data?.aforo).aforoPrimaria : false);
+   const [secundaria, setSecundaria] = useState(data?.aforo ? !!JSON.parse(data?.aforo).aforoSecundaria : false);
    const [zonas, setZonas] = useState();
    const [coordenadas, setCoordenadas] = useState(data?.coordenadas || "");
    const [step, setStep] = useState(1);
    const [open, setOpen] = useState(false);
    const handleOpen = () => setOpen(true);
    const handleClose = () => setOpen(false);
+
+   console.log(!!rowsAC.length)
+
+   const imageToAulas = () => {
+      if (aforoInicial > 0 && aforoPrimaria > 0 && aforoSecundaria > 0) {
+         return "inicial_primaria_secundaria.png"
+      }
+      if (aforoInicial > 0 && aforoPrimaria > 0) {
+         return "inicial_primaria.png"
+      }
+      if (aforoInicial > 0 && aforoSecundaria > 0) {
+         return "primaria_secundaria.png"
+      }
+      if (aforoPrimaria > 0 && aforoSecundaria > 0) {
+         return "primaria_secundaria.png"
+      }
+      if (aforoInicial > 0) {
+         return "inicial.png"
+      }
+      if (aforoPrimaria > 0) {
+         return "primaria.png"
+      }
+      if (aforoSecundaria > 0) {
+         return "secundaria.png"
+      }
+      if (!aforoPrimaria && !aforoSecundaria && !aforoInicial)
+         return "secundaria.png"
+   }
 
    const initialValues = {
       name: "",
@@ -153,6 +176,13 @@ const NewProjectForm = ({ data, onClose, setMutate }) => {
       }
    }
 
+   const handleOnAddAC = (ambiente) => {
+      const verificador = rowsAC.find((item) => item.ambienteComplementario === ambiente);
+      if (!verificador && ambiente !== "") {
+         setRowsAC([...rowsAC, { capacidad: 0, ambienteComplementario: ambiente }]);
+      }
+   }
+
    const handleOnRemove = index => {
       const copyRows = [...rows];
       copyRows.splice(index, 1);
@@ -165,7 +195,7 @@ const NewProjectForm = ({ data, onClose, setMutate }) => {
       setRowsAC(copyRowsAC);
    }
 
-   const MySelect = ({ label, ...props }) => {
+   const Select = ({ label, ...props }) => {
       const [field, meta] = useField(props);
       return (
          <div>
@@ -178,14 +208,23 @@ const NewProjectForm = ({ data, onClose, setMutate }) => {
       );
    };
 
+   const allDataAforo = {
+      aforoInicial: aforoInicial,
+      aulaInicial: aulaInicial,
+      aforoPrimaria: aforoPrimaria,
+      aulaPrimaria: aulaPrimaria,
+      aforoSecundaria: aforoSecundaria,
+      aulaSecundaria: aulaSecundaria,
+   }
+
    const onSubmit = async (values) => {
 
       const dataComplete = {
          ...values,
-         ubication: values.zone,
+         ubication: values.ubication,
          level: `${aulaInicial ? "Inicial" : ""} ${aulaPrimaria ? "Primaria" : ""} ${aulaSecundaria ? "Secundaria" : ""}`,
          puntos: JSON.stringify(rows),
-         aforoInicial, aulaInicial, aforoPrimaria, aulaPrimaria, aforoSecundaria, aulaSecundaria,
+         aforo: JSON.stringify(allDataAforo),
          ambientes: JSON.stringify(rowsAC),
          sublevel: tipo,
          coordenadas: coordenadas,
@@ -198,13 +237,12 @@ const NewProjectForm = ({ data, onClose, setMutate }) => {
 
          const dataHijo = await plataformAxios.post(`projects`, { ...dataComplete, parent_id: data.data.proyectos.id, name: "VERSION 1" });
          if (!!dataHijo.data.proyectos) {
-            setMutate(data.data.proyectos.coordenadas);
+            setMutate(Math.random());
             setStep(2);
          }
       }
-
       if (data.data.proyectos.parent_id != 0) {
-
+         setMutate(Math.random());
          setStep(2);
       }
 
@@ -254,12 +292,11 @@ const NewProjectForm = ({ data, onClose, setMutate }) => {
       )
    }
 
-
    return (
       <Card>
          {step === 1 &&
             <Container >
-               <h2>Crear proyecto nuevo</h2>
+               <h2 style={{ marginBottom: "1.5rem" }}>Crear proyecto nuevo</h2>
                <Formik
                   initialValues={initialValues}
                   onSubmit={onSubmit}
@@ -268,10 +305,10 @@ const NewProjectForm = ({ data, onClose, setMutate }) => {
                   {({ errors, touched }) => (
                      <Form>
                         <Grid container spacing={5}>
-                           <Grid item xs={12} sm={6} lg={12}>
+                           <Grid item xs={12} sm={12} lg={12}>
                               <Grid container spacing={1} >
                                  <Grid item xs={12}>
-                                    <span>NOMBRE:</span><br />
+                                    <span >NOMBRE:</span><br />
                                     <Field style={styleInput} type="text" name="name" placeholder={`${data?.name ? data.name : "Ingrese nombre del proyecto"}`} />
                                     {errors.name && touched.name ? (
                                        <div style={styleError}>{errors.name}</div>
@@ -279,22 +316,22 @@ const NewProjectForm = ({ data, onClose, setMutate }) => {
                                     {/* <ErrorMessage name="email" component="div" /> */}
                                  </Grid>
 
-                                 <Grid item xs={12}>
-                                    <span>TIPOLOGIA:</span> <br />
-                                    <Field style={styleInput} type="text" name="tipologia" />
+                                 <Grid item xs={12} lg={6}>
+                                    <span >TIPOLOGIA</span> <br />
+                                    <Field style={{ ...styleInput, marginTop: ".5rem" }} type="text" name="tipologia" />
                                     {errors.tipologia && touched.tipologia ? (
                                        <div style={styleError}>{errors.tipologia}</div>
                                     ) : null}
                                  </Grid>
 
-                                 <Grid item xs={12}>
-                                    <MySelect style={styleInput} name="zone" label="ZONA" >
+                                 <Grid item xs={12} lg={6}>
+                                    <Select style={styleInput} name="zone" label="ZONA" >
                                        <option value="">Seleccione una zona</option>
 
                                        {zonas?.map(zona => (
                                           <option key={zona.id} value={zona.name}>{UpperLowerCase(zona.name)}</option>
                                        ))}
-                                    </MySelect>
+                                    </Select>
                                  </Grid>
 
                                  <Grid item xs={12}>
@@ -368,27 +405,35 @@ const NewProjectForm = ({ data, onClose, setMutate }) => {
                                        open={open}
                                        onClose={handleClose}
                                        closeAfterTransition
-                                    // componentsProps={{ backdrop: { style: { overflowY: "scroll" } } }}
                                     >
                                        <Fade in={open}>
                                           <Box sx={styleModal}>
 
 
-                                             <Grid container spacing={2} alignItems="center">
-                                                <Grid item xs={6}>
-                                                   <a href="/descargas/test.xlsx" download="Centros de Educaclientcion.xlsx">
-                                                      <Button variant="contained" color="primary" onClick={() => downloadExcel()}>
-                                                         Descargar
+                                             <Grid container spacing={2} >
+                                                <Grid item xs={12} lg={4}>
+                                                   <h2>Adjuntar archivo:</h2>
+                                                </Grid>
+                                                <Grid item xs={12} lg={8}>
+                                                   <Input type='file' accept='.xlsx, .xls' onChange={(e) => onImportExcel(e)} sx={{ display: "none" }} id="button_file" />
+                                                   <label htmlFor="button_file">
+                                                      <Button variant="outlined" component="span" style={{ width: "200px" }}>
+                                                         Subir
+                                                      </Button>
+                                                   </label>
+                                                </Grid>
+                                                <Grid item xs={12} lg={8} >
+                                                   <a href="/descargas/test.xlsx" download="Plantilla del Proyecto.xlsx">
+                                                      <Button variant="contained" color="primary" onClick={() => downloadExcel()} style={{ width: "200px" }}>
+                                                         Descargar Plantilla
                                                       </Button>
                                                    </a>
                                                 </Grid>
-                                                <Grid item xs={6}>
-                                                   <Input style={{ ...styleInput, width: "auto" }} type='file' accept='.xlsx, .xls' onChange={(e) => onImportExcel(e)} sx={{ display: "none" }} id="button_file" />
-                                                   <label htmlFor="button_file">
-                                                      <Button variant="contained" component="span">
-                                                         Upload
-                                                      </Button>
-                                                   </label>
+
+                                                <Grid item xs={12} lg={4} >
+                                                   <Button variant="outlined" color="primary" style={{ width: "100px" }} >
+                                                      Cerrar
+                                                   </Button>
                                                 </Grid>
                                              </Grid>
 
@@ -397,8 +442,6 @@ const NewProjectForm = ({ data, onClose, setMutate }) => {
                                           </Box>
                                        </Fade>
                                     </Modal>
-
-
 
                                     <Grid container spacing={1} sx={{ width: "100%", marginTop: "10px" }}>
                                        <Grid item xs={2} >
@@ -427,7 +470,7 @@ const NewProjectForm = ({ data, onClose, setMutate }) => {
                                              error={errors.rows && errors.rows[index]}
                                           />
                                        ))}
-                                       <Button variant='outlined' onClick={handleOnAdd}>Agregar</Button>
+                                       <Button sx={{ marginTop: "1rem" }} variant='outlined' onClick={handleOnAdd}>Agregar</Button>
                                     </Grid>
 
                                     {false ? (
@@ -435,11 +478,14 @@ const NewProjectForm = ({ data, onClose, setMutate }) => {
                                     ) : (
                                        <Grid item xs={12} marginTop="1rem">
                                           <Grid container spacing={1} sx={{ width: "100%" }}>
+                                             <Box sx={{ width: "100%", height: "5px", backgroundColor: "#F3F6F9", marginTop: "1rem" }}></Box>
+
+
                                              <Grid item xs={5} >
-                                                <span >AMBIENTES COMPLEMENTARIOS</span>
+                                                <span >{!!rowsAC.length && "AMBIENTES COMPLEMENTARIOS"}</span>
                                              </Grid>
                                              <Grid item xs={3}>
-                                                <span>AFORO MAXIMO</span>
+                                                <span>{!!rowsAC.length && "AFORO MAXIMO"}</span>
                                              </Grid>
                                              {rowsAC.map((row, index) => (
                                                 <RowFormAC
@@ -450,73 +496,83 @@ const NewProjectForm = ({ data, onClose, setMutate }) => {
                                                    disabledDeleted={index}
                                                 />
                                              ))}
+                                             <Grid item xs={8}>
+                                                Seleccionar Ambientes complementarios
+                                                <select style={{ ...styleInput, marginTop: "1rem", marginBottom: "1rem" }} onChange={(e) => handleOnAddAC(e.target.value)}  >
+                                                   <option value="">Ambiente Complementario</option>
+
+                                                   {ambientesComplementarios?.map(ambiente => (
+                                                      <option key={ambiente.ambienteComplementario} value={ambiente.ambienteComplementario}>{UpperLowerCase(ambiente.ambienteComplementario)}</option>
+                                                   ))}
+                                                </select>
+                                             </Grid>
+
+                                             <Box sx={{ width: "100%", height: "5px", backgroundColor: "#F3F6F9", marginBottom: "1rem" }}></Box>
+
                                           </Grid>
                                        </Grid>
                                     )}
                                  </Grid>
                               </Grid>
+                              <Grid sx={{ marginBottom: "2rem" }} xs={12} lg={12} container spacing={3}>
+                                 <Grid item xs={6}>
+                                    <span>PROVINCIA:</span> <br />
+                                    <Field style={styleInput} type="text" name="ubication" />
+                                    {errors.ubication && touched.ubication ? (
+                                       <div style={styleError}>{errors.ubication}</div>
+                                    ) : null}
+                                    {/* <ErrorMessage name="email" component="div" /> */}
+                                 </Grid>
+
+                                 <Grid item xs={6}>
+                                    <span>DISTRITO:</span> <br />
+                                    <Field style={styleInput} type="text" name="distrito" />
+                                    {errors.distrito && touched.distrito ? (
+                                       <div style={styleError}>{errors.distrito}</div>
+                                    ) : null}
+
+                                    {/* <ErrorMessage name="email" component="div" /> */}
+                                 </Grid>
+
+                                 <Grid item xs={6}>
+                                    <span>RESPONSABLE:</span> <br />
+                                    <Field style={styleInput} type="text" name="manager" />
+                                    {errors.manager && touched.manager ? (
+                                       <div style={styleError}>{errors.manager}</div>
+                                    ) : null}
+                                    {/* <ErrorMessage name="email" component="div" /> */}
+                                 </Grid>
+
+                                 <Grid item xs={6}>
+                                    <span>CLIENTE:</span> <br />
+                                    <Field style={styleInput} type="text" name="client" />
+                                    {errors.client && touched.client ? (
+                                       <div style={styleError}>{errors.client}</div>
+                                    ) : null}
+
+                                    {/* <ErrorMessage name="email" component="div" /> */}
+                                 </Grid>
+                              </Grid>
+                              <Grid item xs={12} container spacing={2} justifyContent="end" >
+
+                                 <Grid item xs={12} lg={12}>
+                                    <iframe className="iframe"
+                                       src={`https://maps.google.com/?ll=${coordenadas}&z=16&t=m&output=embed`}
+                                       height="100%" width="100%" frameBorder="0" style={{ border: 0 }} allowFullScreen>
+                                    </iframe>
+                                 </Grid>
+
+                                 <Grid item xs={12} lg={12}>
+                                    <span>Coordenadas:</span> <br />
+                                    <Field style={styleInput} type="text" value={coordenadas} onChange={e => setCoordenadas(e.target.value)} name="coordenadas"
+                                       required
+                                    />
+                                 </Grid>
+                                 {/* </Grid> */}
+
+                              </Grid>
                            </Grid>
-                           {/* UBICACIÓN */}
 
-                           {/* <Grid spacing={1} sx={{ marginBottom: "2rem" }} direction="column" xs={6}> */}
-                           <Grid item xs={12} container spacing={2} justifyContent="end" >
-                              <Grid sx={{ marginBottom: "2rem" }} xs={12} lg={6} item>
-                                 {/* <Grid item xs={12}> */}
-                                 <span>PROVINCIA:</span> <br />
-                                 <Field style={styleInput} type="text" name="ubication" />
-                                 {errors.ubication && touched.ubication ? (
-                                    <div style={styleError}>{errors.ubication}</div>
-                                 ) : null}
-                                 {/* <ErrorMessage name="email" component="div" /> */}
-                                 {/* </Grid> */}
-
-                                 {/* <Grid item xs={12}> */}
-                                 <span>DISTRITO:</span> <br />
-                                 <Field style={styleInput} type="text" name="distrito" />
-                                 {errors.distrito && touched.distrito ? (
-                                    <div style={styleError}>{errors.distrito}</div>
-                                 ) : null}
-
-                                 {/* <ErrorMessage name="email" component="div" /> */}
-                                 {/* </Grid> */}
-
-                                 {/* <Grid item xs={12}> */}
-                                 <span>RESPONSABLE:</span> <br />
-                                 <Field style={styleInput} type="text" name="manager" />
-                                 {errors.manager && touched.manager ? (
-                                    <div style={styleError}>{errors.manager}</div>
-                                 ) : null}
-                                 {/* <ErrorMessage name="email" component="div" /> */}
-                                 {/* </Grid> */}
-
-                                 {/* <Grid item xs={12}> */}
-                                 <span>CLIENTE:</span> <br />
-                                 <Field style={styleInput} type="text" name="client" />
-                                 {errors.client && touched.client ? (
-                                    <div style={styleError}>{errors.client}</div>
-                                 ) : null}
-
-                                 {/* <ErrorMessage name="email" component="div" /> */}
-                                 {/* </Grid> */}
-                              </Grid>
-
-                              {/* <Grid xs={6} item> */}
-                              <Grid item xs={12} lg={6}>
-                                 <iframe className="iframe"
-                                    src={`https://maps.google.com/?ll=${coordenadas}&z=16&t=m&output=embed`}
-                                    height="100%" width="100%" frameBorder="0" style={{ border: 0 }} allowFullScreen>
-                                 </iframe>
-                              </Grid>
-
-                              <Grid item xs={12} lg={6}>
-                                 <span>Coordenadas:</span> <br />
-                                 <Field style={styleInput} type="text" value={coordenadas} onChange={e => setCoordenadas(e.target.value)} name="coordenadas"
-                                    required
-                                 />
-                              </Grid>
-                              {/* </Grid> */}
-
-                           </Grid>
                         </Grid>
 
                         <Button variant="contained" type="submit" sx={{ marginTop: "2rem", marginBottom: "2rem" }}>
@@ -531,68 +587,18 @@ const NewProjectForm = ({ data, onClose, setMutate }) => {
          {step === 2 &&
             <Container maxWidth="lg" sx={{ marginTop: "2rem" }}>
                <Box  >
-                  <Button onClick={() => setStep(3)}>Continuar</Button>
 
-               </Box>
-
-               <img src="/images/cuadro1.jpg" alt="img" style={{ display: "flex", width: "70%", margin: "0 auto" }} />
-            </Container>
-         }
-
-         {step === 3 &&
-            <Container maxWidth="lg" sx={{ marginTop: "2rem" }}>
-               <Box  >
-                  <Button onClick={() => setStep(4)}>Continuar 3</Button>
-
-               </Box>
-
-               <img src="/images/cuadro1.jpg" alt="img" style={{ display: "flex", width: "70%", margin: "0 auto" }} />
-            </Container>
-         }
-
-         {step === 4 &&
-            <Container maxWidth="lg" sx={{ marginTop: "2rem" }}>
-               <Box  >
-                  <Button onClick={() => setStep(5)}>Continuar 4</Button>
-
-               </Box>
-
-               <img src="/images/cuadro1.jpg" alt="img" style={{ display: "flex", width: "70%", margin: "0 auto" }} />
-            </Container>
-         }
-
-         {step === 5 &&
-            <Container maxWidth="lg" sx={{ marginTop: "2rem" }}>
-               <Box  >
-                  <Button onClick={() => setStep(6)}>Continuar 5</Button>
-
-               </Box>
-
-               <img src="/images/cuadro1.jpg" alt="img" style={{ display: "flex", width: "70%", margin: "0 auto" }} />
-            </Container>
-         }
-
-         {step === 6 &&
-            <Container maxWidth="lg" sx={{ marginTop: "2rem" }}>
-               <Box  >
-                  {/* <Link
-                     component={RouterLink}
-                     color="inherit"
-                     to={"/"}
-                     sx={{ mt: 2 }}> */}
                   <Button onClick={() => {
                      onClose()
-                     // location.reload();
+                     // setMutate(Math.random());
                   }
-                  }>Continuar fin</Button>
-                  {/* </Link> */}
-
+                  }>Cerrar</Button>
                </Box>
 
-               <img src="/images/cuadro1.jpg" alt="img" style={{ display: "flex", width: "70%", margin: "0 auto" }} />
+               <img src={`/images/${imageToAulas()}`} alt="img" style={{ display: "flex", width: "70%", margin: "0 auto" }} />
             </Container>
          }
-      </Card>
+      </Card >
    )
 };
 

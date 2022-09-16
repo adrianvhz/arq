@@ -61,10 +61,12 @@ export function RowForm({ onChange, onRemove, vertice, lado, dist, angulo, retir
                 />
             </Grid>
 
+            <Grid item xs={1}>
+                <IconButton disabled={disabledDeleted === 0 || disabledDeleted === 1 || disabledDeleted === 2} onClick={() => onRemove()} aria-label="delete">
+                    <DeleteIcon />
+                </IconButton>
+            </Grid>
 
-            <IconButton disabled={disabledDeleted === 0 || disabledDeleted === 1 || disabledDeleted === 2} onClick={() => onRemove()} aria-label="delete">
-                <DeleteIcon />
-            </IconButton>
         </Grid>
     );
 }

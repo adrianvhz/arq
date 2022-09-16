@@ -6,9 +6,11 @@ import { Box, Container } from '@mui/material';
 
 const styleGrid = {
     border: "1.5px solid #AFAFAF",
-    width: "100%",
+    // width: "100%",
     fontSize: "14px",
     padding: "8px 6px",
+    minWidth: "20px",
+    fontWeight: 600,
 }
 
 const containerCustom = {
@@ -18,14 +20,12 @@ const containerCustom = {
 }
 
 const dataBoxGrid = {
-    // width: "1050px",
     width: "100%",
-    // marginLeft: "2rem ",
-    // marginRight: "2rem",
+    display: "flex"
+
 
 }
 const GridData = (data) => {
-    // const [dataCompleta] = useState(data.data)
 
     const [dataFiltrada, setDataFiltrada] = useState([])
     const [fechaInicio, setFechaInicio] = useState('')
@@ -99,7 +99,7 @@ const GridData = (data) => {
     }, [data.data])
 
     return (
-        <Container >
+        <div style={{ marginLeft: "2rem", marginRight: "2rem" }} >
 
             <Grid container spacing={3} sx={{ marginBottom: "1.75rem" }}>
                 <Grid item xs={12} sm={6} lg={4}>
@@ -138,55 +138,46 @@ const GridData = (data) => {
             }}>
 
                 <div style={dataBoxGrid}>
-
-                    <Grid container>
-                        <Grid item xs={0.5} sx={{ ...styleGrid, fontWeight: 600 }}>
-                            {/* <Box width="100%" sx={styleGrid}> */}
-                            ID
-
-                            {/* </Box> */}
-                        </Grid>
-                        <Grid item xs={0.5} sx={{ ...styleGrid, fontWeight: 600 }}>
-
-                            Tipo
-                        </Grid>
-                        <Grid item xs={2} sx={{ ...styleGrid, fontWeight: 600 }}>
-                            Nombre del proyecto
-                        </Grid>
-                        <Grid item xs={1} sx={{ ...styleGrid, fontWeight: 600 }}>
-                            Ubicacion
-                        </Grid>
-                        <Grid item xs={1.5} sx={{ ...styleGrid, fontWeight: 600 }}>
-                            Responsable
-                        </Grid>
-                        <Grid item xs={1.5} sx={{ ...styleGrid, fontWeight: 600 }}>
-                            Fecha de Elab.
-                        </Grid>
-                        <Grid item xs={1.5} sx={{ ...styleGrid, fontWeight: 600 }}>
-                            Fecha de Act.
-                        </Grid>
-                        <Grid item xs={2} sx={{ ...styleGrid, fontWeight: 600 }}>
-                            Nombe del cliente
-                        </Grid>
-                        <Grid item xs={1.5} sx={{ ...styleGrid, fontWeight: 600 }}>
-                            Acciones
-                        </Grid>
-
-
-
-
-                    </Grid>
-                    {dataFiltrada.map((row, index) =>
-                        <RowList key={index} row={row} index={index} data={dataFiltrada} />
-                    )}
+                    <Box sx={{ ...styleGrid, width: "5%", minWidth: "50px" }}>
+                        ID
+                    </Box>
+                    <Box sx={{ ...styleGrid, width: "5%", minWidth: "50px" }}>
+                        Tipo
+                    </Box>
+                    <Box sx={{ ...styleGrid, minWidth: "180px", width: "20%" }}>
+                        Nombre del Proyecto
+                    </Box>
+                    <Box sx={{ ...styleGrid, minWidth: "100px", width: "10%" }}>
+                        Ubicacion
+                    </Box>
+                    <Box sx={{ ...styleGrid, minWidth: "150px", width: "10%" }}>
+                        Responsable
+                    </Box>
+                    <Box sx={{ ...styleGrid, minWidth: "120px", width: "15%" }}>
+                        Fecha de Elab.
+                    </Box>
+                    <Box sx={{ ...styleGrid, minWidth: "120px", width: "15%" }}>
+                        Fecha de Act.
+                    </Box>
+                    <Box sx={{ ...styleGrid, minWidth: "150px", width: "20%" }}>
+                        Nombre del Cliente
+                    </Box>
+                    <Box sx={{ ...styleGrid, minWidth: "50px", width: "10%" }}>
+                        Acciones
+                    </Box>
                 </div>
+
+
+                {dataFiltrada.map((row, index) =>
+                    <RowList key={index} row={row} index={index} data={dataFiltrada} icon={data.typeProject.icon} setMutate={data.setMutate} />
+                )}
             </Box>
 
 
 
 
 
-        </Container>
+        </div>
     )
 }
 
