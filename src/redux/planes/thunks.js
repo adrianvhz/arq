@@ -19,11 +19,11 @@ export const getPlanUserById = () => {
 }
 
 
-export const startSavePerfil = () => {
+export const startSavePerfil = (flag,password='') => {
 
     return async(dispatch, getState) => {
-        const {uid,name,lastname} = getState().auth;
-       const {data} = await updatePersonalData({uid,name,lastname})
+        const {uid,name,lastname,email} = getState().auth;
+       const {data} = await updatePersonalData({uid,name,lastname,email,password:password,flag:flag})
        const user =  data.data
 
        dispatch(updatePerfil({ 

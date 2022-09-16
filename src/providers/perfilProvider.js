@@ -17,9 +17,9 @@ export const getShowPlanUserById = async (id) => {
 }
 
 
-export const updatePersonalData = async ({uid,name,lastname}) => {
+export const updatePersonalData = async ({uid,name,lastname,email,password,flag}) => {
 
-    const resp = await updatePersonalDataService({uid,name,lastname})
+    const resp = await updatePersonalDataService({uid,name,lastname,email,password,flag})
 
     try {
         return resp

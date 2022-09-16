@@ -7,8 +7,8 @@ export const getShowPlanUserByIdService = async (id) => {
 		
 }
 
-export const updatePersonalDataService = async ({uid,name,lastname}) => {
-	return await request({ url: `usuario/update/${uid}`, method: 'PUT', data: { name, lastname } })
+export const updatePersonalDataService = async ({uid,name,lastname,email,password,flag}) => {
+	return await request({ url: `usuario/update/${uid}`, method: 'PUT', data: { name,lastname,email,password,flag } })
 		
 }
 

@@ -25,9 +25,9 @@ export const  authSlice = createSlice({
 			state.name = payload.name,
 			state.lastname = payload.lastname,
 			state.email = payload.email,
-			state.password = null
-			state.photoUrl = null
-			state.errorMessage = null
+			state.password = "",
+			state.photoUrl = null,
+			state.errorMessage = null,
 			state.successMessage = ""
 			
 		},
@@ -39,7 +39,7 @@ export const  authSlice = createSlice({
 			state.name = null,
 			state.lastname = null,
 			state.email = null,
-			state.password = null
+			state.password = ""
 			state.photoUrl = null
 			state.errorMessage = payload?.errorMessage
 		},
