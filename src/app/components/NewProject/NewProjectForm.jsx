@@ -499,7 +499,7 @@ const NewProjectForm = ({ data, onClose, setMutate }) => {
                                              <Grid item xs={8}>
                                                 Seleccionar Ambientes complementarios
                                                 <select style={{ ...styleInput, marginTop: "1rem", marginBottom: "1rem" }} onChange={(e) => handleOnAddAC(e.target.value)}  >
-                                                   <option value="">Ambiente Complementario</option>
+                                                   <option value="">Seleccione</option>
 
                                                    {ambientesComplementarios?.map(ambiente => (
                                                       <option key={ambiente.ambienteComplementario} value={ambiente.ambienteComplementario}>{UpperLowerCase(ambiente.ambienteComplementario)}</option>
