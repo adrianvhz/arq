@@ -18,10 +18,10 @@ import {  login, updatePerfil } from "../../../redux/auth";
 import { startSavePerfil } from "../../../redux/planes/thunks";
 import Swal from "sweetalert2";
 
-export const DatosComponent = ({user}) => {
+export const PasswordComponent = ({user}) => {
   const { successMessage } = user
    const isValidate = false;
-  const {  name,lastname,onInputChange,formState } = useForm(user);
+  const {  password,onInputChange,formState } = useForm(user);
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -30,12 +30,12 @@ export const DatosComponent = ({user}) => {
 
   useEffect(() => {
     if (successMessage.length > 0) {
-      Swal.fire("Datos actualizado", user.successMessage, "success");
+      Swal.fire("Contraseña actualizada", user.successMessage, "success");
     }
   }, [successMessage]);
 
   const onSavePerfil = () => {
-    dispatch(startSavePerfil(1));
+    dispatch(startSavePerfil(3,password));
   };
 
 
@@ -55,26 +55,16 @@ export const DatosComponent = ({user}) => {
           <TextField
             error={isValidate}
             id="outlined-error"
-            label="Nombres"
-            type="text"
+            label="Contrasena"
+            type="password"
             fullWidth
-            placeholder="Ingrese un nombre"
-            name="name"
-            value={name}
+            placeholder="Ingrese un contraseña"
+            name="password"
+            value={password}
             onChange={onInputChange}
           />
         </FormControl>
-        <FormControl fullWidth sx={{ m: 1 }} variant="standard">
-          <TextField
-            error={isValidate}
-            id="outlined-error"
-            label="Apellidos"
-            name="lastname"
-            value={lastname}
-            onChange={onInputChange}
-          />
-        </FormControl>
-
+        
         <FormControl sx={{ m: 1 }} variant="standard">
           <Button 
           variant="contained"

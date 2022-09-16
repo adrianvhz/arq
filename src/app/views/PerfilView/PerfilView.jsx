@@ -4,9 +4,9 @@ import { BasicTabs } from './../../components/BasicTabs';
 import { Grid } from '@mui/material';
 import { StarOutline } from '@mui/icons-material';
 import { Typography } from '@mui/material';
-import { DatosComponent } from './../../components/DatosComponent/DatosComponent';
 import { PlanComponent } from '../../components/PlanComponent/PlanComponent';
 import { useDispatch, useSelector } from 'react-redux';
+import { EmailComponent,DatosComponent,PasswordComponent  } from '../../components/DatosComponent';
 
 export const PerfilView = () => {
 
@@ -15,7 +15,7 @@ export const PerfilView = () => {
 
     const  { data } = planes
    
-    const titulo =['Persona','Plan de pago']
+    const titulo =['Persona','Correo','Contrasena','Plan de pago']
     return (
         <Grid
         container
@@ -26,7 +26,9 @@ export const PerfilView = () => {
             <Grid item xs={12}>
                 <BasicTabs titulo={titulo} >
                     <DatosComponent user={user} key={0}   />
-                    <PlanComponent  key={1} planes={data} />
+                    <EmailComponent user={user} key={1}   />
+                    <PasswordComponent user={user} key={2}   />
+                    <PlanComponent  key={3} planes={data} />
                 </BasicTabs>
 
             </Grid>
