@@ -29,7 +29,7 @@ export const styleModal = {
     '@media (max-width: 1024px)': {
         width: '85%',
         height: '100%',
-        left: '50%',
+        left: '40%',
     }
 
 
