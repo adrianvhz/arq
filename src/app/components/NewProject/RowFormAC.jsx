@@ -7,22 +7,19 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 export function RowFormAC({ onChange, onRemove, ambienteComplementario, capacidad }) {
     return (
-        <Grid container spacing={1} sx={{ marginBottom: ".5rem" }}>
-            <Grid item xs={5}>
+        <Grid container spacing={1} sx={{ marginBottom: "1rem" }}>
+            <Grid item xs={8} sm={5}>
                 <input
                     value={ambienteComplementario}
                     disabled
                     style={{ ...styleInput, textAlign: "center" }}
-                // onChange={e => onChange("ambienteComplementario", e.target.value)}
 
                 />
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={3} sm={3}>
 
                 <input
-                    // placeholder="Email"
                     style={{ ...styleInput, textAlign: "center" }}
-                    // disabled
                     value={capacidad}
                     onChange={e => onChange("capacidad", e.target.value)}
                     required
@@ -30,10 +27,11 @@ export function RowFormAC({ onChange, onRemove, ambienteComplementario, capacida
 
                 />
             </Grid>
-
-            <IconButton onClick={() => onRemove()} aria-label="delete">
-                <DeleteIcon />
-            </IconButton>
+            <Grid item xs={1}>
+                <IconButton onClick={() => onRemove()} aria-label="delete">
+                    <DeleteIcon />
+                </IconButton>
+            </Grid>
         </Grid>
     );
 }

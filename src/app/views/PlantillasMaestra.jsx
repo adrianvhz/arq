@@ -2,9 +2,33 @@ import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import React from 'react'
+import { useState } from 'react';
+import { useEffect } from 'react';
 import { Link as RouterLink } from "react-router-dom";
+import { arqPlataformAxios } from '../../utils/arqPlataformAxios';
 
 const PlantillasMaestra = () => {
+    const [plantillas, setPlantillas] = useState([]);
+
+    const getTypeProject = async () => {
+        const data = await arqPlataformAxios.get(`typeProject`);
+        const dataMapeada = data.data.map((typeProject) => {
+            return {
+                id: typeProject.id,
+                name: typeProject.name,
+                icon: typeProject.icon,
+                slug: typeProject.slug,
+                show: typeProject.show,
+            }
+        });
+        setPlantillas(dataMapeada)
+    }
+
+    useEffect(() => {
+        getTypeProject();
+    }, []);
+
+    if (!plantillas) return null;
 
     return (
         <div>
@@ -30,7 +54,7 @@ const PlantillasMaestra = () => {
                         component={RouterLink}
                         key={idx}
                         color="inherit"
-                        to={plantilla.to}
+                        to={`/${plantilla.slug}`}
                         sx={{ mt: 2 }}>
                         <Paper sx={{
                             cursor: 'pointer',
@@ -44,7 +68,7 @@ const PlantillasMaestra = () => {
                             borderRadius: '20px',
                             textAlign: 'center',
                         }} elevation={5}>
-                            <span>{plantilla.nombre.toUpperCase()}</span>
+                            <span>{plantilla.name.toUpperCase()}</span>
                         </Paper>
                     </Link>
                 ))}
@@ -55,20 +79,3 @@ const PlantillasMaestra = () => {
 
 
 export default PlantillasMaestra
-
-const plantillas = [{
-    nombre: 'Educacion',
-    route: '/educacion',
-    to: '/educacion',
-
-},
-{
-    nombre: 'Salud',
-    route: '/salud',
-    to: '/salud',
-},
-{
-    nombre: "Infraestructura Urbana",
-    route: '/infraestructura-urbana',
-    to: '/infraestructura',
-}]

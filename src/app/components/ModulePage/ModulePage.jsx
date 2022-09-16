@@ -10,12 +10,23 @@ import styled from '@mui/material/styles/styled';
 import NewProject from '../NewProject/NewProject'
 import { plataformAxios } from '../../../services/zonesService';
 import { useSelector, useDispatch } from 'react-redux';
+import { arqPlataformAxios } from '../../../utils/arqPlataformAxios';
 
 
 const ModulePage = ({ pagina }) => {
 	const [project, setProject] = useState(null)
 	const id = useSelector((state) => state.auth.uid);
 	const [mutate, setMutate] = useState("init")
+
+	const [plantillas, setPlantillas] = useState([]);
+	const getTypeProject = async () => {
+		const data = await arqPlataformAxios.get(`typeProject/${pagina}`);
+		setPlantillas(data.data[0])
+	}
+
+	useEffect(() => {
+		getTypeProject();
+	}, []);
 
 	const dataFilterType = (data = '') => {
 		const projectExist = data.filter((item) => item.deleted_at !== null)
@@ -83,28 +94,10 @@ const ModulePage = ({ pagina }) => {
 			</div>
 
 
-			<GridData data={project} ></GridData>
+			<GridData data={project} typeProject={plantillas} setMutate={setMutate} ></GridData>
 
 		</Card>
 	)
 }
-
-
-
-// const ColorButton = styled(Button)({
-// 	borderRadius: ".42rem",
-// 	color: "#ffffff",
-// 	padding: ".60rem 1rem",
-// 	fontFamily: "inherit",
-// 	textTransform: "none",
-// 	border: "1px solid #1BC5BD",
-// 	boxShadow: "none",
-// 	backgroundColor: "#1BC5BD",
-// 	'&:hover': {
-// 		backgroundColor: "#2cb4ad",
-// 		boxShadow: "none"
-// 	}
-// })
-
 
 export default ModulePage
