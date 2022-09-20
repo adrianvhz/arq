@@ -454,8 +454,8 @@ const NewProjectForm = ({ data, onClose, setMutate }) => {
                                                    </label>
                                                 </Grid>
                                                 <Grid item xs={12} lg={8} >
-                                                   <a href="/descargas/test.xlsx" download="Plantilla del Proyecto.xlsx">
-                                                      <Button variant="contained" color="primary" onClick={() => downloadExcel()} style={{ width: "200px" }}>
+                                                   <a href="/descargas/template_project.xlsx" download="Plantilla del Proyecto.xlsx">
+                                                      <Button variant="contained" color="primary" style={{ width: "200px" }}>
                                                          Descargar Plantilla
                                                       </Button>
                                                    </a>
