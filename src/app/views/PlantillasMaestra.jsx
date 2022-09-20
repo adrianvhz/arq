@@ -5,13 +5,13 @@ import React from 'react'
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { Link as RouterLink } from "react-router-dom";
-import { arqPlataformAxios } from '../../utils/arqPlataformAxios';
+import { arqPlataformAxios, request } from '../../utils/arqPlataformAxios';
 
 const PlantillasMaestra = () => {
     const [plantillas, setPlantillas] = useState([]);
 
     const getTypeProject = async () => {
-        const data = await arqPlataformAxios.get(`typeProject`);
+        const data = await request({ url: 'typeProject', method: 'GET' });
         const dataMapeada = data.data.map((typeProject) => {
             return {
                 id: typeProject.id,
