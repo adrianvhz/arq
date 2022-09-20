@@ -5,7 +5,7 @@ export const getData = (file, data) => {
 	form.append("file", file);
 	form.append("data", data);
 
-	return axios.post("http://arq.com/admin/read", form, {
+	return axios.post(import.meta.env.VITE_READ_EXCEL, form, {
 		headers: {
 			"Content-Type": "multipart/form-data"
 		}
