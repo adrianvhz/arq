@@ -10,7 +10,6 @@ import Input from "@mui/material/Input";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import * as XLSX from 'xlsx';
-import { plataformAxios } from '../../../services/zonesService';
 import { UpperLowerCase } from '../../../utils/utils';
 import { RowForm } from './RowForm';
 import * as yup from 'yup';
@@ -19,6 +18,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/system/Box';
 import { useSelector } from 'react-redux';
 import { Fade, Modal } from '@mui/material';
+import { request } from '../../../utils/arqPlataformAxios';
 
 export const styleInput = {
    width: "100%",
@@ -67,8 +67,6 @@ const NewProjectForm = ({ data, onClose, setMutate }) => {
    const handleOpen = () => setOpen(true);
    const handleClose = () => setOpen(false);
 
-   console.log(!!rowsAC.length)
-
    const imageToAulas = () => {
       if (aforoInicial > 0 && aforoPrimaria > 0 && aforoSecundaria > 0) {
          return "inicial_primaria_secundaria.png"
@@ -115,7 +113,8 @@ const NewProjectForm = ({ data, onClose, setMutate }) => {
 
    //Obtener las zonas desde el api
    const getZones = async () => {
-      const data = await plataformAxios.get(`zones`);
+      const data = await request({ url: 'zones', method: 'GET' });
+
       setZonas(data.data.zones);
    }
    useEffect(() => {
@@ -231,11 +230,11 @@ const NewProjectForm = ({ data, onClose, setMutate }) => {
          user_id: id
       };
 
-      const data = await plataformAxios.post(`projects`, dataComplete);
+      const data = await request({ url: `projects`, method: 'POST', data: dataComplete });
 
       if (data.data.proyectos.parent_id == 0) {
 
-         const dataHijo = await plataformAxios.post(`projects`, { ...dataComplete, parent_id: data.data.proyectos.id, name: "VERSION 1" });
+         const dataHijo = await request({ url: `projects`, method: 'POST', data: { ...dataComplete, parent_id: data.data.proyectos.id, name: "VERSION 1" } });
          if (!!dataHijo.data.proyectos) {
             setMutate(Math.random());
             setStep(2);

@@ -1,16 +1,9 @@
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
-import Container from '@mui/material/Container';
 import React, { useEffect, useState } from 'react';
 import GridData from '../GridData/GridData';
-import AddIcon from '@mui/icons-material/Add';
-import styled from '@mui/material/styles/styled';
 import NewProject from '../NewProject/NewProject'
-import { plataformAxios } from '../../../services/zonesService';
-import { useSelector, useDispatch } from 'react-redux';
-import { arqPlataformAxios } from '../../../utils/arqPlataformAxios';
+import { useSelector } from 'react-redux';
+import { request } from '../../../utils/arqPlataformAxios';
 
 
 const ModulePage = ({ pagina }) => {
@@ -20,7 +13,7 @@ const ModulePage = ({ pagina }) => {
 
 	const [plantillas, setPlantillas] = useState([]);
 	const getTypeProject = async () => {
-		const data = await arqPlataformAxios.get(`typeProject/${pagina}`);
+		const data = await request({ url: `typeProject/${pagina}`, method: 'GET' });
 		setPlantillas(data.data[0])
 	}
 
@@ -49,7 +42,7 @@ const ModulePage = ({ pagina }) => {
 
 
 	const getProjects = async () => {
-		const data = await plataformAxios.get(`projects/${id}`);
+		const data = await request({ url: `projects/${id}`, method: 'GET' });
 		if (data) {
 			dataFilterType(data.data.proyectos)
 		}
