@@ -19,6 +19,7 @@ import Box from '@mui/system/Box';
 import { useSelector } from 'react-redux';
 import { Fade, Modal } from '@mui/material';
 import { request } from '../../../utils/arqPlataformAxios';
+import { getData } from '../../../services/spreadsheetService';
 
 export const styleInput = {
    width: "100%",
@@ -50,6 +51,7 @@ const NewProjectForm = ({ data, onClose, setMutate }) => {
    const [rows, setRows] = useState(data?.puntos ? JSON.parse(data?.puntos) : [{ ...defaultState, vertice: "P1" }].concat({ ...defaultState, vertice: "P2" }).concat({ ...defaultState, vertice: "P3" }));
    const [rowsAC, setRowsAC] = useState(data?.ambientes ? JSON.parse(data?.ambientes) : []);
    const [tipo, setTipo] = useState(data?.sublevel || "unidocente");
+   const [zone, setZone] = useState();
    const [aforoInicial, setAforoInicial] = useState(data?.aforo ? JSON.parse(data?.aforo).aforoInicial : 0);
    const [aulaInicial, setAulaInicial] = useState(data?.aforo ? JSON.parse(data?.aforo).aulaInicial : 0);
    const [aforoPrimaria, setAforoPrimaria] = useState(data?.aforo ? JSON.parse(data?.aforo).aforoPrimaria : 0);
@@ -124,21 +126,39 @@ const NewProjectForm = ({ data, onClose, setMutate }) => {
    // Leer el excel y colocar en la columna de aulas
    useEffect(() => {
       if (dataExcel) {
-         setAforoInicial(dataExcel[3].__EMPTY_2)
-         setAulaInicial(Math.round(dataExcel[3].__EMPTY_6))
-         if (dataExcel[3].__EMPTY_2 > 0 || dataExcel[3].__EMPTY_6 > 0) {
-            setInicial(true)
+         for (var key of Object.keys(dataExcel)) {
+            if (key === "inicial") {
+               setAforoInicial(dataExcel[key].aforo);
+               setAulaInicial(dataExcel[key].aulas);
+               setInicial(true);
+            }
+            else if (key === "primaria") {
+               setAforoPrimaria(dataExcel[key].aforo);
+               setAulaPrimaria(dataExcel[key].aulas);
+               setPrimaria(true);
+            }
+            else if (key === "secundaria") {
+               setAforoSecundaria(dataExcel[key].aforo);
+               setAulaSecundaria(dataExcel[key].aulas);
+               setSecundaria(true);
+            }
          }
-         setAforoPrimaria(dataExcel[12].__EMPTY_2)
-         setAulaPrimaria(Math.round(dataExcel[12].__EMPTY_6))
-         if (dataExcel[12].__EMPTY_2 > 0 && dataExcel[12].__EMPTY_6 > 0) {
-            setPrimaria(true)
-         }
-         setAforoSecundaria(dataExcel[21].__EMPTY_2)
-         setAulaSecundaria(Math.round(dataExcel[21].__EMPTY_6))
-         if (dataExcel[21].__EMPTY_2 > 0 && dataExcel[21].__EMPTY_6 > 0) {
-            setSecundaria(true)
-         }
+
+         // setAforoInicial(dataExcel[3].__EMPTY_2)
+         // setAulaInicial(Math.round(dataExcel[3].__EMPTY_6))
+         // if (dataExcel[3].__EMPTY_2 > 0 || dataExcel[3].__EMPTY_6 > 0) {
+         //    setInicial(true)
+         // }
+         // setAforoPrimaria(dataExcel[12].__EMPTY_2)
+         // setAulaPrimaria(Math.round(dataExcel[12].__EMPTY_6))
+         // if (dataExcel[12].__EMPTY_2 > 0 && dataExcel[12].__EMPTY_6 > 0) {
+         //    setPrimaria(true)
+         // }
+         // setAforoSecundaria(dataExcel[21].__EMPTY_2)
+         // setAulaSecundaria(Math.round(dataExcel[21].__EMPTY_6))
+         // if (dataExcel[21].__EMPTY_2 > 0 && dataExcel[21].__EMPTY_6 > 0) {
+         //    setSecundaria(true)
+         // }
       }
    }, [dataExcel])
 
@@ -199,7 +219,7 @@ const NewProjectForm = ({ data, onClose, setMutate }) => {
       return (
          <div>
             <label htmlFor={props.id || props.name}>{label}</label>
-            <select {...field} {...props} />
+            <select {...field} onChangeCapture={(evt) => setZone(evt.target.value)} {...props} />
             {meta.touched && meta.error ? (
                <div style={styleError}>{meta.error}</div>
             ) : null}
@@ -252,27 +272,38 @@ const NewProjectForm = ({ data, onClose, setMutate }) => {
       setTipo((event.target.value))
    };
 
-   const onImportExcel = file => {
+   const onImportExcel = async (file) => {
       handleClose();
       const { files } = file.target;
-      const fileReader = new FileReader();
-      fileReader.onload = event => {
-         try {
-            const { result } = event.target;
-            const workbook = XLSX.read(result, { type: 'binary' });
-            let data = [];
-            for (const sheet in workbook.Sheets) {
-               if (workbook.Sheets.hasOwnProperty(sheet)) {
-                  data = data.concat(XLSX.utils.sheet_to_json(workbook.Sheets[sheet]));
-               }
-            }
-            setDataExcel(data);
-         } catch (e) {
-            <Alert severity="error">Archivo Incorrecto</Alert>
-            return;
-         }
-      };
-      fileReader.readAsBinaryString(files[0]);
+      var levels = [];
+      console.log(aulaInicial)
+      if (inicial) levels.push("inicial");
+      if (primaria) levels.push("primaria");
+      if (secundaria) levels.push("secundaria");
+      const data = JSON.stringify({ zone, levels, type: tipo }); // '{"zone": "urbano", "levels": ["inicial", "secundaria"], "type": "polidocente multigrado"}'
+      var res = await getData(files[0], data);
+      setDataExcel(res.data);
+
+
+
+      // const fileReader = new FileReader();
+      // fileReader.onload = event => {
+      //    try {
+      //       const { result } = event.target;
+      //       const workbook = XLSX.read(result, { type: 'binary' });
+      //       let data = [];
+      //       for (const sheet in workbook.Sheets) {
+      //          if (workbook.Sheets.hasOwnProperty(sheet)) {
+      //             data = data.concat(XLSX.utils.sheet_to_json(workbook.Sheets[sheet]));
+      //          }
+      //       }
+      //       setDataExcel(data);
+      //    } catch (e) {
+      //       <Alert severity="error">Archivo Incorrecto</Alert>
+      //       return;
+      //    }
+      // };
+      // fileReader.readAsBinaryString(files[0]);
    }
 
    const nivelGrid = (label, aforo, aula) => {
@@ -422,8 +453,8 @@ const NewProjectForm = ({ data, onClose, setMutate }) => {
                                                    </label>
                                                 </Grid>
                                                 <Grid item xs={12} lg={8} >
-                                                   <a href="/descargas/test.xlsx" download="Plantilla del Proyecto.xlsx">
-                                                      <Button variant="contained" color="primary" onClick={() => downloadExcel()} style={{ width: "200px" }}>
+                                                   <a href="/descargas/template_project.xlsx" download="Plantilla del Proyecto.xlsx">
+                                                      <Button variant="contained" color="primary" style={{ width: "200px" }}>
                                                          Descargar Plantilla
                                                       </Button>
                                                    </a>
