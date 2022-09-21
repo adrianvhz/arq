@@ -10,11 +10,9 @@ import { EmailComponent,DatosComponent,PasswordComponent  } from '../../componen
 
 export const PerfilView = () => {
 
-    const {planes} = useSelector(status => status.plan)
+    const { planes  }  = useSelector(status => status.plan)
     const user = useSelector(status => status.auth)
-
-    const  { data } = planes
-   
+    const   data  = planes
     const titulo =['Persona','Correo','Contrasena','Plan de pago']
     return (
         <Grid

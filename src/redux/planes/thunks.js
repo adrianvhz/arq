@@ -10,7 +10,8 @@ export const getPlanUserById = () => {
        //const id = 1;
 
       const resp = await getShowPlanUserById(uid)
-      dispatch(getPlanes(resp.data))
+      const {data } = resp.data
+      dispatch(getPlanes(data))
     
  }
 
