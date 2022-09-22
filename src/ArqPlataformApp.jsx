@@ -1,10 +1,13 @@
+import { SnackbarProvider } from "notistack";
 import { AppRouter } from "./router/AppRouter";
 import { AppTheme } from './theme/AppTheme';
 
 function ArqPlataformApp() {
   return (
     <AppTheme>
-       <AppRouter  />
+      <SnackbarProvider maxSnack={3}>
+        <AppRouter />
+      </SnackbarProvider>
     </AppTheme>
   )
 }

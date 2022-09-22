@@ -44,7 +44,7 @@ export const LoginView = () => {
 		// <AuthLayout title="Login">
 		<>
 			<LoadingBackdrop />
-			<form onSubmit={onSubmit}>
+			<form onSubmit={onSubmit} style={{margin: "3rem 0"}}>
 				<Grid justifyContent={"center"} container spacing={3}>
 					<Grid>
 						<Typography variant="h3" textAlign={"center"} sx={{fontSize: "1.75rem", fontWeight: 600, color: "#181C32"}}>

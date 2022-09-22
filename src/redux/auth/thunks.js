@@ -31,16 +31,8 @@ export const startCreateUserWithEmailPassword = ({
     var res = await registerUser(name, lastname, email, password);
     console.log(res);
     if (res.status === 201) {
-      // delete this later
-      var d = new Date();
-      d.setTime(d.getTime() + 60 * 60 * 60 * 1000);
-      var expires = "expires="  + d.toUTCString();
-      document.cookie =
-        "token=" + "tokenfortest_change_thisss" + "; " + expires + "; path=/";
-      // delete this later
-
 			handleBackdrop({ message: "Registro exitoso!", variant: "success" });
-			dispatch(login({}));
+			dispatch(startLoginWithEmailPassword(email, password, handleBackdrop));
 		} else {
 			res.response.data.errors?.forEach(el => {
 				handleBackdrop({ message: "Error: " + el.msg, variant: "error" });
@@ -67,11 +59,11 @@ export const startLoginWithEmailPassword = (
     const res = await LoginWithEmailPassword(email, password);
    
     if (res.status === 200) {
-      
-      const {data,msg } = res.data
-     const { token } = data.data
-      const {usuario} = data.data
-      const {id,name,lastname,email  } = usuario
+      const { data } = res.data;
+      const { msg } = data;
+      const { token } = data.data;
+      const { usuario } = data.data;
+      const { id,name,lastname,email } = usuario;
       localStorage.setItem('token',token)
       localStorage.setItem('token-init', new Date().getTime());
       handleBackdrop({ message: msg, variant: "success" });
