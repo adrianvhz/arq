@@ -6,38 +6,16 @@ import { useSelector } from 'react-redux';
 import { request } from '../../../utils/arqPlataformAxios';
 
 
-const ModulePage = ({ pagina }) => {
+
+const ModulePage = ({ proyecto }) => {
 	const [project, setProject] = useState(null)
 	const id = useSelector((state) => state.auth.uid);
 	const [mutate, setMutate] = useState("init")
 
-	const [plantillas, setPlantillas] = useState([]);
-	const getTypeProject = async () => {
-		const data = await request({ url: `typeProject/${pagina}`, method: 'GET' });
-		setPlantillas(data.data[0])
-	}
-
-	useEffect(() => {
-		getTypeProject();
-	}, []);
 
 	const dataFilterType = (data = '') => {
 		const projectExist = data.filter((item) => item.deleted_at !== null)
-
-		switch (pagina) {
-			case 'educacion':
-				setProject(projectExist.filter((item) => item.type_id == 1))
-				break;
-			case 'salud':
-				setProject(projectExist.filter((item) => item.type_id == 2))
-				break;
-			case 'infraestructura':
-				setProject(projectExist.filter((item) => item.type_id == 3))
-				break;
-			default:
-				setProject(projectExist)
-				break;
-		}
+		setProject(projectExist.filter((item) => item.type_id == proyecto.id))
 	}
 
 
@@ -51,7 +29,6 @@ const ModulePage = ({ pagina }) => {
 	useEffect(() => {
 		getProjects();
 	}, [mutate]);
-
 
 	if (!project) { return <div>Cargando...</div> }
 
@@ -87,7 +64,7 @@ const ModulePage = ({ pagina }) => {
 			</div>
 
 
-			<GridData data={project} typeProject={plantillas} setMutate={setMutate} ></GridData>
+			<GridData data={project} typeProject={proyecto} setMutate={setMutate} ></GridData>
 
 		</Card>
 	)
