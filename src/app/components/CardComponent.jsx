@@ -8,35 +8,39 @@ import Box from "@mui/material/Box";
 
 
 export const CardComponent = ({data}) => {
-
-  const {plan,permisos} = data
-  console.log(plan)
+  const planes = data[0].Planes
   return (
-    <Card  sx={{
+    planes.map(p => (
+    <Card key={p.id} sx={{
         width: "calc(100%/3.2)",
-        backgroundColor: "#FFF",
+        backgroundColor: p.defecto ? '#05245c' : "#FFF" ,
+        color: p.defecto ? '#FFF' : "#000" ,
         padding: "20px",
         borderRadius: 3,
         boxShadow: "rgb(100 100 111) 0px 7px 29px 0px",
       }}>
-      <CardContent
-       
-      >
-        <Typography variant="h5" component="div">
-          {plan.descripcion}
-        </Typography>
-        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-          {plan.vigencia} Días
-        </Typography>
+        {
+         
+            <CardContent
 
-        <ul>
-            {
-              permisos.map(p=>(
-                  <li key={p.id}>{p.descripcion}</li>
-              ) )
-            }
-        </ul>
-      </CardContent>
+            >
+              <Typography variant="h5" component="div" sx={{color: p.defecto ? '#FFF' : "#000" }}>
+                {p.descripcion}
+              </Typography>
+              <Typography sx={{ fontSize: 14 , color: p.defecto ? '#FFF' : "#000" }}  gutterBottom>
+                {p.vigencia} Días
+              </Typography>
+      
+              <ul>
+                  {
+                    p.Permisos.map(per=>(
+                        <li key={per.id}>{per.descripcion}</li>
+                    ) )
+                  }
+              </ul>
+            </CardContent>
+        }
     </Card>
+    ))
   );
 };
