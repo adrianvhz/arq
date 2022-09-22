@@ -20,6 +20,7 @@ import { useSelector } from 'react-redux';
 import { Fade, Modal } from '@mui/material';
 import { request } from '../../../utils/arqPlataformAxios';
 import { getData } from '../../../services/spreadsheetService';
+import { useLocation } from 'react-router-dom';
 
 export const styleInput = {
    width: "100%",
@@ -68,6 +69,21 @@ const NewProjectForm = ({ data, onClose, setMutate }) => {
    const [open, setOpen] = useState(false);
    const handleOpen = () => setOpen(true);
    const handleClose = () => setOpen(false);
+   const [plantillas, setPlantillas] = useState([]);
+   const location = useLocation();
+
+
+   const slug = location.pathname.split('/')[2];
+
+
+   const getTypeProject = async () => {
+      const data = await request({ url: `typeProject/${slug}`, method: 'GET' });
+      setPlantillas(data.data[0])
+   }
+
+   useEffect(() => {
+      getTypeProject();
+   }, []);
 
    const imageToAulas = () => {
       if (aforoInicial > 0 && aforoPrimaria > 0 && aforoSecundaria > 0) {
@@ -247,7 +263,8 @@ const NewProjectForm = ({ data, onClose, setMutate }) => {
          ambientes: JSON.stringify(rowsAC),
          sublevel: tipo,
          coordenadas: coordenadas,
-         user_id: id
+         user_id: id,
+         type_id: plantillas?.id,
       };
 
       const data = await request({ url: `projects`, method: 'POST', data: dataComplete });
@@ -276,7 +293,6 @@ const NewProjectForm = ({ data, onClose, setMutate }) => {
       handleClose();
       const { files } = file.target;
       var levels = [];
-      console.log(aulaInicial)
       if (inicial) levels.push("inicial");
       if (primaria) levels.push("primaria");
       if (secundaria) levels.push("secundaria");

@@ -54,7 +54,7 @@ const PlantillasMaestra = () => {
                         component={RouterLink}
                         key={idx}
                         color="inherit"
-                        to={`/${plantilla.slug}`}
+                        to={`/proyecto/${plantilla.slug}`}
                         sx={{ mt: 2 }}>
                         <Paper sx={{
                             cursor: 'pointer',
