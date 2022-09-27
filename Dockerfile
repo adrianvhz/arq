@@ -2,7 +2,7 @@ FROM node:16.14-alpine3.15 as builder_prod
 
 WORKDIR /app
 
-COPY package*.json .
+COPY ./package*.json ./
 
 RUN npm install
 
