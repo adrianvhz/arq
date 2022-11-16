@@ -1,23 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { Formik, Form, Field, useField } from 'formik';
 import Button from '@mui/material/Button';
+import Box from '@mui/system/Box';
+import Fade from '@mui/material/Fade';
 import Card from "@mui/material/Card";
 import Checkbox from "@mui/material/Checkbox";
+import CircularProgress from '@mui/material/CircularProgress';
 import Container from "@mui/material/Container";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Grid from "@mui/material/Grid";
+import Modal from "@mui/material/Modal";
 import Input from "@mui/material/Input";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
-import * as XLSX from 'xlsx';
 import { UpperLowerCase } from '../../../utils/utils';
 import { RowForm } from './RowForm';
 import * as yup from 'yup';
 import { RowFormAC } from './RowFormAC';
-import CircularProgress from '@mui/material/CircularProgress';
-import Box from '@mui/system/Box';
 import { useSelector } from 'react-redux';
-import { Fade, Modal } from '@mui/material';
 import { request } from '../../../utils/arqPlataformAxios';
 import { getData } from '../../../services/spreadsheetService';
 import { useLocation } from 'react-router-dom';
@@ -52,7 +52,7 @@ const NewProjectForm = ({ data, onClose, setMutate }) => {
    const [rows, setRows] = useState(data?.puntos ? JSON.parse(data?.puntos) : [{ ...defaultState, vertice: "P1" }].concat({ ...defaultState, vertice: "P2" }).concat({ ...defaultState, vertice: "P3" }));
    const [rowsAC, setRowsAC] = useState(data?.ambientes ? JSON.parse(data?.ambientes) : []);
    const [tipo, setTipo] = useState(data?.sublevel || "unidocente");
-   const [zone, setZone] = useState();
+   const [zone, setZone] = useState(data?.zone);
    const [aforoInicial, setAforoInicial] = useState(data?.aforo ? JSON.parse(data?.aforo).aforoInicial : 0);
    const [aulaInicial, setAulaInicial] = useState(data?.aforo ? JSON.parse(data?.aforo).aulaInicial : 0);
    const [aforoPrimaria, setAforoPrimaria] = useState(data?.aforo ? JSON.parse(data?.aforo).aforoPrimaria : 0);
@@ -132,7 +132,6 @@ const NewProjectForm = ({ data, onClose, setMutate }) => {
    //Obtener las zonas desde el api
    const getZones = async () => {
       const data = await request({ url: 'zones', method: 'GET' });
-
       setZonas(data.data.zones);
    }
    useEffect(() => {
@@ -141,21 +140,22 @@ const NewProjectForm = ({ data, onClose, setMutate }) => {
 
    // Leer el excel y colocar en la columna de aulas
    useEffect(() => {
+      console.log(dataExcel)
       if (dataExcel) {
-         for (var key of Object.keys(dataExcel)) {
+         for (var key of Object.keys(dataExcel.levels)) { // cambiar
             if (key === "inicial") {
-               setAforoInicial(dataExcel[key].aforo);
-               setAulaInicial(dataExcel[key].aulas);
+               setAforoInicial(dataExcel.levels[key].aforo);
+               setAulaInicial(dataExcel.levels[key].aulas);
                setInicial(true);
             }
             else if (key === "primaria") {
-               setAforoPrimaria(dataExcel[key].aforo);
-               setAulaPrimaria(dataExcel[key].aulas);
+               setAforoPrimaria(dataExcel.levels[key].aforo);
+               setAulaPrimaria(dataExcel.levels[key].aulas);
                setPrimaria(true);
             }
             else if (key === "secundaria") {
-               setAforoSecundaria(dataExcel[key].aforo);
-               setAulaSecundaria(dataExcel[key].aulas);
+               setAforoSecundaria(dataExcel.levels[key].aforo);
+               setAulaSecundaria(dataExcel.levels[key].aulas);
                setSecundaria(true);
             }
          }
@@ -232,12 +232,13 @@ const NewProjectForm = ({ data, onClose, setMutate }) => {
 
    const Select = ({ label, ...props }) => {
       const [field, meta] = useField(props);
+
       return (
          <div>
             <label htmlFor={props.id || props.name}>{label}</label>
             <select {...field} onChangeCapture={(evt) => setZone(evt.target.value)} {...props} />
             {meta.touched && meta.error ? (
-               <div style={styleError}>{meta.error}</div>
+               <div style={styleError}>{meta.error}asdasd</div>
             ) : null}
          </div>
       );
@@ -253,11 +254,20 @@ const NewProjectForm = ({ data, onClose, setMutate }) => {
    }
 
    const onSubmit = async (values) => {
+      let levels = [];
+      
+      aulaInicial && levels.push("Inicial");
+      aulaPrimaria && levels.push("Primaria");
+      aulaSecundaria && levels.push("Secundaria");
+
+      console.log("dataExcel", dataExcel);
 
       const dataComplete = {
          ...values,
+         build_data: JSON.stringify({ classroom_measurements: dataExcel.classroom_measurements, result_data: dataExcel.result_data, construction_info: dataExcel.construction_info }),
          ubication: values.ubication,
-         level: `${aulaInicial ? "Inicial" : ""} ${aulaPrimaria ? "Primaria" : ""} ${aulaSecundaria ? "Secundaria" : ""}`,
+         // level: `${aulaInicial ? "Inicial" : ""} ${aulaPrimaria ? "Primaria" : ""} ${aulaSecundaria ? "Secundaria" : ""}`,
+         level: JSON.stringify(levels),
          puntos: JSON.stringify(rows),
          aforo: JSON.stringify(allDataAforo),
          ambientes: JSON.stringify(rowsAC),
@@ -270,7 +280,6 @@ const NewProjectForm = ({ data, onClose, setMutate }) => {
       const data = await request({ url: `projects`, method: 'POST', data: dataComplete });
 
       if (data.data.proyectos.parent_id == 0) {
-
          const dataHijo = await request({ url: `projects`, method: 'POST', data: { ...dataComplete, parent_id: data.data.proyectos.id, name: "VERSION 1" } });
          if (!!dataHijo.data.proyectos) {
             setMutate(Math.random());
@@ -281,8 +290,6 @@ const NewProjectForm = ({ data, onClose, setMutate }) => {
          setMutate(Math.random());
          setStep(2);
       }
-
-
    }
 
    const handleChange = (event) => {
@@ -491,7 +498,7 @@ const NewProjectForm = ({ data, onClose, setMutate }) => {
 
                                     <Grid container spacing={1} sx={{ width: "100%", marginTop: "10px" }}>
                                        <Grid item xs={2} >
-                                          <span >VERTICE</span>
+                                          <span>VERTICE</span>
                                        </Grid>
                                        <Grid item xs={2}>
                                           <span>LADO</span>
@@ -524,7 +531,7 @@ const NewProjectForm = ({ data, onClose, setMutate }) => {
                                     ) : (
                                        <Grid item xs={12} marginTop="1rem">
                                           <Grid container spacing={1} sx={{ width: "100%" }}>
-                                             <Box sx={{ width: "100%", height: "5px", backgroundColor: "#F3F6F9", marginTop: "1rem" }}></Box>
+                                             {/* <Box sx={{ width: "100%", height: "5px", backgroundColor: "#F3F6F9", marginTop: "1rem" }}></Box> */}
 
 
                                              <Grid item xs={5} >
@@ -553,7 +560,7 @@ const NewProjectForm = ({ data, onClose, setMutate }) => {
                                                 </select>
                                              </Grid>
 
-                                             <Box sx={{ width: "100%", height: "5px", backgroundColor: "#F3F6F9", marginBottom: "1rem" }}></Box>
+                                             {/* <Box sx={{ width: "100%", height: "5px", backgroundColor: "#F3F6F9", marginBottom: "1rem" }}></Box> */}
 
                                           </Grid>
                                        </Grid>

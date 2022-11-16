@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { useAuthStore } from './../hooks/useCheckAuth';
 import { CheckingAuth } from '../ui';
 import { useEffect } from 'react';
+import PlanIndex from "../app/Builder/PlanIndex";
 
 export const AppRouter = () => {
   const { status, useCheckAuth  } = useAuthStore();
@@ -22,7 +23,7 @@ export const AppRouter = () => {
     : <Route path="/auth/*" element={<AuthLayout />} />
   }
   <Route path="/*" element={<Navigate to='/auth/' />} />
-
+      <Route path="/three" element={<PlanIndex />} />
     </Routes>
   );
 };

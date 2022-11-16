@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import moment from 'moment';
 import Grid from '@mui/material/Grid';
 import { RowList } from './RowList';
-import { Box, Container } from '@mui/material';
+import Box from "@mui/material/Box";
 
 const styleGrid = {
     border: "1.5px solid #AFAFAF",

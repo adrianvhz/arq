@@ -5,3 +5,9 @@ export const getProjects = () => {
 		.then(res => res)
 		.catch(err => err)
 }
+
+export const deleteProjects = (id) => {
+	return request({ method: "DELETE", url: `projects/${id}` })
+		.then(res => res)
+		.catch(err => err)
+}

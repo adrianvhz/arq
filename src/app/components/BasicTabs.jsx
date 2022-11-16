@@ -1,12 +1,10 @@
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
-
 import { TabPanel } from "./TabPanel";
 import { useState } from "react";
 import { a11yProps } from "../../hooks/propsTabPanel";
 import { DatosComponent } from "./DatosComponent/DatosComponent";
-import { React } from "react";
 
 export const BasicTabs = ({ children, titulo = [] }) => {
   const [value, setValue] = useState(0);

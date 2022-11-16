@@ -17,7 +17,7 @@ export const AuthLayout = ({ children, title = '' }) => {
         xs={0}
         md={6}
         lg={8}
-        // xl={9}
+        xl={9}
       >
         <div
           style={{
@@ -47,7 +47,7 @@ export const AuthLayout = ({ children, title = '' }) => {
         xs={12}
         md={6}
         lg={4}
-        // xl={3}
+        xl={3}
       >
         <Grid item xs={12} bgcolor='#05245C' height={180}></Grid>
 

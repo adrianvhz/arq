@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useNavigate } from "react-router-dom";
 import moment from 'moment';
 import SchoolIcon from '@mui/icons-material/School';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -7,8 +8,11 @@ import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import NewProject from '../NewProject/NewProject';
-import { Box, Icon } from '@mui/material';
+import Box from "@mui/material/Box";
+import Icon from "@mui/material/Icon";
 import LocationCityIcon from '@mui/icons-material/LocationCity';
+import { deleteProjects } from '../../../services/projectsService';
+import "./styles.css";
 
 const styleGrid = {
     border: "1.5px solid #AFAFAF",
@@ -19,7 +23,7 @@ const styleGrid = {
 }
 
 export const RowList = ({ row, index, data, setMutate }) => {
-
+    
     const getIcon = (icon) => {
         switch (icon) {
             case 1:
@@ -33,18 +37,24 @@ export const RowList = ({ row, index, data, setMutate }) => {
         }
     }
 
-
     const [show, setShow] = useState(false);
+    const navigate = useNavigate();
 
     const formatDate = (date) => {
         return moment(date).format('DD/MM/YYYY');
+    }
+    
+    const handleDelete = (id) => () => {
+        deleteProjects(id).then(d => {
+            setShow(false);
+        })
     }
 
     return (
         <div key={index}>
             {row.parent_id === 0 &&
-
-                <div style={{
+                <div
+                    style={{
                     width: "100%",
                     display: "flex"
                 }}>
@@ -55,13 +65,15 @@ export const RowList = ({ row, index, data, setMutate }) => {
                     <Box sx={{ ...styleGrid, width: "5%", minWidth: "50px" }}>
                         <Icon >{getIcon(row.type_id)}</Icon>
                     </Box>
-                    <Box sx={{ ...styleGrid, minWidth: "180px", width: "20%" }}>
+                    <Box sx={{ ...styleGrid, minWidth: "180px", width: "20%" }} onClick={() => setShow(!show)} className="cursor">
                         <div style={{
                             display: "flex", justifyContent: "space-between",
                         }}>
-                            <span>{row.name}</span>
-                            {!show ? <KeyboardArrowDownIcon onClick={() => setShow(!show)} sx={{ cursor: "pointer" }} /> :
-                                <KeyboardArrowLeftIcon onClick={() => setShow(!show)} sx={{ cursor: "pointer" }} />}
+                            <span>
+                                {row.name}
+                            </span>
+                            {!show ? <KeyboardArrowDownIcon onClick={() => setShow(!show)} className="cursor" /> :
+                                <KeyboardArrowLeftIcon onClick={() => setShow(!show)} className="cursor" />}
 
                         </div>
                     </Box>
@@ -103,9 +115,12 @@ export const RowList = ({ row, index, data, setMutate }) => {
                                     {row2.id}
                                 </Box>
                                 <Box sx={{ ...styleGrid, width: "5%", minWidth: "50px" }}>
-                                    <Icon >{getIcon(row2.type_id)}</Icon>
+                                    <Icon>{getIcon(row2.type_id)}</Icon>
                                 </Box>
-                                <Box sx={{ ...styleGrid, minWidth: "180px", width: "20%" }}>
+                                <Box sx={{ ...styleGrid, minWidth: "180px", width: "20%" }}
+                                    className="row-project-name cursor"
+                                    onClick={() => navigate("/proyecto/colegios/" + row2.id, {state: row2})}    
+                                >
                                     {row2.name}
                                 </Box>
                                 <Box sx={{ ...styleGrid, minWidth: "100px", width: "10%" }}>
@@ -126,7 +141,7 @@ export const RowList = ({ row, index, data, setMutate }) => {
                                 <Box sx={{ ...styleGrid, minWidth: "50px", width: "10%" }}>
                                     <NewProject onRow data={row2} setMutate={setMutate} />
                                     <GroupsIcon />
-                                    <DeleteIcon />
+                                    <DeleteIcon onClick={handleDelete(row2.id)} />
                                 </Box>
                             </div>
                         }

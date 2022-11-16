@@ -11,3 +11,11 @@
 .ag-theme-alpine .ag-header-cell {
   font-size: 10px;
 }
+
+.cursor {
+  cursor: pointer;
+}
+
+.row-project-name:hover {
+  color: #3699FF;
+}

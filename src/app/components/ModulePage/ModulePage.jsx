@@ -1,17 +1,16 @@
 import Card from '@mui/material/Card';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import GridData from '../GridData/GridData';
 import NewProject from '../NewProject/NewProject'
 import { useSelector } from 'react-redux';
 import { request } from '../../../utils/arqPlataformAxios';
-
+import * as THREE from "three";
 
 
 const ModulePage = ({ proyecto }) => {
 	const [project, setProject] = useState(null)
 	const id = useSelector((state) => state.auth.uid);
 	const [mutate, setMutate] = useState("init")
-
 
 	const dataFilterType = (data = '') => {
 		const projectExist = data.filter((item) => item.deleted_at !== null)

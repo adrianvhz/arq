@@ -49,6 +49,7 @@ import Button from "@mui/material/Button";
 import { Link } from "react-router-dom/";
 import { useDispatch, useSelector } from "react-redux";
 import { setView } from "../../redux/main/mainSlice";
+import TopNavBar from "../components/TopNavBar";
 import Typography from "@mui/material/Typography";
 
 const drawerWidth = 265;
@@ -70,41 +71,8 @@ export const ArqPlataformLayout = ({ children }) => {
   return (
     <Box sx={{ display: "flex", backgroundColor: "#EEF0F8" }}>
       <CssBaseline />
-      <AppBar
-        position="fixed"
-        open={open}
-        sx={{
-          backgroundColor: "#ffffff",
-          boxShadow: "0px 0px 40px 0px rgb(82 63 105 / 10%)",
-          WebkitBoxShadow: "0px 0px 40px 0px rgb(82 63 105 / 10%)",
-        }}
-      >
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{
-              marginRight: 5,
-              ...(open && { display: "none" }),
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <div
-            style={{
-              width: "100%",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <div></div>
-            <UserPopover />
-          </div>
-        </Toolbar>
-      </AppBar>
+
+      <TopNavBar open={open} handleDrawerOpen={handleDrawerOpen} />
 
       <Drawer
         variant="permanent"
@@ -284,24 +252,6 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   padding: theme.spacing(0, 1),
   // necessary for content to be below app bar
   ...theme.mixins.toolbar,
-}));
-
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
-  //   zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(["width", "margin"], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
 }));
 
 const Drawer = styled(MuiDrawer, {

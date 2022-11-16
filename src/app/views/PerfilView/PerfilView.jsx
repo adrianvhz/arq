@@ -1,9 +1,6 @@
-
-
 import { BasicTabs } from './../../components/BasicTabs';
-import { Grid } from '@mui/material';
-import { StarOutline } from '@mui/icons-material';
-import { Typography } from '@mui/material';
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
 import { PlanComponent } from '../../components/PlanComponent/PlanComponent';
 import { useDispatch, useSelector } from 'react-redux';
 import { EmailComponent,DatosComponent,PasswordComponent  } from '../../components/DatosComponent';
