@@ -1,48 +1,52 @@
 import { MathUtils } from "three";
 import Pabellon from "./components/Pabellon";
 
-export default function Pabellones({ amount_classrooms, classroom, bathroom, baths_amount, terrain_width, increment_scale, wall_thickness }) {
+export default function Pabellones({ amount_classrooms, classroom, bathroom, stairs, baths_amount, terrain, increment_scale, wall_thickness }) {
 	let pabellones = [];
 	let remaining_classrooms = amount_classrooms;
+	let pasillo = 2.4 * 50;
+	let offset = classroom.length; // offset en el TOP LEFT del pabellon === 1 classroom length
 
-	const computeMaxClassrooms = ({ stairs } = { stairs: false }) => {
-		let buildable_terrain = terrain_width - 336.29999981224523; // 336.29999981224523 is bathroom length
-		if (stairs) buildable_terrain -= 120;
-		return (Math.floor(buildable_terrain / classroom.length)) - 1; // ese - 1 indica el offset en el TOP LEFT === 1 classroom de offset | 336.29999981224523 del bathroom y 220 de las escaleras
+	const computeMaxClassrooms = ({ have_stairs } = { have_stairs: false }) => {
+		let buildable_terrain = terrain.width - offset - 336.29999981224523; // 336.29999981224523 is bathroom length
+		if (have_stairs) buildable_terrain -= stairs.width;
+		return Math.floor(buildable_terrain / classroom.length); // 336.29999981224523 del bathroom y 220 de las escaleras
 	}
 
-	(() => {
+	// (() => {
 		let total_classrooms_length = ((amount_classrooms + 1) * classroom.length) + 336.29999981224523; // +1 es por el offset.  // 336.29999981224523 is bathroom length
-		let amount_pabellones = total_classrooms_length < terrain_width ? 1 : 2;
+		let amount_pabellones = total_classrooms_length < terrain.width ? 1 : 2;
 		
 		let pab = {
 			1: { // (classroom.length * 2) es el offset en la parte superior del pabellon.
-				x: -terrain_width / 2 + (classroom.length * 2),
+				x: -terrain.width / 2 + (classroom.length * 2),
 				y: 0,
-				z: terrain_width / 2,
+				z: terrain.width / 2,
 				rotation: [0, MathUtils.degToRad(-180), 0],
 				max_classrooms: computeMaxClassrooms(),
 				baths: baths_amount.pab1
 			},
 			2: { // (classroom.length) es el offset en la parte superior del pabellon. NOTE: No se multiplica x2 porque este pabellon no ha sido rotado como el primero.
-				// x: -terrain_width / 2 + (classroom.length),
-				x: terrain_width / 2 - (classroom.length * 1.5), // 1.5 es para que sea el (largo + (largo / 2))  |  2
+				// x: -terrain.width / 2 + (classroom.length),
+				x: terrain.width / 2 - (classroom.length * 1.5), // 1.5 es para que sea el (largo + (largo / 2))  |  2
 				y: 0,
-				z: -terrain_width / 2,
+				z: -terrain.width / 2,
 				max_classrooms: computeMaxClassrooms(),
 				baths: baths_amount.pab2
 			}
 		}
-		
-		let max_classrooms_peine = Math.floor((terrain_width - (2 * ((2.4 * 50) + classroom.width))) / classroom.length);
 
+		// Formula: Tl - 2(p + Cw) / Cl
+		let max_classrooms_peine = Math.floor((terrain.width - (2 * (pasillo + classroom.width))) / classroom.length);
+		// Formula: (MaxClassroomsP1 + MaxClassroomsP2 + 3 * MaxClassroomsPeine) - 1  
 		let max_classroom_for_floor = pab[1].max_classrooms + pab[2].max_classrooms + (3 * max_classrooms_peine) - 1;
 
-		if (amount_classrooms > max_classroom_for_floor) {
-			pab[1].max_classrooms = computeMaxClassrooms({ stairs: true });
-			pab[1].stairs = true;
-		}
+		// if (amount_classrooms > max_classroom_for_floor) {
+		// 	pab[1].max_classrooms = computeMaxClassrooms({ have_stairs: true });
+		// 	pab[1].have_stairs = true;
+		// }
 
+		console.log({max_classrooms_peine})
 		console.log({max_classroom_for_floor});
 
 		console.log("max classrooms first pabellon:", pab[1].max_classrooms);
@@ -100,14 +104,31 @@ export default function Pabellones({ amount_classrooms, classroom, bathroom, bat
 				amountSide1: topSide,
 				amountSide2: bottomSide,
 				baths: pab[p].baths,
-				stairs: pab[p].stairs
+				// have_stairs: pab[p].have_stairs
 			});
 
 			// remaining_classrooms -= max_classrooms_per_pabellon;
 		}
 
-		console.log("remaining classrooms for peine", remaining_classrooms);
-	})();
+		let totalSidesPeine = max_classrooms_peine * 3;
+		let classrooms_for_peine;
+
+		if (remaining_classrooms > totalSidesPeine) {
+			classrooms_for_peine = totalSidesPeine;
+			remaining_classrooms -= totalSidesPeine;
+		} else {
+			classrooms_for_peine = remaining_classrooms;
+			remaining_classrooms = 0;
+		}
+
+		console.log("remaining classrooms for second floor", remaining_classrooms);
+
+		if (remaining_classrooms > 0) {
+			let amount_high_floors = Math.ceil(remaining_classrooms / pab[1].max_classrooms);
+			pab[1].floors_above = Math.ceil(amount_high_floors / 2);
+			pab[2].floors_above = amount_high_floors - pab[1].floors_above;
+		}
+	// })();
 
 	return (
 		pabellones.map((el, index) => (
@@ -120,13 +141,16 @@ export default function Pabellones({ amount_classrooms, classroom, bathroom, bat
 				amountSide2={el.amountSide2}
 				classroom={classroom}
 				bathroom={bathroom}
+				stairs={stairs}
 				increment_scale={increment_scale}
-				terrain_width={terrain_width}
-				remaining_classrooms_={remaining_classrooms}
+				terrain={terrain}
+				classrooms_for_peine={classrooms_for_peine}
+				floors_above={pab[index + 1].floors_above}
 				index={index}
 				baths={el.baths}
-				stairs={el.stairs}
+				pasillo={pasillo}
 				wall_thickness={wall_thickness}
+				max_classrooms={pab[2].max_classrooms}
 			/>
 		))
 	)

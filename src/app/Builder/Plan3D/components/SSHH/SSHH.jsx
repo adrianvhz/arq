@@ -5,8 +5,9 @@ import Bathroom from "./components/Bathroom";
 import Pasillo from "./components/Pasillo";
 import Stairs from "../Stairs/Stairs";
 import WallsClass from "./components/WallsClass";
+import RoofSSHH from "./components/RoofSSHH";
 
-export default function SSHH({ position, rotation, bathroom, baths, stairs, wall_thickness, increment_scale, n_pabellon }) {
+export default function SSHH({ position, rotation, bathroom, stairs, baths, wall_thickness, increment_scale, n_pabellon }) {
 	// 1 compensacion de pared grosor en paralelo
 
 	const { pasillo, inodoro, pasillo_de_entrada } = bathroom;
@@ -55,7 +56,7 @@ export default function SSHH({ position, rotation, bathroom, baths, stairs, wall
 			rotation={rotation}
 			ref={oSSHH}
 		>
-            {stairs && <Stairs position={[463.1, 4, 190]} index={0} />}
+            {stairs && <Stairs position={[463.1, 4, 190]} stairs={stairs} index={0} />}
 
 			<group	// classroom length - bathroom length === 79.33       // 192.67
 				// position={[272 - (este ? 79.33 : 79.33), 0, sides_wall.length + wall_thickness]}
@@ -111,6 +112,8 @@ export default function SSHH({ position, rotation, bathroom, baths, stairs, wall
 					rotation={[-Math.PI / 2, 0, 0]}
 					color={0x3d3d3d}
 				/>
+
+				<RoofSSHH />
 			</group>
 		</group>
 	)

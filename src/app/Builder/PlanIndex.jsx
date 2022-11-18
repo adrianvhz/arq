@@ -11,6 +11,8 @@ export default function PlanIndex() {
 	let aforo = JSON.parse(state.aforo);
 	let levels = JSON.parse(state.level);
 
+	console.log(state)
+
 	console.log({ levels, aforo });
 
 	let {

@@ -265,6 +265,8 @@ const NewProjectForm = ({ data, onClose, setMutate }) => {
       const dataComplete = {
          ...values,
          build_data: JSON.stringify({ classroom_measurements: dataExcel.classroom_measurements, result_data: dataExcel.result_data, construction_info: dataExcel.construction_info }),
+         toilets_per_student: JSON.stringify(dataExcel.toilets_per_student),
+         stairs: JSON.stringify(dataExcel.stairs),
          ubication: values.ubication,
          // level: `${aulaInicial ? "Inicial" : ""} ${aulaPrimaria ? "Primaria" : ""} ${aulaSecundaria ? "Secundaria" : ""}`,
          level: JSON.stringify(levels),

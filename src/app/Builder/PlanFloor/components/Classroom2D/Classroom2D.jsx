@@ -43,11 +43,11 @@ export default function Classroom2D({ position, rotation, classroom, wall_thickn
 			</line>
 
 			<mesh
-				position={[1, 0, ((50 * 6.25) + (wall_thickness * 2)) - 1]}
+				position={[0, 0, ((50 * 6.25) + (wall_thickness * 2))]}
 				rotation={[-Math.PI / 2, 0, 0]}
 			>
 				<shapeGeometry
-					args={[createSquareShape(classroom.width - 2, classroom.length - 2)]}
+					args={[createSquareShape(classroom.width, classroom.length)]}
 					ref={fillGeom}
 				/>
 				<meshBasicMaterial
@@ -57,7 +57,7 @@ export default function Classroom2D({ position, rotation, classroom, wall_thickn
 
 			<Text
 				position={[200, 1, 162]}
-				rotation={[-Math.PI / 2, 0, 0]} //
+				rotation={[-Math.PI / 2, 0, 0]}
 				color="black"
 				font={InterBold}
 				anchorX="center"

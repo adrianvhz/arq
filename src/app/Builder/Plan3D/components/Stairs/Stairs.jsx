@@ -4,7 +4,7 @@ import { createWallShape } from "../../common/createWallShape";
 import Flight from "./components/Flight";
 import Landing from "./components/Landing";
 
-export default function Stairs({ position, index }) {
+export default function Stairs({ position, index, stairs }) {
 	let obj = useRef(null);
 	let geom = useRef(null);
 	let shape = createWallShape((2.40 * 50) + (7.5 * 2), (3.90 * 50) + (7.5 * 2), 7.5);
@@ -16,20 +16,6 @@ export default function Stairs({ position, index }) {
 		// bevelThickness: 0.2, // default: 0.2
 		// bevelSize: 0.1 // default: bevelThickness - 0.1
 	}
-
-	let flight = {
-		width: 1.20 * 50,
-		riser: 0.17 * 50, // contrapaso
-		tread: 0.25 * 50, // paso
-	}
-
-	let landing = {
-		width: 1.20 * 50,
-		length: 2.40 * 50
-	}
-
-	let flight1_amount = 8;
-	let flight2_amount = 8;
 
 	useEffect(() => {
 		// geom.current.translate(0, (-50 * 6.25) - (7.5 * 2), 0);
@@ -70,30 +56,30 @@ export default function Stairs({ position, index }) {
 			<group>
 				<Landing
 					position={[67.3, initialPosLanding, 0]} // z = 155.25
-					landing={landing}
+					landing={stairs.landing}
 				/>
 
 				<Flight
 					position={[97.3, 0, 36.25]} // z = 191.5
-					amount={flight1_amount}
-					flight={flight}
+					amount={stairs.flight1_amount}
+					flight={stairs.flight}
 				/>
 				
 				<Landing
-					position={[67.3, initialPosLanding + (flight.riser * flight1_amount), (flight.tread * flight1_amount) + landing.width]} // z = 315.2  159.95
-					landing={landing}
+					position={[67.3, initialPosLanding + (stairs.flight.riser * stairs.flight1_amount), (stairs.flight.tread * stairs.flight1_amount) + stairs.landing.width]} // z = 315.2  159.95
+					landing={stairs.landing}
 				/>
 
 				<Flight
-					position={[37.3, (flight.riser * flight1_amount), (flight.tread * (flight2_amount - 1)) + 36.25]} // z = 279  123.75
+					position={[37.3, (stairs.flight.riser * stairs.flight1_amount), (stairs.flight.tread * (stairs.flight2_amount - 1)) + 36.25]} // z = 279  123.75
 					rotation={[0, MathUtils.degToRad(180), 0]}
-					amount={flight2_amount}
-					flight={flight}
+					amount={stairs.flight2_amount}
+					flight={stairs.flight}
 				/>
 				
 				<Landing
-					position={[67.3, initialPosLanding + (flight.riser * (flight1_amount + flight2_amount)), 0]} // z = 155.25
-					landing={landing}
+					position={[67.3, initialPosLanding + (stairs.flight.riser * (stairs.flight1_amount + stairs.flight2_amount)), 0]} // z = 155.25
+					landing={stairs.landing}
 				/>
 			</group>
 		</group>

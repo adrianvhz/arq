@@ -15,15 +15,14 @@ import Test from "../Test/Test";
 export default function Plan3D({ result_data, classroom_measurements, construction_info, baths_amount }) {
     let increment_scale = 50;
     let wall_thickness = 7.5; // 15cm (0.15 * increment_scale)
-    
-    let terrain_side = Number(construction_info.area_general)**0.5; console.log({ terrain_side });
 
+    let terrain_side = construction_info.area_general**0.5;                                     console.log({ terrain_side });
     let terrain = {
         length: terrain_side * increment_scale,
         width: terrain_side * increment_scale
     }
-
-    let amount_classrooms = Number(result_data.aulas); // 30
+    console.log({result_data})
+    let amount_classrooms = result_data.aulas; // 30
 
     // +0.200006 is the thickness calculated in the default extrude (0.2 bevelThickness), change this value if more or less bevel is required.
     let classroom = {
@@ -49,6 +48,21 @@ export default function Plan3D({ result_data, classroom_measurements, constructi
 		pasillo_de_entrada: bathroom_real_measures.pasillo_de_entrada * increment_scale
 	}
 
+    let stairs = {
+        flight: { // tramo de escalones
+            width: 1.20 * 50,
+            riser: 0.17 * 50, // contrapaso
+            tread: 0.25 * 50, // paso
+        },
+        landing: { // descanso
+            width: 1.20 * 50,
+            length: 2.40 * 50
+        },
+        width: 2.40 * 50,
+        flight1_amount: 8,
+	    flight2_amount: 8
+    }
+
     let soccer_field_real_measures = {
         width: 15 * 50, // 22
         length: 28 * 50 // 44
@@ -71,8 +85,6 @@ export default function Plan3D({ result_data, classroom_measurements, constructi
 
 
 
-
-
     // let orthographic = new OrthographicCamera();
     // orthographic.position.set(700.0833006726812, 3240.991418099096, 0.9116933195872228);
     // orthographic.rotation.set("-1.5705150260514118", "0.21274036703194613", "1.5694640280967271", "XYZ");
@@ -90,14 +102,14 @@ export default function Plan3D({ result_data, classroom_measurements, constructi
     // perspective.far = 7000;
     // perspective.near = 4;
     
-    
     return (
         <Canvas
             camera={{
                 fov: 65, // 60
                 aspect: window.innerWidth / window.innerHeight,
                 position: [3202.3188734998785, 858.758291437268, -42.78855655034773],
-                rotation: new Euler("-1.6205812315008037", "1.3084828063007592", "1.6223414925263104", "XYZ"),
+                rotation: ["-1.6205812315008037", "1.3084828063007592", "1.6223414925263104", "XYZ"],
+                // rotation: new Euler("-1.6205812315008037", "1.3084828063007592", "1.6223414925263104", "XYZ"),
                 far: 7000,
                 near: 4
             }}
@@ -110,8 +122,9 @@ export default function Plan3D({ result_data, classroom_measurements, constructi
                 amount_classrooms={amount_classrooms}
                 classroom={classroom}
                 bathroom={bathroom}
+                stairs={stairs}
                 increment_scale={increment_scale}
-                terrain_width={terrain.width}
+                terrain={terrain}
                 baths_amount={baths_amount}
                 wall_thickness={wall_thickness}
             />

@@ -4,7 +4,11 @@ import SoccerField2D from "../../PlanFloor/components/SoccerField2D/SoccerField2
 
 export default function SoccerFieldView({ terrain, amount_classrooms, classroom, soccer_field, increment_scale }) {
 	let view = useSelector(state => state.building.view);
+	let view2DModule = useSelector(state => state.building.view2DModule);
+	
 	let SoccerField_OBJ = view === "3D" ? SoccerField : SoccerField2D;
+	console.log("ADSAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+	if (view2DModule > 1) return null;
 
 	return (
 		<SoccerField_OBJ

@@ -60,8 +60,20 @@ export default function InitConfig() {
 	// 	cam.far = 7000;
 	// 	cam.near = 3;
 
+
+	
+    // state.camera.position.lerp(vec.set(x, y, z), step)
+    // state.camera.lookAt(0, 0, 0)
+    // state.camera.updateProjectionMatrix()
+
+
 	// 	if (view === "2D") set({ camera: cam });
 	// }, []);
+
+	let frustumSize = 857;
+	let aspect = window.innerWidth / window.innerHeight;
+
+	console.log(frustumSize, aspect)
 
 	return (
 		<>
@@ -94,15 +106,16 @@ export default function InitConfig() {
 			{view === "2D" && (
 				<OrthographicCamera
 					makeDefault
+					manual
 					position={[700.0833006726812, 3240.991418099096, 0.9116933195872228]}
-					rotation={new Euler("-1.5705150260514118", "0.21274036703194613", "1.5694640280967271", "XYZ")}
-					top={428.5}
-					left={-507}
-					right={507}
-					bottom={-428.5}
-					far={7000}
-					near={3}
+					rotation={["-1.5705150260514118", "0.21274036703194613", "1.5694640280967271", "XYZ"]}
+					left={frustumSize * aspect / - 2} // -507
+					right={frustumSize * aspect / 2} // 507
+					top={frustumSize / 2} // 428.5
+					bottom={frustumSize / - 2} // -428.5
 					zoom={0.19874378960470135}
+					near={3}
+					far={7000}
 				/>
 			)}
 
@@ -130,7 +143,7 @@ export default function InitConfig() {
 
 			</directionalLight>
 
-			{view === "2D" && (
+			{view === "3D" && (
 				<GizmoHelper alignment="bottom-right" margin={[50, 50]} >
 					<GizmoViewcube
 						color="#8b98a5"
