@@ -7,7 +7,7 @@ export default function SoccerFieldView({ terrain, amount_classrooms, classroom,
 	let view2DModule = useSelector(state => state.building.view2DModule);
 	
 	let SoccerField_OBJ = view === "3D" ? SoccerField : SoccerField2D;
-	console.log("ADSAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+	
 	if (view2DModule > 1) return null;
 
 	return (

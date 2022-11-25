@@ -1,6 +1,7 @@
 import Walls from "./components/Walls";
 import Columns from "./components/Columns";
 import Roof from "./components/Roof";
+import Door from "./components/Door";
 // import wallSVG from "../../../../assets/svg/";
 // import Svg from "../../../Test/Svg";
 
@@ -42,6 +43,7 @@ import Roof from "./components/Roof";
 // );
 
 export default function ClassroomGroup({ position, rotation, classroom, increment_scale, wall_thickness, index }) {
+	
 	return (
 		<group
 			position={position}
@@ -58,6 +60,8 @@ export default function ClassroomGroup({ position, rotation, classroom, incremen
 				wall_thickness={wall_thickness}
 				increment_scale={increment_scale}
 			/>
+
+			{/* <Door /> */}
 
 			<Roof
 				classroom={classroom}

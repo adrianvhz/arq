@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { Shape } from "three";
+import { Color, Shape } from "three";
 import { Text } from "@react-three/drei";
 import InterBold from "../../../../../assets/font/Inter-Bold.woff";
 
@@ -7,16 +7,13 @@ export default function Classroom2D({ position, rotation, classroom, wall_thickn
 	let outlinedGeom = useRef(null);
 	let fillGeom = useRef(null);
 
-	const createSquareShape = (width, length) => {
-		let squareShape = new Shape();
-		squareShape.moveTo(0, 0);
-		squareShape.lineTo(0, width - wall_thickness);
-		squareShape.lineTo(length - wall_thickness, width - wall_thickness);
-		squareShape.lineTo(length - wall_thickness, 0);
-		squareShape.closePath();
-		return squareShape;
-	}
-
+	let shape = new Shape();
+	shape.moveTo(0, 0);
+	shape.lineTo(0, classroom.width - (wall_thickness * 2));
+	shape.lineTo(classroom.length - (wall_thickness * 2), classroom.width - (wall_thickness * 2));
+	shape.lineTo(classroom.length - (wall_thickness * 2), 0);
+	shape.closePath();
+		
 	useEffect(() => {
 		// outlinedGeom.current.translate(0, (-50 * 6.25) - (wall_thickness * 2), 0);
 		// fillGeom.current.translate(0, (-50 * 6.25) - (wall_thickness * 2), 0);
@@ -34,11 +31,11 @@ export default function Classroom2D({ position, rotation, classroom, wall_thickn
 				rotation={[-Math.PI / 2, 0, 0]}
 			>
 				<shapeGeometry
-					args={[createSquareShape(classroom.width, classroom.length)]}
+					args={[shape]}
 					ref={outlinedGeom}
 				/>
 				<lineBasicMaterial
-					color={0x383838}
+					color={new Color(0x383838)}
 				/>
 			</line>
 
@@ -47,7 +44,7 @@ export default function Classroom2D({ position, rotation, classroom, wall_thickn
 				rotation={[-Math.PI / 2, 0, 0]}
 			>
 				<shapeGeometry
-					args={[createSquareShape(classroom.width, classroom.length)]}
+					args={[shape]}
 					ref={fillGeom}
 				/>
 				<meshBasicMaterial
@@ -62,7 +59,7 @@ export default function Classroom2D({ position, rotation, classroom, wall_thickn
 				font={InterBold}
 				anchorX="center"
 				anchorY="middle"
-				fontSize={100}
+				fontSize={85}
 				children={"   Sala\nClases"}
 			/>
 		</group>

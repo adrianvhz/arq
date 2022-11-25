@@ -25,16 +25,16 @@ export default function Roof({ position, classroom }) {
 		steps: 2,
 		depth: thickness, // (grosor)
 		bevelEnabled: true,
-		bevelThickness: 5,
-		bevelSize: 1,
 		bevelSegments: 2,
+		bevelThickness: 4, // default: 0.2
+		// bevelSize: 0.1 // default: bevelThickness - 0.1
 	}
 
 	if (!roof) return null;
 
 	return (
 		<mesh
-			position={[-extra_roof, classroom.height + 9.7, 0]}
+			position={[-extra_roof, classroom.height + 7.3, 0]}  // si se cambia que y = 7.3 tambien cambiar en RoofSSHH
 			rotation={[MathUtils.degToRad(90), 0, 0]}
 			scale={[1, 1.15, 1]}
 		>

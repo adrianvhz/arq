@@ -8,7 +8,8 @@ export default function BathGroup({ position, bathroom, increment_scale, first, 
 
 	let lavamanos_pos = {
 		left: [
-			(-bathroom.lavamanos / 2) - bathroom.pasillo - bathroom.inodoro,
+			// (-bathroom.lavamanos / 2) - bathroom.pasillo - bathroom.inodoro,
+			(-bathroom.lavamanos / 2),
 			0,
 			common_z
 		],
@@ -31,15 +32,16 @@ export default function BathGroup({ position, bathroom, increment_scale, first, 
 			)}
 			
 			<CubiculoWall
-				position={[0, 0, -bathroom.ancho_de_cubiculo - wall_thickness]}
+				// position={[0, 0, -bathroom.ancho_de_cubiculo - wall_thickness]}
+				position={[0, 0, 50]}
 				bathroom={bathroom}
 				separacion_cubiculos={separacion_cubiculos}
 				wall_thickness={wall_thickness}
 			/>
 
 			<SeparacionWall
-				position={[-1.5, 0, -0.5]}
-				rotation={[0, Math.PI / 2, 0]}
+				position={[74, 0, 7.5]}
+				rotation={[0, -Math.PI / 2, 0]}
 				bathroom={bathroom}
 				wall_thickness={wall_thickness}
 				increment_scale={increment_scale}

@@ -3,9 +3,9 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   showSettings: false,
   view: "3D",
-  cameraControls: "non-play",
+  isPlayCamera: "non-play",
   roof: true,
-  colorWall: "#0xf5f5f5",
+  colorWall: "#f5f5f5",
   view2DModule: undefined,
   view3DModule: undefined
 }
@@ -20,9 +20,9 @@ export const buildingSlice = createSlice({
     setView: (state, { payload }) => {
       state.view = payload.view;
     },
-    setCameraControls: (state, { payload }) => {
+    setPlayCamera: (state, { payload }) => {
       if (state.view === "3D") {
-        state.cameraControls = payload.cameraControls;
+        state.isPlayCamera = payload.isPlayCamera;
       }
     },
     setRoof: (state) => {
@@ -49,7 +49,7 @@ export const buildingSlice = createSlice({
 export const {
   setShowSettings,
   setView,
-  setCameraControls,
+  setPlayCamera,
   setRoof,
   setColorWall,
   setView2DModule,

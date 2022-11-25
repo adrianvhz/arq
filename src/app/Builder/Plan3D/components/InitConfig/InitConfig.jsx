@@ -1,120 +1,70 @@
 import { useEffect } from "react";
-import { Sky, GizmoHelper, GizmoViewcube, OrthographicCamera, PerspectiveCamera } from '@react-three/drei';
-import { Euler } from "three";
+import { Sky, GizmoHelper, GizmoViewcube, OrthographicCamera, PerspectiveCamera } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
-import { useSelector } from 'react-redux';
+import { useSelector } from "react-redux";
+import { OBJExporter } from "three/examples/jsm/exporters/OBJExporter";
 import CameraControls from "./CameraControls";
 import "./styles.css";
-import { useRef } from "react";
 
 export default function InitConfig() {
     let view = useSelector(state => state.building.view);
 
-	var ortho = useRef();
-	var pers = useRef();
-
-	let { camera, gl, set, get } = useThree(({ get, set , camera, gl }) => ({ get, set, camera, gl  }));
+	// let { gl, scene, camera } = useThree(({ gl, scene, camera }) => ({ gl, scene, camera }));
+	let gl = useThree(state => state.gl);
+	let scene = useThree(state => state.scene);
+	let camera = useThree(state => state.camera);
 
 	// window.onresize = function(evt) {
 	// 	camera.aspect = (window.innerWidth - 278) / (window.innerHeight - 80);
 	// 	gl.setSize(window.innerWidth - 278, window.innerHeight - 80);
 	// }
 
-	// window.onkeyup = function(evt) {
-	// 	if (evt.key === "Escape") {
-	// 		dispatch(setCameraControls({ cameraControls: "non-play" }));
-	// 	}
-	// 	// console.log(camera)
-	// }
+	// console.log("initConfig");
 
-	console.log("initConfig");
+	const link = document.createElement("a");
 
+	document.getElementById("save-jpeg").onclick = function() {
+		gl.render(scene, camera);
+		const dataURL = gl.domElement.toDataURL("image/jpeg");
+
+		link.setAttribute("href", dataURL);
+		link.setAttribute("download", "canvas.jpeg");
+		link.click();
+	}
+	
+	document.getElementById("save-obj").onclick = function() {
+		console.log(123)
+		const exporter = new OBJExporter();
+		const data = exporter.parse(scene);
+
+		link.setAttribute("href", URL.createObjectURL(new Blob([data], { type: "text/plain" })));
+		link.setAttribute("download", "test.obj");
+		link.click();
+	}
+	
 	if (view === "2D") gl.domElement.classList.add("cursor-cross");
 	else gl.domElement.classList.remove("cursor-cross");
-
-	// useEffect(() => {
-	// 	if (view === "2D") {
-	// 		set({ camera: ortho.current })
-	// 	} else {
-	// 		set({ camera: pers.current })
-	// 	}
-	// 	console.log(123)
-	// }, [get, set])
-
-	useEffect(() => {
-		console.log(camera)
-	})
-
-	// console.log(camera)
-
-
-	// useEffect(() => {
-
-	// 	let cam = new OrthographicCamera();
-	// 	cam.position.set([700.0833006726812, 3240.991418099096, 0.9116933195872228]);
-	// 	cam.rotation.set("-1.5705150260514118", "0.21274036703194613", "1.5694640280967271", "XYZ");
-	// 	cam.top = 428.5;
-	// 	cam.left = -507;
-	// 	cam.right = 507;
-	// 	cam.bottom = -428.5;
-	// 	cam.far = 7000;
-	// 	cam.near = 3;
-
-
-	
-    // state.camera.position.lerp(vec.set(x, y, z), step)
-    // state.camera.lookAt(0, 0, 0)
-    // state.camera.updateProjectionMatrix()
-
-
-	// 	if (view === "2D") set({ camera: cam });
-	// }, []);
 
 	let frustumSize = 857;
 	let aspect = window.innerWidth / window.innerHeight;
 
-	console.log(frustumSize, aspect)
 
 	return (
 		<>
-			{/* <color attach="background" args={[0x4f4f4f]} /> */}
 			<color attach="background" args={[0xebebeb]} />
-
-			{/* <PerspectiveCamera
-				ref={pers}
-                name="3D"
-                position={[3202.3188734998785, 858.758291437268, -42.7885565503477]}
-                rotation={[-1.6205812315008037, 1.3084828063007592, 1.6223414925263104, "XYZ"]}
-                fov={65}
-                aspect={window.innerWidth / window.innerHeight}
-                far={7000}
-                near={4}
-            />
-
-			<OrthographicCamera
-				ref={ortho}
-				rotation={new Euler("-1.5705150260514118", "0.21274036703194613", "1.5694640280967271", "XYZ")}
-				top={428.5}
-				left={-507}
-				right={507}
-				bottom={-428.5}
-				far={7000}
-				near={3}
-				zoom={0.19874378960470135}
-			/> */}
 
 			{view === "2D" && (
 				<OrthographicCamera
 					makeDefault
 					manual
-					position={[700.0833006726812, 3240.991418099096, 0.9116933195872228]}
-					rotation={["-1.5705150260514118", "0.21274036703194613", "1.5694640280967271", "XYZ"]}
-					left={frustumSize * aspect / - 2} // -507
-					right={frustumSize * aspect / 2} // 507
-					top={frustumSize / 2} // 428.5
-					bottom={frustumSize / - 2} // -428.5
-					zoom={0.19874378960470135}
-					near={3}
+					position={[0.0033158862420857344, 3315.741671368019, 0.000004318159471182016]}
+					rotation={["-1.5707963254925756", "0.000001000043601318168", "1.5694940634737558", "XYZ"]}
+					left={frustumSize * aspect / - 2}
+					right={frustumSize * aspect / 2}
+					top={frustumSize / 2}
+					bottom={frustumSize / - 2}
+					zoom={0.23180497402501982}
+					near={4}
 					far={7000}
 				/>
 			)}
@@ -123,7 +73,7 @@ export default function InitConfig() {
 
             {/* <Sky
                 distance={3000000}
-                sunPosition={[3, 0, 5]}
+                sunPosition={[0, 1, 0]}
                 inclination={0.5}
                 azimuth={0.25}
             /> */}
@@ -136,9 +86,10 @@ export default function InitConfig() {
 				castShadow
 				shadow-mapSize={[2048, 2048]}
 			>
-				{/* <mesh>
+				{/* <mesh onClick={() => {
+				}}>
 					<sphereGeometry args={[5]} />
-					<meshStandardMaterial color={"yellow"} emissive={new Color("red")} />
+					<meshStandardMaterial color={"yellow"} emissive={"red"} />
 				</mesh> */}
 
 			</directionalLight>

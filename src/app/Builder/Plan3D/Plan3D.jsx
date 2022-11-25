@@ -1,6 +1,6 @@
-import { Scene, Matrix4, TextureLoader, Shape, RepeatWrapping, Euler } from "three";
-import { useRef, useMemo, useState } from "react";
-import { Canvas, useThree, createPortal, useLoader } from "@react-three/fiber";
+import { Scene, Matrix4, TextureLoader, Shape, RepeatWrapping, Vector2, DoubleSide, Color } from "three";
+import { useState, useRef, useMemo } from "react";
+import { Canvas, useThree, createPortal, useLoader, extend } from "@react-three/fiber";
 import { useCamera } from "@react-three/drei";
 import wallPath from "../../../assets/textures/wall.png"
 import Pabellones from "./components/Pabellones/Pabellones";
@@ -12,16 +12,17 @@ import SSHH from "./components/SSHH/SSHH";
 import ClassroomGroup from "./components/ClassroomGroup/ClassroomGroup";
 import Test from "../Test/Test";
 
-export default function Plan3D({ result_data, classroom_measurements, construction_info, baths_amount }) {
+export default function Plan3D({ result_data, classroom_measurements, construction_info, baths_amount, data }) {
     let increment_scale = 50;
     let wall_thickness = 7.5; // 15cm (0.15 * increment_scale)
 
-    let terrain_side = construction_info.area_general**0.5;                                     console.log({ terrain_side });
+    let terrain_side = construction_info.area_general**0.5;
+
     let terrain = {
         length: terrain_side * increment_scale,
         width: terrain_side * increment_scale
     }
-    console.log({result_data})
+    
     let amount_classrooms = result_data.aulas; // 30
 
     // +0.200006 is the thickness calculated in the default extrude (0.2 bevelThickness), change this value if more or less bevel is required.
@@ -30,22 +31,13 @@ export default function Plan3D({ result_data, classroom_measurements, constructi
         width: (classroom_measurements.muro_vertical * increment_scale) + (wall_thickness * 2) + 0.200006,
         height: 2.5 * increment_scale
     }
-    console.log("classroom length", classroom.length);
 
-    let bathroom_real_measures = {
-		lavamanos: 0.60,
-		inodoro: 1.40, // largo del cubiculo
-		ancho_de_cubiculo: 0.85, // ancho del baño (cubiculo y lavamanos)
-		pasillo: 1.20,
-		pasillo_de_entrada: 1
-	}
-	
 	let bathroom = {
-		lavamanos: bathroom_real_measures.lavamanos * increment_scale,
-		inodoro: bathroom_real_measures.inodoro * increment_scale,
-		ancho_de_cubiculo: bathroom_real_measures.ancho_de_cubiculo * increment_scale,
-		pasillo: bathroom_real_measures.pasillo * increment_scale,
-		pasillo_de_entrada: bathroom_real_measures.pasillo_de_entrada * increment_scale
+		lavamanos: 0.60 * increment_scale,
+		inodoro: 1.40 * increment_scale, // largo del cubiculo
+		ancho_de_cubiculo: 0.85 * increment_scale, // ancho del baño (cubiculo y lavamanos)
+		pasillo: 1.20 * increment_scale,
+		pasillo_de_entrada: 1 * increment_scale
 	}
 
     let stairs = {
@@ -59,18 +51,14 @@ export default function Plan3D({ result_data, classroom_measurements, constructi
             length: 2.40 * 50
         },
         width: 2.40 * 50,
+        length: (1.20 * 50 * 2) + (8 * 0.25 * 50),
         flight1_amount: 8,
 	    flight2_amount: 8
     }
 
-    let soccer_field_real_measures = {
-        width: 15 * 50, // 22
-        length: 28 * 50 // 44
-    }
-
     let soccer_field = {
-        width: soccer_field_real_measures.width,
-        length: soccer_field_real_measures.length
+        width: 15 * increment_scale, // 22
+        length: 28 * increment_scale // 44
     }
 
     // let amount_pabellones = Math.ceil(((amount_classrooms + amount_bathrooms) * classroom_length) / (terrain_width * classroom_add_scale));
@@ -101,7 +89,7 @@ export default function Plan3D({ result_data, classroom_measurements, constructi
     // perspective.rotation.set("-1.6205812315008037", "1.3084828063007592", "1.6223414925263104", "XYZ");
     // perspective.far = 7000;
     // perspective.near = 4;
-    
+
     return (
         <Canvas
             camera={{
@@ -109,27 +97,27 @@ export default function Plan3D({ result_data, classroom_measurements, constructi
                 aspect: window.innerWidth / window.innerHeight,
                 position: [3202.3188734998785, 858.758291437268, -42.78855655034773],
                 rotation: ["-1.6205812315008037", "1.3084828063007592", "1.6223414925263104", "XYZ"],
-                // rotation: new Euler("-1.6205812315008037", "1.3084828063007592", "1.6223414925263104", "XYZ"),
                 far: 7000,
                 near: 4
             }}
+            
             style={{width: window.innerWidth - 278, height: window.innerHeight - 80, marginTop: "5.6rem", marginLeft: ".7rem"}}
         >
-
             <InitConfig />
             
             <Pabellones
                 amount_classrooms={amount_classrooms}
                 classroom={classroom}
                 bathroom={bathroom}
-                stairs={stairs}
-                increment_scale={increment_scale}
-                terrain={terrain}
                 baths_amount={baths_amount}
+                data={data}
+                stairs={stairs}
+                terrain={terrain}
+                increment_scale={increment_scale}
                 wall_thickness={wall_thickness}
             />
 
-            {/* <Stairs index={0} position={[0, 3, 0]} /> */}
+            {/* <Stairs index={0} position={[0, 3, 0]} stairs={stairs} /> */}
 
             {/* <Test /> */}
 
@@ -137,16 +125,17 @@ export default function Plan3D({ result_data, classroom_measurements, constructi
                 position={[0, 0, 50]}
                 baths={4}
                 increment_scale={50}
-                // este   
+                wall_thickness={wall_thickness}
+                bathroom={bathroom}
+		        floor={1}
             /> */}
-            
+           
             {/* <ClassroomGroup
                 classroom={classroom}
                 increment_scale={50}
                 // rotation={[0, MathUtils.degToRad(180), 0]}
                 wall_thickness={wall_thickness}
             /> */}
-
 
             <SoccerFieldView
                 terrain={terrain}

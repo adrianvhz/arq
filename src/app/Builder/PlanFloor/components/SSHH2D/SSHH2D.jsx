@@ -6,12 +6,14 @@ export default function SSHH2D({ position, rotation, bathroom, baths, stairs, wa
 	const createSquareShape = (width, length) => {
 		let squareShape = new Shape();
 		squareShape.moveTo(0, 0);
-		squareShape.lineTo(0, width - wall_thickness);
-		squareShape.lineTo(length - wall_thickness, width - wall_thickness);
-		squareShape.lineTo(length - wall_thickness, 0);
+		squareShape.lineTo(0, width - (wall_thickness * 2));
+		squareShape.lineTo(length - (wall_thickness * 2), width - (wall_thickness * 2));
+		squareShape.lineTo(length - (wall_thickness * 2), 0);
 		squareShape.closePath();
 		return squareShape;
 	}
+
+	let z = (baths * bathroom.ancho_de_cubiculo) + ((wall_thickness + 0.200006105005) * (baths + 1)) + bathroom.pasillo_de_entrada + 0.200006105005;
 
 	return (
 		<group
@@ -19,11 +21,11 @@ export default function SSHH2D({ position, rotation, bathroom, baths, stairs, wa
 			rotation={rotation}
 		>
 			<line
-				position={[8, 0, ((baths * bathroom.ancho_de_cubiculo) + ((wall_thickness + 0.200006105005) * (baths + 1)) + bathroom.pasillo_de_entrada + 0.200006105005)]}
+				position={[8, 0, z]}
 				rotation={[-Math.PI / 2, 0, 0]}
 			>
 				<shapeGeometry
-					args={[createSquareShape(((baths * bathroom.ancho_de_cubiculo) + ((wall_thickness + 0.200006105005) * (baths + 1)) + bathroom.pasillo_de_entrada + 0.200006105005), (bathroom.lavamanos + bathroom.pasillo + bathroom.inodoro) * 2)]}
+					args={[createSquareShape(z, (bathroom.lavamanos + bathroom.pasillo + bathroom.inodoro) * 2)]}
 				/>
 				<lineBasicMaterial
 					color={0x383838}
@@ -31,11 +33,11 @@ export default function SSHH2D({ position, rotation, bathroom, baths, stairs, wa
 			</line>
 
 			<mesh
-				position={[9, 0, ((baths * bathroom.ancho_de_cubiculo) + ((wall_thickness + 0.200006105005) * (baths + 1)) + bathroom.pasillo_de_entrada + 0.200006105005) - 1]}
+				position={[8, 0, z]}
 				rotation={[-Math.PI / 2, 0, 0]}
 			>
 				<shapeGeometry
-					args={[createSquareShape(((baths * bathroom.ancho_de_cubiculo) + ((wall_thickness + 0.200006105005) * (baths + 1)) + bathroom.pasillo_de_entrada + 0.200006105005) - 2, ((bathroom.lavamanos + bathroom.pasillo + bathroom.inodoro) * 2) - 2)]}
+					args={[createSquareShape(z, ((bathroom.lavamanos + bathroom.pasillo + bathroom.inodoro) * 2))]}
 				/>
 				<meshBasicMaterial
 					color={0x4e5a65}
@@ -49,7 +51,7 @@ export default function SSHH2D({ position, rotation, bathroom, baths, stairs, wa
 				font={InterBold}
 				anchorX="center"
 				anchorY="middle"
-				fontSize={100}
+				fontSize={85}
 				children={"SSHH"}
 			/>
 		</group>

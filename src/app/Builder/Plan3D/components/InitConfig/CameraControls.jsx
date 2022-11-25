@@ -1,20 +1,20 @@
 import { FlyControls, OrbitControls, FirstPersonControls } from "@react-three/drei";
 import { useDispatch, useSelector } from "react-redux";
-import { setCameraControls } from "../../../../../redux/building/buildingSlice";
+import { setPlayCamera } from "../../../../../redux/building/buildingSlice";
 
 export default function CameraControls({ view }) {
-	let cameraControls = useSelector(state => state.building.cameraControls);
+	let isPlayCamera = useSelector(state => state.building.isPlayCamera);
 	let dispatch = useDispatch();
 
 	const stopFly = function(evt) {
-		if (evt.key === "Escape") dispatch(setCameraControls({ cameraControls: "non-play" }));
+		if (evt.key === "Escape") dispatch(setPlayCamera({ isPlayCamera: "non-play" }));
 	}
 
-	window.onkeyup = cameraControls === "play"
+	window.onkeyup = isPlayCamera === "play"
 		? stopFly
-		: null;
+		: null
 
-	if (cameraControls === "play") {
+	if (isPlayCamera === "play") {
 		return <FlyControls rollSpeed={.7} movementSpeed={700} />
 	}
 	else {

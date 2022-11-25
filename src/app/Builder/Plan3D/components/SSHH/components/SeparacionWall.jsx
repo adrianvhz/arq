@@ -11,11 +11,11 @@ export default function SeparacionWall({ position, rotation, bathroom, wall_thic
 
 	let extrudeSettings = {
 		steps: 2, // default: 1
-		depth: wall_thickness, // default: 1  // antes: 3
+		depth: wall_thickness, // default: 1
 		bevelEnabled: true,
 		bevelSegments: 3, // esto no afecta el grosor
-		bevelThickness: 0.2, // 0.5 // default: 0.2
-		// bevelSize: 0.4 // default: bevelThickness - 0.1
+		bevelThickness: 0.2, // default: 0.2
+		// bevelSize: 0.1 // default: bevelThickness - 0.1
 	}
 
 	return ( // pared de separacion vertical

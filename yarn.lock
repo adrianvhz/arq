@@ -762,6 +762,14 @@
     "cannon-es" "^0.20.0"
     "cannon-es-debugger" "^1.0.0"
 
+"@react-three/csg@1.1.5":
+  "integrity" "sha512-b/xejsRHPjwDtd44X8VtoLkXC+Vc/PRt/SqA5dSYocn3efFZkk0CZCubDhAzR0rj+Ydbqr3AXVPWPo6YLqRIHw=="
+  "resolved" "https://registry.npmjs.org/@react-three/csg/-/csg-1.1.5.tgz"
+  "version" "1.1.5"
+  dependencies:
+    "react-merge-refs" "^1.1.0"
+    "three-bvh-csg" "^0.0.2"
+
 "@react-three/drei@9.32.5":
   "integrity" "sha512-1Xd3U0Wo4dyvjGMcaE+b/pLcmNEkRTquNd+bQckom+RTRpWz2I2Dzee9bvWR97TVoR2SxKBdAXC+6IsPte/IBA=="
   "resolved" "https://registry.npmjs.org/@react-three/drei/-/drei-9.32.5.tgz"
@@ -2972,7 +2980,12 @@
 "text-table@~0.2.0":
   "version" "0.2.0"
 
-"three-mesh-bvh@^0.5.15":
+"three-bvh-csg@^0.0.2":
+  "integrity" "sha512-5T1BP1iRjvrG0YIt6G5GwQNgTGHKHrDfRajG10qIVrfjk2QXcwu6rfmSOm+TW7IZQbTcpiBp1/wePyiaYmdlIw=="
+  "resolved" "https://registry.npmjs.org/three-bvh-csg/-/three-bvh-csg-0.0.2.tgz"
+  "version" "0.0.2"
+
+"three-mesh-bvh@^0.5.13", "three-mesh-bvh@^0.5.15":
   "integrity" "sha512-kN3QGKJNiQQcuiOsjVIkjtPnV3PJa+0Orih2E52afa+kQfs3zfoYt6Kxn6b6RNiAfaQ+7ckwPK0mTVFVl2F2LA=="
   "resolved" "https://registry.npmjs.org/three-mesh-bvh/-/three-mesh-bvh-0.5.16.tgz"
   "version" "0.5.16"
@@ -2993,6 +3006,11 @@
     "opentype.js" "^1.3.3"
     "potpack" "^1.0.1"
     "zstddec" "^0.0.2"
+
+"three@^0.141.0":
+  "integrity" "sha512-JaSDAPWuk4RTzG5BYRQm8YZbERUxTfTDVouWgHMisS2to4E5fotMS9F2zPFNOIJyEFTTQDDKPpsgZVThKU3pXA=="
+  "resolved" "https://registry.npmjs.org/three/-/three-0.141.0.tgz"
+  "version" "0.141.0"
 
 "three@>= 0.123.0", "three@>=0.103.0", "three@>=0.122.0", "three@>=0.126", "three@>=0.133", "three@>=0.137", "three@>=0.139", "three@0.145.0", "three@0.x":
   "integrity" "sha512-EKoHQEtEJ4CB6b2BGMBgLZrfwLjXcSUfoI/MiIXUuRpeYsfK5aPWbYhdtIVWOH+x6X0TouldHKHBuc/LAiFzAw=="

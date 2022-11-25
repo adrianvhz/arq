@@ -1,9 +1,8 @@
-import { useEffect, useRef } from "react";
 import { Shape, Vector2, Color } from "three";
 import { Text } from "@react-three/drei";
 import InterBold from "../../../../../assets/font/Inter-Bold.woff";
 
-export default function Entrance2D({ position, rotation, classroom }) {
+export default function Entrance2D({ position, rotation, classroom, wall_thickness }) {
 	let length = classroom.length;
 	let width = classroom.width;
 
@@ -11,20 +10,28 @@ export default function Entrance2D({ position, rotation, classroom }) {
 	var pts = [];
 
 	pts.push(new Vector2(0, 0));
-	pts.push(new Vector2(0, width));
-	pts.push(new Vector2(length, width));
-	pts.push(new Vector2(length, 0));
+	pts.push(new Vector2(0, width - (wall_thickness * 2)));
+	pts.push(new Vector2(length - (wall_thickness * 2), width - (wall_thickness * 2)));
+	pts.push(new Vector2(length - (wall_thickness * 2), 0));
 	pts.push(new Vector2(0, 0));
 	shape = new Shape(pts);
 
 	return (
 		<group
 			position={position}
-			rotation={[-Math.PI / 2, 0, Math.PI / 2]}
-			// rotation={rotation}
+			rotation={[-Math.PI / 2, 0, rotation[1]]}
 		>
+			<line
+				position={[0, -((50 * 6.25) + (wall_thickness * 2)), 0]}
+			>
+				<shapeGeometry args={[shape]} />
+				<lineBasicMaterial
+					color={new Color(0x000000)}
+				/>
+			</line>
+			
 			<mesh
-				position={[0, -((50 * 6.25) + (7.5 * 2)), 0]}
+				position={[0, -((50 * 6.25) + (wall_thickness * 2)), 0]}
 			>
 				<shapeGeometry
 					args={[shape]}
@@ -34,15 +41,6 @@ export default function Entrance2D({ position, rotation, classroom }) {
 				/>
 			</mesh>
 
-			<line
-				position={[0, -((50 * 6.25) + (7.5 * 2)), 0]}
-			>
-				<shapeGeometry args={[shape]} />
-				<lineBasicMaterial
-					color={new Color(0x000000)}
-				/>
-			</line>
-
 			<Text
 				position={[207, -160, 3]}
 				// rotation={[-Math.PI / 2, 0, 0]}
@@ -50,7 +48,7 @@ export default function Entrance2D({ position, rotation, classroom }) {
 				font={InterBold}
 				anchorX="center"
 				anchorY="middle"
-				fontSize={80}
+				fontSize={85}
 				children={" Acceso\nPrincipal"}
 			/>
 		</group>

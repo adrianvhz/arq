@@ -7,17 +7,20 @@ import PlayIcon from '@mui/icons-material/PlayCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CopyIcon from '@mui/icons-material/ContentCopy';
 import SettingsIcon from '@mui/icons-material/Settings';
+import CameraIcon from '@mui/icons-material/Camera';
+import DataObjectIcon from '@mui/icons-material/DataObject';
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import { setShowSettings, setCameraControls, setRoof, setColorWall } from "../../../../redux/building/buildingSlice";
+import { setShowSettings, setPlayCamera, setRoof, setColorWall } from "../../../../redux/building/buildingSlice";
 import "./styles.css";
 import AreasList from "../../Plan3D/components/AreasList";
 import Button3D from "./components/Button3D";
 import Button2D from "./components/Button2D";
+import ButtonSave from "./components/ButtonSave";
 
 export default function ToolsBar() {
 	const dispatch = useDispatch();
-	console.log("ToolsBar");
+	// console.log("ToolsBar");
 
 	function debounce(func, timeout = 300){
 		let timer;
@@ -47,7 +50,7 @@ export default function ToolsBar() {
 			</select>
 			<nav className="navMenu">
 				<ColorButton
-					onClick={() => dispatch(setCameraControls({ cameraControls: "play" }))}
+					onClick={() => dispatch(setPlayCamera({ isPlayCamera: "play" }))}
 				>
 					<PlayIcon htmlColor="#3699FF" />&nbsp; Play
 				</ColorButton>
@@ -72,14 +75,27 @@ export default function ToolsBar() {
 
 				<ColorButton disabled>REPORTE</ColorButton>
 
+				<ColorButton id="save-jpeg">
+					<CameraIcon htmlColor="#3699FF" />
+					{/* <CameraIcon htmlColor="#3699FF" />&nbsp; Screenshoot */}
+				</ColorButton>
+
+				<ColorButton id="save-obj">
+					<DataObjectIcon htmlColor="#3699FF" />
+					{/* <DataObjectIcon htmlColor="#3699FF" />&nbsp; OBJ */}
+				</ColorButton>
+
 				<ColorButton onClick={() => dispatch(setRoof())}>roof (temp)</ColorButton>
 
-				<div style={{position: "absolute", top: "13px", right: "20rem"}}>
-						<input id="color" type="color" name="color_wall" onChange={(evt) => {
-							handleColorWall(evt.target.value);
-						}} />
-						<label htmlFor="color" style={{font: ".7rem 'Fira Sans', sans-serif", color: "black"}}>(prototype)</label>
-				</div>
+				{/* <ButtonSave /> */}
+
+
+				{/* <div style={{}}>
+					<input id="color" type="color" name="color_wall" onChange={(evt) => {
+						handleColorWall(evt.target.value);
+					}} />
+					<label htmlFor="color" style={{font: ".7rem 'Fira Sans', sans-serif", color: "black"}}>(prototype)</label>
+				</div> */}
 			</nav>
 			{/* <AreasList /> */}
 

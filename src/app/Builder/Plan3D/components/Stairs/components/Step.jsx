@@ -1,24 +1,19 @@
-import { useEffect } from "react";
-import { useRef } from "react";
-import { BackSide, DoubleSide, FrontSide, MathUtils, Box3 } from "three";
+import { BackSide, DoubleSide, Shape } from "three";
 
-export default function Step({ position, flight }) {
-	let { width, riser, tread } = flight;
+export default function Step({ position, stairs }) {
+	let { width, riser, tread } = stairs.flight;
 
-	let step = useRef(null);
-
-	useEffect(() => {
-		// var boundingBox = new Box3().setFromObject(step.current);
-		// const xSize = boundingBox.max.x - boundingBox.min.x;
-		// console.log({xSize}, "escalon largo")
-	})
+	let shape = new Shape();
+	shape.moveTo(0, 0);
+	shape.lineTo(0, riser);
+	shape.lineTo(width, riser);
+	shape.lineTo(width, 0);
+	shape.lineTo(0, 0);
 
 	return (
-		<mesh
-			ref={step}
-			position={position}
-		>
-			<boxGeometry args={[width, riser, tread]} />
+		<mesh position={position}>
+			{/* <boxGeometry args={[width, riser, tread]} /> */}
+			<extrudeGeometry args={[shape, { bevelEnabled: false, depth: tread }]} />
 			<meshStandardMaterial shadowSide={BackSide} side={DoubleSide} />
 		</mesh>
 	)
