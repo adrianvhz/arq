@@ -3,7 +3,8 @@ import { DoubleSide, Color, Box3, MathUtils } from "three";
 import { createWallShape } from "../../../common/createWallShape";
 import MeshWallColor from "./MeshWallColor";
 import { Brush, Subtraction } from "@react-three/csg";
-import Door from "./Door";
+import DoorGeometry from "./DoorGeometry";
+import WindowGeometry from "./WindowGeometry";
 
 export default function Walls({ classroom, wall_thickness, index }) {
 	let oClassroom = useRef(null);
@@ -33,20 +34,26 @@ export default function Walls({ classroom, wall_thickness, index }) {
 	return (
 		<mesh>
 			<Subtraction>
-				<Brush
-					a
-					position={[0, 0, (50 * 6.25) + (wall_thickness * 2) + 0.100003]} // (50 * 6.25) + ((wall_thickness + 0.2000061050056) * 2)
-					rotation={[MathUtils.degToRad(-90), 0, 0]}
-				>
-					<extrudeGeometry
-						args={[shape, extrudeSettings]}
-						// ref={geom}
-					/>
-				</Brush>
+				<Subtraction a>
+					<Brush
+						a
+						position={[0, 0, (50 * 6.25) + (wall_thickness * 2) + 0.100003]} // (50 * 6.25) + ((wall_thickness + 0.2000061050056) * 2)
+						rotation={[MathUtils.degToRad(-90), 0, 0]}
+					>
+						<extrudeGeometry
+							args={[shape, extrudeSettings]}
+							// ref={geom}
+						/>
+					</Brush>
 
-				{/* <Brush b position={[10, 10, 30]}> */}
-				<Brush b position={[30, 0, 320]}>
-					<Door />
+					{/* <Brush b position={[10, 10, 30]}> */}
+					<Brush b position={[30, 0, 320]}>
+						<DoorGeometry />
+					</Brush>
+				</Subtraction>
+
+				<Brush b position={[150, 30, 320]}>
+					<WindowGeometry />
 				</Brush>
 			</Subtraction>
 			{/* <MeshWallColor level={"primaria"} /> */}

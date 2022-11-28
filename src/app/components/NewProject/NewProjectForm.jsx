@@ -142,39 +142,27 @@ const NewProjectForm = ({ data, onClose, setMutate }) => {
    useEffect(() => {
       console.log(dataExcel)
       if (dataExcel) {
-         for (var key of Object.keys(dataExcel.levels)) { // cambiar
-            if (key === "inicial") {
-               setAforoInicial(dataExcel.levels[key].aforo);
-               setAulaInicial(dataExcel.levels[key].aulas);
-               setInicial(true);
+         if (dataExcel.levels) {
+            for (var key of Object.keys(dataExcel.levels)) { // cambiar
+               if (key === "inicial") {
+                  setAforoInicial(dataExcel.levels[key].aforo);
+                  setAulaInicial(dataExcel.levels[key].aulas);
+                  setInicial(true);
+               }
+               else if (key === "primaria") {
+                  setAforoPrimaria(dataExcel.levels[key].aforo);
+                  setAulaPrimaria(dataExcel.levels[key].aulas);
+                  setPrimaria(true);
+               }
+               else if (key === "secundaria") {
+                  setAforoSecundaria(dataExcel.levels[key].aforo);
+                  setAulaSecundaria(dataExcel.levels[key].aulas);
+                  setSecundaria(true);
+               }
             }
-            else if (key === "primaria") {
-               setAforoPrimaria(dataExcel.levels[key].aforo);
-               setAulaPrimaria(dataExcel.levels[key].aulas);
-               setPrimaria(true);
-            }
-            else if (key === "secundaria") {
-               setAforoSecundaria(dataExcel.levels[key].aforo);
-               setAulaSecundaria(dataExcel.levels[key].aulas);
-               setSecundaria(true);
-            }
+         } else {
+            alert("Debes seleccionar al menos un nivel.")
          }
-
-         // setAforoInicial(dataExcel[3].__EMPTY_2)
-         // setAulaInicial(Math.round(dataExcel[3].__EMPTY_6))
-         // if (dataExcel[3].__EMPTY_2 > 0 || dataExcel[3].__EMPTY_6 > 0) {
-         //    setInicial(true)
-         // }
-         // setAforoPrimaria(dataExcel[12].__EMPTY_2)
-         // setAulaPrimaria(Math.round(dataExcel[12].__EMPTY_6))
-         // if (dataExcel[12].__EMPTY_2 > 0 && dataExcel[12].__EMPTY_6 > 0) {
-         //    setPrimaria(true)
-         // }
-         // setAforoSecundaria(dataExcel[21].__EMPTY_2)
-         // setAulaSecundaria(Math.round(dataExcel[21].__EMPTY_6))
-         // if (dataExcel[21].__EMPTY_2 > 0 && dataExcel[21].__EMPTY_6 > 0) {
-         //    setSecundaria(true)
-         // }
       }
    }, [dataExcel])
 

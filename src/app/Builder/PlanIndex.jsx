@@ -21,9 +21,12 @@ export default function PlanIndex() {
 			secundaria: aforoData.aforoSecundaria
 		},
 		aulas: {
-			inicial: aforoData.aulaInicial + 5,
-			primaria: aforoData.aulaPrimaria + 5,
-			secundaria: aforoData.aulaSecundaria + 5
+			inicial: aforoData.aulaInicial,
+			primaria: aforoData.aulaPrimaria,
+			secundaria: aforoData.aulaSecundaria
+			// inicial: aforoData.aulaInicial + 5,
+			// primaria: aforoData.aulaPrimaria + 5,
+			// secundaria: aforoData.aulaSecundaria + 5
 		},
 		zone: state.zone,
 		type: state.sublevel
@@ -43,28 +46,35 @@ export default function PlanIndex() {
 		secundaria: Math.ceil(aforoData.aforoSecundaria / 60)
 	}
 
-	
-	let baths_amount = {}
+	let baths_amount = []
+	// let baths_amount = {}
 	let total_bathrooms = amount_bathrooms.inicial + amount_bathrooms.primaria + amount_bathrooms.secundaria;
 
-	if (data.levels.includes("Inicial")) {
-		let pab1_baths = amount_bathrooms.inicial;
-		baths_amount.pab1 = pab1_baths <= 6 ? pab1_baths : 6;
+	if (data.levels.includes("inicial")) {
+		let pab1_baths = amount_bathrooms.inicial <= 6 ? amount_bathrooms.inicial : 6;
+		baths_amount.push({
+			pab: 1,
+			baths: pab1_baths
+		});
 
-		total_bathrooms -= baths_amount.pab1;
+		total_bathrooms -= pab1_baths;
 
-		let pab2_baths = amount_bathrooms.primaria + amount_bathrooms.secundaria;
-		baths_amount.pab2 = pab2_baths <= 6 ? pab2_baths : 6;
-		total_bathrooms -= baths_amount.pab2;
+		let pab2_baths = (amount_bathrooms.primaria + amount_bathrooms.secundaria) <= 6 ? (amount_bathrooms.primaria + amount_bathrooms.secundaria) : 6;
+		baths_amount.push({
+			pab: 2,
+			baths: pab2_baths
+		})
+		
+		total_bathrooms -= pab2_baths;
 
 		console.log("left bathrooms", total_bathrooms);
 	} else {
 		let pab1_baths = amount_bathrooms.primaria + amount_bathrooms.secundaria;
 		baths_amount.pab1 = pab1_baths <= 6 ? pab1_baths : 6;
-
 		total_bathrooms -= baths_amount.pab1;
 
-		baths_amount.pab2 = total_bathrooms > 0 ? total_bathrooms : 1;
+		baths_amount.pab2 = total_bathrooms > 0 ? total_bathrooms : 0;
+		total_bathrooms -= baths_amount.pab2;
 	}
 
 	console.log({ amount_bathrooms, total_bathrooms, baths_amount })

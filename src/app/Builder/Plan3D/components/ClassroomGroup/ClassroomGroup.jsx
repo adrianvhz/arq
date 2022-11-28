@@ -1,7 +1,6 @@
 import Walls from "./components/Walls";
 import Columns from "./components/Columns";
 import Roof from "./components/Roof";
-import Door from "./components/Door";
 // import wallSVG from "../../../../assets/svg/";
 // import Svg from "../../../Test/Svg";
 

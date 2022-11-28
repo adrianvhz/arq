@@ -34,7 +34,7 @@ export default function Pabellones({ amount_classrooms, classroom, bathroom, sta
 			y: 0,
 			z: -terrain.width / 2,
 			baths: baths_amount.pab2,
-			max_classrooms: computeMaxClassrooms({ have_bathroom: (baths_amount.pab2 > 0), have_stairs: false })
+			max_classrooms: computeMaxClassrooms({ have_bathroom: baths_amount.find(el => el.pab === 2).baths > 0, have_stairs: false })
 		}
 	}	
 
@@ -48,7 +48,7 @@ export default function Pabellones({ amount_classrooms, classroom, bathroom, sta
 	if (amount_classrooms > max_classrooms_first_floor) {
 		pab[1].max_classrooms = computeMaxClassrooms({ have_bathroom: true, have_stairs: true });
 		if (max_classrooms_first_floor + pab[1].max_classrooms) {
-			pab[2].max_classrooms = computeMaxClassrooms({ have_bathroom: (baths_amount.pab2 > 0), have_stairs: true });
+			pab[2].max_classrooms = computeMaxClassrooms({ have_bathroom: baths_amount.find(el => el.pab === 2).baths > 0, have_stairs: true });
 		}
 	}
 
@@ -56,31 +56,124 @@ export default function Pabellones({ amount_classrooms, classroom, bathroom, sta
 	console.log({"max classrooms first pabellon:": pab[1].max_classrooms, "max classrooms second pabellon:": pab[2].max_classrooms});
 
 	
+// ============ //
+	pab[1].floors = [
+		// {
+		// 	// floor: 1,							// pab[1].max_classrooms   ===   5
+		// 	// classrooms: classrooms.slice(0, pab[1].max_classrooms), // 1st
+		// 	classrooms: [],
+		// 	baths: 4,
+		// 	have_stairs: true
+		// },
+		// {
+		// 	// floor: 2,
+		// 	// classrooms: classrooms.slice(4, 15), // 3rd
+		// 	classrooms: [],
+		// 	baths: 0,
+		// 	have_stairs: false
+		// }
+	];
+
+	pab[2].floors = [
+		// {
+		// 	// floor: 1,
+		// 	// classrooms: classrooms.slice(5, 10), // 2nd
+		// 	classrooms: [],
+		// 	baths: 6,
+		// 	have_stairs: false
+		// }
+	];
+	
+	pab[2].classrooms_for_peine = 5;
+// ============ //
 
 
-
+// ------------------------------------------- //
 	let remaining_first_floor = max_classrooms_first_floor;
 
 	let classrooms = [];
 	let aula_index = 0;
 
+	let pab_actual = 1;
+	let floor_actual = 1;
+
+	let classrooms_tmp = [];
+	// for (let level of data.levels) {
+		// for (let i = 0; i < data.aulas[level]; i++) {
+
+
 	for (let level of data.levels) {
 		for (let i = 0; i < data.aulas[level]; i++) {
-			classrooms.push({
-				aula_index: aula_index,
-				aula_level_index: i,
+			// pab[pab_actual].floors[floor_actual]
+			// console.log(level)
+			// push one by one classrooms to actual pab and floor
+
+			// pab[pab_actual].floors[floor_actual-1].classrooms.push({
+			classrooms_tmp.push({
 				level: level,
-				pab: aula_index < pab[1].max_classrooms ? 1 : (aula_index > max_classrooms_first_floor && aula_index < max_classrooms_first_floor + pab[2].max_classrooms + 1 ? 1 : 2),
-				floor: aula_index < max_classrooms_first_floor ? 1 : aula_index < (max_classrooms_first_floor + pab[1].max_classrooms) ? 2 : 3 
+				// aula_index: aula_index,
+				// aula_level_index: i,
+				// pab: aula_index < pab[1].max_classrooms ? 1 : (aula_index > max_classrooms_first_floor && aula_index < max_classrooms_first_floor + pab[2].max_classrooms + 1 ? 1 : 2),
+				// floor: aula_index < max_classrooms_first_floor ? 1 : aula_index < (max_classrooms_first_floor + pab[1].max_classrooms) ? 2 : 3 
 			});
+			
+			// pab[pab_actual].floors[floor_actual]
 			aula_index++;
+
+			if (classrooms_tmp.length >= (pab[pab_actual].max_classrooms) + (pab[pab_actual].classrooms_for_peine || 0)) {
+				pab[pab_actual].floors.push({
+					floor: floor_actual,
+					classrooms: classrooms_tmp.slice(0, 5),
+					baths: 2,
+					have_stairs: true
+
+				});
+				classrooms_tmp = [];
+				pab_actual = pab_actual === 1 ? 2 : 1; // !true !false
+			}
+			
+			// if () {
+			// 	floor_actual++;
+			// 	pab[pab_actual].floors[floor_actual-1].floor = floor_actual;
+			// }
 		}
 	}
 
 	// console.log(classrooms.map(el => ({pab: el.pab, floor: el.floor})))
-	console.log(classrooms)
+	
+	// console.log(pab[1].floors);
+	// console.log(pab[2].floors);
+// ------------------------------------------- //
 
 
+// // ----------------------------------------------------------------------- //
+// let remaining_first_floor = max_classrooms_first_floor;
+
+// let classrooms = [];
+// let aula_index = 0;
+
+// let pab_actual = 1;
+// let floor_actual = 1;
+
+// for (let level of data.levels) {
+// 	for (let i = 0; i < data.aulas[level]; i++) {
+// 		classrooms.push({
+// 			aula_index: aula_index,
+// 			aula_level_index: i,
+// 			level: level,
+// 			// pab: aula_index < pab[1].max_classrooms ? 1 : (aula_index > max_classrooms_first_floor && aula_index < max_classrooms_first_floor + pab[2].max_classrooms + 1 ? 1 : 2),
+// 			// floor: aula_index < max_classrooms_first_floor ? 1 : aula_index < (max_classrooms_first_floor + pab[1].max_classrooms) ? 2 : 3 
+// 		});
+// 		aula_index++;
+// 		if (aula_index > pab[pab_actual].max_classrooms) {
+
+// 		}
+// 	}
+// }
+
+// // console.log(classrooms.map(el => ({pab: el.pab, floor: el.floor})))
+// console.log(classrooms);
+// // ----------------------------------------------------------------------- //
 
 
 
@@ -116,55 +209,56 @@ export default function Pabellones({ amount_classrooms, classroom, bathroom, sta
 
 	// PUSH PABELLONES
 	for (let p = 1; p <= amount_pabellones; p++) {
-		let topSide;
-		let bottomSide;
+		// let topSide;
+		// let bottomSide;
 
-		// 1 PABELLON
-		if (amount_pabellones === 1) {
-			topSide = Math.ceil(remaining_classrooms / 2);
-			bottomSide = remaining_classrooms - topSide;
+		// // 1 PABELLON
+		// if (amount_pabellones === 1) {
+		// 	topSide = Math.ceil(remaining_classrooms / 2);
+		// 	bottomSide = remaining_classrooms - topSide;
 
-			remaining_classrooms = 0;
-		}
+		// 	remaining_classrooms = 0;
+		// }
 
-		// 2 PABELLONES
-		else {
-			let amountsPab = new AmountsPab(p);
+		// // 2 PABELLONES
+		// else {
+		// 	let amountsPab = new AmountsPab(p);
 
-			topSide = amountsPab.side1;
-			bottomSide = amountsPab.side2;
-		}
+		// 	topSide = amountsPab.side1;
+		// 	bottomSide = amountsPab.side2;
+		// }
 		
 		pabellones.push({
 			position: [pab[p].x, pab[p].y, pab[p].z],
 			rotation: pab[p].rotation,
-			amountSide1: topSide,
-			amountSide2: bottomSide,
-			baths: pab[p].baths,
-			// have_stairs: pab[p].have_stairs
+			max_classrooms_for_pab: pab[p].max_classrooms,
+			floors: pab[p].floors
+			// amountSide1: topSide,
+			// amountSide2: bottomSide,
+			// baths: pab[p].baths,
 		});
 
 		// remaining_classrooms -= max_classrooms_per_pabellon;
 	}
 
-	let totalSidesPeine = max_classrooms_peine * 3;
-	let classrooms_for_peine;
+	// let totalSidesPeine = max_classrooms_peine * 3;
+	// let classrooms_for_peine;
 
-	if (remaining_classrooms > totalSidesPeine) {
-		classrooms_for_peine = totalSidesPeine;
-		remaining_classrooms -= totalSidesPeine;
-	} else {
-		classrooms_for_peine = remaining_classrooms;
-		remaining_classrooms = 0;
-	}
+	// if (remaining_classrooms > totalSidesPeine) {
+	// 	classrooms_for_peine = totalSidesPeine;
+	// 	remaining_classrooms -= totalSidesPeine;
+	// } else {
+	// 	classrooms_for_peine = remaining_classrooms;
+	// 	remaining_classrooms = 0;
+	// }
 
 	console.log("remaining classrooms for second floor", remaining_classrooms);
 
-	if (remaining_classrooms > 0) {
-		let amount_high_floors = Math.ceil(remaining_classrooms / pab[1].max_classrooms);
-		pab[1].floors_above = Math.ceil(amount_high_floors / 2);
-		pab[2].floors_above = amount_high_floors - pab[1].floors_above;
-	}
+	// if (remaining_classrooms > 0) {
+	// 	let amount_high_floors = Math.ceil(remaining_classrooms / pab[1].max_classrooms);
+	// 	pab[1].floors_above = Math.ceil(amount_high_floors / 2);
+	// 	pab[2].floors_above = amount_high_floors - pab[1].floors_above;
+	// }
 
 	return (
 		pabellones.map((el, index) => (
@@ -172,20 +266,38 @@ export default function Pabellones({ amount_classrooms, classroom, bathroom, sta
 				key={index}
 				position={el.position}
 				rotation={el.rotation}
-				amountSide1={el.amountSide1}
-				amountSide2={el.amountSide2}
 				classroom={classroom}
 				bathroom={bathroom}
 				stairs={stairs}
-				increment_scale={increment_scale}
-				terrain={terrain}
-				classrooms_for_peine={classrooms_for_peine}
-				floors_above={pab[index + 1].floors_above}
-				index={index}
-				baths={el.baths}
 				pasillo={pasillo}
+				terrain={terrain}
+				classrooms_for_peine={pab[2].classrooms_for_peine}
+				max_classrooms_for_pab={el.max_classrooms_for_pab}
+				baths={el.baths}
+				floors={el.floors}
 				wall_thickness={wall_thickness}
+				increment_scale={increment_scale}
+				index={index}
 			/>
+
+			// <Pabellon
+			// 	key={index}
+			// 	position={el.position}
+			// 	rotation={el.rotation}
+			// 	amountSide1={el.amountSide1}
+			// 	amountSide2={el.amountSide2}
+			// 	classroom={classroom}
+			// 	bathroom={bathroom}
+			// 	stairs={stairs}
+			// 	increment_scale={increment_scale}
+			// 	terrain={terrain}
+			// 	classrooms_for_peine={classrooms_for_peine}
+			// 	floors_above={pab[index + 1].floors_above}
+			// 	index={index}
+			// 	baths={el.baths}
+			// 	pasillo={pasillo}
+			// 	wall_thickness={wall_thickness}
+			// />
 		))
 	)
 }
