@@ -24,7 +24,7 @@ export default function WallSSH({ position, rotation, length, rotate, wall_thick
 				<Subtraction>
 					<Brush
 						a
-						position={[0, 0, (((0.85 * 50) * 4) + (8 * 5)) - 0.100003]}
+						position={[0, 0, (((0.85 * 50) * 4) + (8 * 5)) + (wall_thickness * 2) - 0.200006]}
 						rotation={[-Math.PI / 2, 0, 0]}
 					>
 						<extrudeGeometry
@@ -32,11 +32,11 @@ export default function WallSSH({ position, rotation, length, rotate, wall_thick
 						/>
 					</Brush>
 
-					<Brush b position={[30, 0, 320]}>
+					<Brush b position={[137, -1, 217]}>
 						<EntranceGeometry />
 					</Brush>
 				</Subtraction>
-				<meshStandardMaterial />
+				<meshStandardMaterial color={0xb8c5d3} />
 			</mesh>
 		</object3D>
 	)

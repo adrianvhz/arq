@@ -7,5 +7,10 @@ export default defineConfig({
   assetsInclude: ["**/*.fbx", "**/*.glb", "**/*.gltf"],
   server: {
     host: "0.0.0.0"
+  },
+  esbuild: {
+    logOverride: {
+      "this-is-undefined-in-esm": "silent"
+    }
   }
 })

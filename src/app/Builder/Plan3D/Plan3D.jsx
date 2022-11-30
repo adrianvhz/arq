@@ -11,6 +11,7 @@ import Stairs from "./components/Stairs/Stairs";
 import SSHH from "./components/SSHH/SSHH";
 import ClassroomGroup from "./components/ClassroomGroup/ClassroomGroup";
 import Test from "../Test/Test";
+import Pasillo from "./components/Pasillo/Pasillo";
 
 export default function Plan3D({ result_data, classroom_measurements, construction_info, baths_amount, data }) {
     let increment_scale = 50;
@@ -59,6 +60,10 @@ export default function Plan3D({ result_data, classroom_measurements, constructi
     let soccer_field = {
         width: 15 * increment_scale, // 22
         length: 28 * increment_scale // 44
+    }
+
+    let pasillo = {
+        width: 2.4 * increment_scale
     }
 
     // let amount_pabellones = Math.ceil(((amount_classrooms + amount_bathrooms) * classroom_length) / (terrain_width * classroom_add_scale));
@@ -143,6 +148,13 @@ export default function Plan3D({ result_data, classroom_measurements, constructi
                 classroom={classroom}
                 soccer_field={soccer_field}
                 increment_scale={increment_scale}
+            />
+
+            <Pasillo
+                args={[pasillo.width, terrain.width]}
+                position={[-terrain.width / 2, 0, (terrain.width / 2) - classroom.width]}
+                rotation={[-Math.PI / 2, 0, 0]}
+                color={0x5a5a5a}
             />
 
             <TerrainView

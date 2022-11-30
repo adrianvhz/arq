@@ -5,8 +5,7 @@ import EntranceView from "../../../../components/EntranceView/EntranceView";
 import SSHHView from "../../../../components/SSHHView/SSHHView";
 import StairsView from "../../../../components/StairsView/StairsView";
 
-// export default function Pabellon({ position, rotation, amountSide1, amountSide2, classroom, bathroom, increment_scale, pasillo, terrain, classrooms_for_peine, floors_above, baths, stairs, index, wall_thickness }) {
-export default function Pabellon({ position, rotation, classroom, bathroom, stairs, pasillo, terrain, floors, classrooms_for_peine, baths, max_classrooms_for_pab, index, wall_thickness, increment_scale }) {
+export default function Pabellon({ position, rotation, classroom, bathroom, stairs, pasillo, terrain, floors, index, wall_thickness, increment_scale }) {
 	let pabellon_group = useRef(null);
 	let n_pabellon = index + 1;
 
@@ -24,194 +23,14 @@ export default function Pabellon({ position, rotation, classroom, bathroom, stai
 		return n_pabellon === 1 ? x - (classroom.length - 334.9999938979745) : x + (classroom.length - 334.9999938979745);
 	}
 
-	// START TEST //
-	const buildFloor = ({ floor, classrooms, baths, have_stairs }) => {
-		let x = 0;
-		let y = (floor - 1) * 137;
-		let z = 0;
-
-		if (baths || have_stairs) {
-			let side1 = Math.ceil(classrooms.length / 2);
-			let side2 = classrooms.length - side1;
-
-			// side 1
-			for (let i = 0; i < side1; i++) {
-				oRoom.push({
-					position: [x, y, z],
-					room: ClassroomView,
-					level: classrooms[i].level,
-					floor: floor
-				});
-				x = addClassroomPosition(x);
-			}
-
-			// stairs
-			if (have_stairs) {
-				x = stairsOffset(x);
-				oRoom.push({
-					position: [x, y, z],
-					room: StairsView,
-					n_pabellon: n_pabellon,
-					floor: 1
-				});
-				x = addClassroomPosition(x);
-			}
-
-			// bathroom
-			if (baths) {
-				x = bathroomOffset(x);
-				oRoom.push({
-					position: [x, y, z],
-					room: SSHHView,
-					bathroom: bathroom,
-					baths: baths,
-					floor: 1
-				});
-				x = addClassroomPosition(x);
-			}
-
-			// side 2
-			for (let i = 0; i < side2; i++) {
-				oRoom.push({
-					position: [x, y, z],
-					room: ClassroomView,
-					level: classrooms[i].level,
-					floor: floor
-				});
-				x = addClassroomPosition(x);
-			}
-
-
-		} 
-		
-		else {
-			for (let i = 0; i < classrooms.length; i++) {
-				oRoom.push({
-					position: [x, y, z],
-					room: ClassroomView,
-					level: classrooms[i].level,
-					floor: floor
-				});
-				x = addClassroomPosition(x);
-			}
-		}
-
-		// // side 1
-		// for (let i = 0; i < side1; i++) {
-		// 	oRoom.push({
-		// 		position: [x, y, z],
-		// 		room: ClassroomView,
-		// 		floor: floor
-		// 	});
-		// 	x = addClassroomPosition(x);
-		// }
-		
-		// // stairs
-		// if (have_stairs) {
-		// 	x = stairsOffset(x);
-		// 	oRoom.push({
-		// 		position: [x, y, z],
-		// 		room: StairsView,
-		// 		n_pabellon: n_pabellon,
-		// 		floor: 1
-		// 	});
-		// 	x = addClassroomPosition(x);
-		// }
-
-		// // bathroom
-		// if (baths) {
-		// 	x = bathroomOffset(x);
-		// 	oRoom.push({
-		// 		position: [x, y, z],
-		// 		room: SSHHView,
-		// 		bathroom: bathroom,
-		// 		baths: baths,
-		// 		floor: 1
-		// 	});
-		// 	x = addClassroomPosition(x);
-		// }
-
-		// // side 2
-		// for (let i = 0; i < side2; i++) {
-		// 	oRoom.push({
-		// 		position: [x, y, z],
-		// 		room: ClassroomView,
-		// 		floor: 1
-		// 	});
-		// 	x = addClassroomPosition(x);
-		// }
-	}
-
-	for (let i = 0; i < floors.length; i++) {
-		buildFloor({ amount: floors[i].amount_classrooms, floor: floors[i].floor, classrooms: floors[i].classrooms, baths: floors[i].baths, have_stairs: floors[i].have_stairs });
-	}
-	// END TEST //
-
-
-	// ORIGINAL
-	// const buildF = () => {
-	// 	let x = 0;
-	// 	let y = 0;
-	// 	let z = 0;
-
-	// 	// side 1
-	// 	for (let i = 0; i < amountSide1; i++) {
-	// 		oRoom.push({
-	// 			position: [x, y, z],
-	// 			room: ClassroomView,
-	// 			floor: 1
-	// 		});
-	// 		x = addClassroomPosition(x);
-	// 	}
-		
-	// 	// stairs
-	// 	if (!!floors_above) {
-	// 		x = stairsOffset(x);
-	// 		oRoom.push({
-	// 			position: [x, y, z],
-	// 			room: StairsView,
-	// 			n_pabellon: n_pabellon,
-	// 			floor: 1
-	// 		});
-	// 		x = addClassroomPosition(x);
-	// 	}
-
-	// 	// bathroom
-	// 	x = bathroomOffset(x);
-	// 	oRoom.push({
-	// 		position: [x, y, z],
-	// 		room: SSHHView,
-	// 		bathroom: bathroom,
-	// 		baths: baths,
-	// 		floor: 1
-	// 	});
-	// 	x = addClassroomPosition(x);
-
-	// 	// side 2
-	// 	for (let i = 0; i < amountSide2; i++) {
-	// 		oRoom.push({
-	// 			position: [x, y, z],
-	// 			room: ClassroomView,
-	// 			floor: 1
-	// 		});
-	// 		x = addClassroomPosition(x);
-	// 	}
-	// }
-
-	// buildF();
-	
-	// REMAINING CLASSROOMS FOR PEINE
-	if (n_pabellon === 2 && classrooms_for_peine > 0) {
+	const buildPeine = (classrooms_for_peine, floor) => {
 		let posX = {
 			top: (-terrain.width) + (classroom.width * 3),
 			middle: (-terrain.width / 2)  + (classroom.width * 3), // (-classroom.width * 2)
 			bottom: classroom.length
-			// top: 0,
-			// middle: terrain.width / 2 - (classroom.width / 2),
-			// bottom: terrain.width - (classroom.length + classroom.width)
 		}
-		
-		let posY = 0;
+
+		let posY = (floor - 1) * 137;
 		
 		let posZ = {
 			top: classroom.length + classroom.width + pasillo,
@@ -221,12 +40,13 @@ export default function Pabellon({ position, rotation, classroom, bathroom, stai
 
 		let side = "top";
 
-		for (let i = 0; i < classrooms_for_peine; i++) {
+		for (let i = 0; i < classrooms_for_peine.length; i++) {
 			oRoom.push({
 				position: [posX[side], posY, posZ[side]],
 				rotation_classroom: [0, MathUtils.degToRad(side === "top" ? 90 : -90), 0],
 				room: ClassroomView,
-				floor: 1
+				floor: floor,
+				level: classrooms_for_peine[i]
 			});
 			posZ[side] += classroom.length;
 			
@@ -235,70 +55,106 @@ export default function Pabellon({ position, rotation, classroom, bathroom, stai
 
 		// let posicion_entrada = ((8)) - 1;
 		// classrooms[13].room = EntranceView;
-		oRoom[oRoom.length - 4].room = EntranceView;
+		floor === 1 && (
+			oRoom[oRoom.length - 6].room = EntranceView
+		);
 	}
 
-	
+	const buildFloor = ({ floor, classrooms, baths, have_stairs, classrooms_for_peine }) => {
+		let x = 0;
+		let y = (floor - 1) * 137;
+		let z = 0;
 
-	// HIGH FLOORS
-	// if (floors_above) {
-	// 	const buildFloor = (n) => {
-	// 		let x = 0;
-	// 		let y = (classroom.height + 11.2) * n;
-	// 		let z = 0;
-			
-	// 		// side 1
-	// 		for (let i = 0; i < amountSide1; i++) {
-	// 			oRoom.push({
-	// 				position: [x, y, z],
-	// 				room: ClassroomView,
-	// 				floor: n + 1
-	// 			});
-	// 			x = addClassroomPosition(x);
-	// 		}
+		let classroom_i = 0;
 
-	// 		// stairs
-	// 		if (!!floors_above) {
-	// 			x = stairsOffset(x);
-	// 			oRoom.push({
-	// 				position: [x, y, z],
-	// 				room: StairsView,
-	// 				n_pabellon: n_pabellon,
-	// 				floor: n + 1
-	// 			});
-	// 			x = addClassroomPosition(x);
-	// 		}
+		// if (baths || have_stairs) {
+			let side1 = Math.ceil(classrooms.length / 2);
+			let side2 = classrooms.length - side1;
 
-	// 		x = bathroomOffset(x);
-	// 		// bathroom
-	// 		oRoom.push({
-	// 			position: [x, y, z],
-	// 			room: SSHHView,
-	// 			bathroom: bathroom,
-	// 			baths: 0,
-	// 			have_stairs: !!floors_above,
-	// 			floor: n + 1
-	// 		});
-	// 		x = addClassroomPosition(x);
+			// side 1
+			for (let i = 0; i < side1; i++) {
+				oRoom.push({
+					position: [x, y, z],
+					room: ClassroomView,
+					level: classrooms[classroom_i],
+					// level: classrooms[i].level,
+					floor: floor
+				});
+				x = addClassroomPosition(x);
+				classroom_i++;
+			}
 
-	// 		// side 2
-	// 		for (let i = 0; i < amountSide2; i++) {
-	// 			oRoom.push({
-	// 				position: [x, y, z],
-	// 				room: ClassroomView,
-	// 				floor: n + 1
-	// 			});
-	// 			x = addClassroomPosition(x);
-	// 		}
-	// 	}
+			// stairs
+			if (floors.length > 1) {
+				x = stairsOffset(x);
+				oRoom.push({
+					position: [x, y, z],
+					room: StairsView,
+					n_pabellon: n_pabellon,
+					floor: floor,
+					hide_stairs: floor >= floors.length
+				});
+				x = addClassroomPosition(x);
+			}
 
-	// 	for (let i = 1; i <= floors_above; i++) {
-	// 		buildFloor(i);
-	// 		// if (view3DModule === undefined || view3DModule === (i + 1)) buildFloor(i);
-	// 	}
-	// }
-	// END SECOND FLOOR
+			// bathroom
+			if (floors[0].baths) {
+				x = bathroomOffset(x);
+				oRoom.push({
+					position: [x, y, z],
+					room: SSHHView,
+					bathroom: bathroom,
+					baths: baths,
+					floor: floor,
+					hide_sshh: !baths
+				});
+				x = addClassroomPosition(x);
+			}
 
+			// side 2
+			for (let i = 0; i < side2; i++) {
+				oRoom.push({
+					position: [x, y, z],
+					room: ClassroomView,
+					level: classrooms[classroom_i],
+					// level: classrooms[i].level,
+					floor: floor
+				});
+				x = addClassroomPosition(x);
+				classroom_i++;
+			}
+		// } 
+		
+		// else {
+		// 	for (let i = 0; i < classrooms.length; i++) {
+		// 		oRoom.push({
+		// 			position: [x, y, z],
+		// 			room: ClassroomView,
+		// 			level: classrooms[i],
+		// 			// level: classrooms[i].level,
+		// 			floor: floor
+		// 		});
+		// 		x = addClassroomPosition(x);
+		// 	}
+		// }
+
+
+		// BUILD FLOOR PEINE
+		if (n_pabellon === 2) {
+			buildPeine(classrooms_for_peine, floor);
+		}
+	}
+
+	for (let i = 0; i < floors.length; i++) {
+		buildFloor({
+			amount: floors[i].amount_classrooms,
+			floor: floors[i].floor,
+			classrooms: floors[i].classrooms,
+			baths: floors[i].baths,
+			have_stairs: floors[i].have_stairs,
+			classrooms_for_peine: floors[i].classrooms_for_peine
+		});
+	}
 
 	useEffect(() => {
 		var boundingBox = new Box3().setFromObject(pabellon_group.current);
@@ -326,9 +182,11 @@ export default function Pabellon({ position, rotation, classroom, bathroom, stai
 					bathroom={bathroom}
 					stairs={stairs}
 					baths={el.baths}
+					hide_sshh={el.hide_sshh}
 					increment_scale={increment_scale}
 					floor={el.floor}
 					have_stairs={el.have_stairs}
+					hide_stairs={el.hide_stairs}
 					wall_thickness={wall_thickness}
 					index={index}
 					n_pabellon={n_pabellon}
@@ -469,6 +327,73 @@ export default function Pabellon({ position, rotation, classroom, bathroom, stai
 
 
 
+
+
+
+
+
+
+
+
+
+	// HIGH FLOORS
+	// if (floors_above) {
+	// 	const buildFloor = (n) => {
+	// 		let x = 0;
+	// 		let y = (classroom.height + 11.2) * n;
+	// 		let z = 0;
+			
+	// 		// side 1
+	// 		for (let i = 0; i < amountSide1; i++) {
+	// 			oRoom.push({
+	// 				position: [x, y, z],
+	// 				room: ClassroomView,
+	// 				floor: n + 1
+	// 			});
+	// 			x = addClassroomPosition(x);
+	// 		}
+
+	// 		// stairs
+	// 		if (!!floors_above) {
+	// 			x = stairsOffset(x);
+	// 			oRoom.push({
+	// 				position: [x, y, z],
+	// 				room: StairsView,
+	// 				n_pabellon: n_pabellon,
+	// 				floor: n + 1
+	// 			});
+	// 			x = addClassroomPosition(x);
+	// 		}
+
+	// 		x = bathroomOffset(x);
+	// 		// bathroom
+	// 		oRoom.push({
+	// 			position: [x, y, z],
+	// 			room: SSHHView,
+	// 			bathroom: bathroom,
+	// 			baths: 0,
+	// 			have_stairs: !!floors_above,
+	// 			floor: n + 1
+	// 		});
+	// 		x = addClassroomPosition(x);
+
+	// 		// side 2
+	// 		for (let i = 0; i < amountSide2; i++) {
+	// 			oRoom.push({
+	// 				position: [x, y, z],
+	// 				room: ClassroomView,
+	// 				floor: n + 1
+	// 			});
+	// 			x = addClassroomPosition(x);
+	// 		}
+	// 	}
+
+	// 	for (let i = 1; i <= floors_above; i++) {
+	// 		buildFloor(i);
+	// 		// if (view3DModule === undefined || view3DModule === (i + 1)) buildFloor(i);
+	// 	}
+	// }
+	// END SECOND FLOOR
 
 
 

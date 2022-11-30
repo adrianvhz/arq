@@ -26,8 +26,6 @@ export default function SSHH({ position, rotation, bathroom, baths, wall_thickne
 		// console.log("REAL BATHROOM LENGTH:", xSize);
 	}, []);
 	
-	if (baths_amount === 0) return null;
-
 	return (
 		<group
 			position={position}
@@ -59,8 +57,8 @@ export default function SSHH({ position, rotation, bathroom, baths, wall_thickne
 			{/* PASILLO DE ENTRADA */}
 			<Pasillo
 				// args={[pasillo_de_entrada, walls.back.length]}
-				args={[pasillo_de_entrada, 200]}
-				position={[-0.1, 0.01, 0]}
+				args={[pasillo_de_entrada, 329]}
+				position={[0, 0.01, 217]}
 				rotation={[-Math.PI / 2, 0, 0]}
 				color={0x3d3d3d}
 			/>

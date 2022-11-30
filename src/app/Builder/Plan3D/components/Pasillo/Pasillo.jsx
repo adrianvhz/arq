@@ -1,6 +1,9 @@
 import { Shape, Color, DoubleSide } from "three";
+import { useSelector } from "react-redux";
 
 export default function Pasillo({ args, position, rotation, color }) {
+	let view = useSelector(state => state.building.view);
+
 	let [width, length] = args;
 
 	let shape = new Shape();
@@ -9,15 +12,14 @@ export default function Pasillo({ args, position, rotation, color }) {
 	shape.lineTo(length, width);
 	shape.lineTo(length, 0);
 	shape.lineTo(0, 0);
+	
+	if (view === "2D") return null;
 
 	return (
 		<mesh
 			position={position}
 			rotation={rotation}
 		>
-			{/* <planeGeometry
-				args={args}
-			/> */}
 			<shapeGeometry args={[shape]} />
 			<meshStandardMaterial
 				side={DoubleSide}

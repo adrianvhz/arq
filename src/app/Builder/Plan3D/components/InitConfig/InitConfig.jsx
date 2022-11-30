@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { OBJExporter } from "three/examples/jsm/exporters/OBJExporter";
 import CameraControls from "./CameraControls";
 import "./styles.css";
+import { useRef } from "react";
 
 export default function InitConfig() {
     let view = useSelector(state => state.building.view);
@@ -20,6 +21,8 @@ export default function InitConfig() {
 	// }
 
 	// console.log("initConfig");
+
+	let ref = useRef(null);
 
 	const link = document.createElement("a");
 
@@ -82,12 +85,17 @@ export default function InitConfig() {
 
 			<directionalLight
 				args={[0xffffff, 0.5]}
-				position={[10, 20, 0]}
+				position={[10, 19, 0]}
 				castShadow
 				shadow-mapSize={[2048, 2048]}
+				ref={ref}
 			>
-				{/* <mesh onClick={() => {
-				}}>
+				{/* <mesh
+					scale={[2.5, 2.5, 2.5]}
+					onClick={() => {
+						ref.current.intensity = ref.current.intensity === 1 ? 0.3 : 1
+					}}
+				>
 					<sphereGeometry args={[5]} />
 					<meshStandardMaterial color={"yellow"} emissive={"red"} />
 				</mesh> */}

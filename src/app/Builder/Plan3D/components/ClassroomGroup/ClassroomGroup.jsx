@@ -41,7 +41,7 @@ import Roof from "./components/Roof";
 // 	}
 // );
 
-export default function ClassroomGroup({ position, rotation, classroom, increment_scale, wall_thickness, index }) {
+export default function ClassroomGroup({ position, rotation, classroom, increment_scale, wall_thickness, level, index }) {
 	
 	return (
 		<group
@@ -51,6 +51,7 @@ export default function ClassroomGroup({ position, rotation, classroom, incremen
 			<Walls
 				classroom={classroom}
 				wall_thickness={wall_thickness}
+				level={level}
 				index={index}
 			/>
 

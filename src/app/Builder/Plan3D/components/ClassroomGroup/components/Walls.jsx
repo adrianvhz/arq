@@ -6,7 +6,7 @@ import { Brush, Subtraction } from "@react-three/csg";
 import DoorGeometry from "./DoorGeometry";
 import WindowGeometry from "./WindowGeometry";
 
-export default function Walls({ classroom, wall_thickness, index }) {
+export default function Walls({ classroom, wall_thickness, level, index }) {
 	let oClassroom = useRef(null);
 	let geom = useRef(null);
 	let shape = createWallShape(classroom.length - 0.200006, classroom.width - 0.200006, wall_thickness);
@@ -47,7 +47,7 @@ export default function Walls({ classroom, wall_thickness, index }) {
 					</Brush>
 
 					{/* <Brush b position={[10, 10, 30]}> */}
-					<Brush b position={[30, 0, 320]}>
+					<Brush b position={[30, -0.2, 320]}>
 						<DoorGeometry />
 					</Brush>
 				</Subtraction>
@@ -56,8 +56,8 @@ export default function Walls({ classroom, wall_thickness, index }) {
 					<WindowGeometry />
 				</Brush>
 			</Subtraction>
-			{/* <MeshWallColor level={"primaria"} /> */}
-			<meshStandardMaterial />
+			<MeshWallColor level={level} />
+			{/* <meshStandardMaterial /> */}
 		</mesh>
 	)
 }

@@ -11,7 +11,7 @@ import CameraIcon from '@mui/icons-material/Camera';
 import DataObjectIcon from '@mui/icons-material/DataObject';
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import { setShowSettings, setPlayCamera, setRoof, setColorWall } from "../../../../redux/building/buildingSlice";
+import { setShowSettings, setPlayCamera, setRoof, setColorWall, setColorForLevel } from "../../../../redux/building/buildingSlice";
 import "./styles.css";
 import AreasList from "../../Plan3D/components/AreasList";
 import Button3D from "./components/Button3D";
@@ -86,6 +86,8 @@ export default function ToolsBar() {
 				</ColorButton>
 
 				<ColorButton onClick={() => dispatch(setRoof())}>roof (temp)</ColorButton>
+
+				<ColorButton onClick={() => dispatch(setColorForLevel())}>level color (temp)</ColorButton>
 
 				{/* <ButtonSave /> */}
 

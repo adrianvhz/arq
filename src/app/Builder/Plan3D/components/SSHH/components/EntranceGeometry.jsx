@@ -2,7 +2,7 @@ import { Color, DoubleSide, Shape } from "three";
 
 export default function EntranceGeometry() {
 	let width = 50;
-	let length = 100;
+	let length = 127;
 
 	const shape = new Shape();
 	shape.moveTo(0, 0);

@@ -2,7 +2,9 @@ import { useSelector } from "react-redux";
 import Stairs from "../../Plan3D/components/Stairs/Stairs";
 import Stairs2D from "../../PlanFloor/components/Stairs2D/Stairs2D";
 
-export default function StairsView({ position, rotation, stairs, floor, n_pabellon, index }) {
+export default function StairsView({ position, rotation, stairs, floor, n_pabellon, hide_stairs, index }) {
+	if (hide_stairs) return null;
+
 	let view = useSelector(state => state.building.view);
 	let view2DModule = useSelector(state => state.building.view2DModule);
 	let view3DModule = useSelector(state => state.building.view3DModule);

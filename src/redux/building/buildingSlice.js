@@ -6,6 +6,7 @@ const initialState = {
   isPlayCamera: "non-play",
   roof: true,
   colorWall: "#f5f5f5",
+  colorForLevel: false,
   view2DModule: undefined,
   view3DModule: undefined
 }
@@ -35,6 +36,11 @@ export const buildingSlice = createSlice({
         state.colorWall = payload.color;
       }
     },
+    setColorForLevel: (state) => {
+      if (state.view === "3D") {
+        state.colorForLevel = !state.colorForLevel;
+      }
+    },
     setView2DModule: (state, { payload }) => {
       state.view = "2D";
       state.view2DModule = payload.view2DModule;
@@ -52,5 +58,6 @@ export const {
   setPlayCamera,
   setRoof,
   setColorWall,
+  setColorForLevel,
   setView2DModule,
   setView3DModule } =  buildingSlice.actions;

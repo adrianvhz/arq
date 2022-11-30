@@ -47,7 +47,7 @@ export default function BathGroup({ position, bathroom, increment_scale, first, 
 				increment_scale={increment_scale}
 			/>
 
-			<Lavamanos
+			{/* <Lavamanos
 				position={lavamanos_pos.left}
 				bathroom={bathroom}
 			/>
@@ -55,7 +55,7 @@ export default function BathGroup({ position, bathroom, increment_scale, first, 
 			<Lavamanos
 				position={lavamanos_pos.rigth}
 				bathroom={bathroom}
-			/>
+			/> */}
 		</group>
 	)
 }
