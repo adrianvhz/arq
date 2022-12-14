@@ -17,7 +17,17 @@ export const purpleTheme = createTheme({
 					fontFamily: ", ",
 					color: "#9899ac"
 				}
-			}
+			},
+			variants: [
+				{
+					props: { variant: "project-item" },
+					style: {
+						"&:hover": {
+							backgroundColor: "red"
+						}
+					}
+				}
+			]
 		},
 		MuiListItemIcon: {
 			styleOverrides: {
@@ -26,27 +36,41 @@ export const purpleTheme = createTheme({
 				}
 			}
 		},
-		MuiListItem: {
+		// MuiListItem: {
+		// 	styleOverrides: {
+		// 		root: {
+		// 			"&:hover": {
+		// 				// backgroundColor: "#232334" // #1b1b28
+		// 			}
+		// 		}
+		// 	}
+		MuiListItemButton: {
 			styleOverrides: {
 				root: {
+					"&.Mui-selected": {
+						backgroundColor: "#1b1b28",
+						"&:hover": {
+							backgroundColor: "#1b1b28"
+						}
+					},
 					"&:hover": {
-						backgroundColor: "#1b1b28"
+						backgroundColor: "#232334"
 					}
 				}
 			},
-			variants: [
-				{
-					props: { variant: "selected" },
-					style: {
-						backgroundColor: "#1b1b28"
-					}
-				}
-			]
+			// variants: [
+			// 	{
+			// 		props: { selected: true },
+			// 		style: {
+			// 			backgroundColor: "#1b1b28"
+			// 		}
+			// 	}
+			// ]
 		}
 	},
 	palette:{
 		primary:{
-			main: '#3f50b5'
+			main: '#1890ff'
 		},
 		secondary:{
 			main : '#543884'

@@ -1,110 +1,151 @@
-// import { useMemo } from "react";
-// import { useDispatch, useSelector } from "react-redux";
-
-// import { Link as RouterLink } from "react-router-dom";
-
-// import Grid from "@mui/material/Grid";
-// import { TextField, Typography, Button, Link, Alert } from "@mui/material";
-// import { Google } from "@mui/icons-material";
-// import { AuthLayout } from '../layouts/AuthLayout';
-// import { checkingAuthentication, startGoogleSignIn, startLoginWithEmailPassword } from "../../redux/auth";
-// import { useForm } from "../../hooks";
-
-
-// const formDate = { 
-//   email: "",
-//   password: "",
-// }
-
-// export const LoginPage = () => {
-//   const { status,errorMessage } = useSelector((state) => state.auth);
-//   const dispatch = useDispatch();
+import { useEffect, useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { startLoginWithEmailPassword, setAuthView, setAuthModal } from "../../redux/auth";
+import { useSnackbar } from "notistack";
+import Grid from "@mui/material/Grid";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import LoadingBackdrop from "../components/LoadingBackdrop";
+import { Link } from "react-router-dom";
 
 
-//   const { email, password, onInputChange } = useForm(formDate);
+export const LoginPage = () => {
+	const dispatch = useDispatch();
 
-//   const isAutheticate = useMemo(() => status === "checking", [status]);
-  
-//   const onSubmit = (e) => {
-//     e.preventDefault();
-//     dispatch(checkingAuthentication(email, password));
-//     dispatch(startLoginWithEmailPassword(email,password))
-//   };
+	const { enqueueSnackbar } = useSnackbar();
+	const { status, errorMessage } = useSelector((state) => state.auth);
 
-//   const onGoogleSigIn = () => {
-//     dispatch(startGoogleSignIn(email, password));
-//   };
+	const isAutheticate = useMemo(() => status === "authenticated", [status]);
+	// const { email, password, onInputChange } = useForm(formDate);
 
-//   return (
-//     <AuthLayout title="Login">
-//       <form onSubmit={onSubmit}>
-//         <Grid container>
-//           <Grid item xs={12} sx={{ mt: 2 }}>
-//             <TextField
-//               label="Correo"
-//               type="email"
-//               placeholder="correo@google.com"
-//               fullWidth
-//               name="email"
-//               value={email}
-//               onChange={onInputChange}
-//             />
-//           </Grid>
-//           <Grid item xs={12} sx={{ mt: 2 }}>
-//             <TextField
-//               label="Contraseña"
-//               type="password"
-//               placeholder="contraseña"
-//               fullWidth
-//               name="password"
-//               value={password}
-//               onChange={onInputChange}
-//             />
-//           </Grid>
+	const handleBackdrop = ({ message, variant }) => {
+		// variant could be success, error, warning, info, or default
+		enqueueSnackbar(message, { variant });
+	}
 
-//           <Grid container spacing={2} sx={{ mg: 2, mt: 1 }}>
-//             <Grid item xs={12} sm={12} display={!!errorMessage ? '':'none'}>
-//               <Alert severity="error">
-//                 {errorMessage}
-//               </Alert>
-//             </Grid>
+	const onSubmit = (evt) => {
+		evt.preventDefault();
+		var { email, password } = Object.fromEntries(new FormData(evt.target));
+		dispatch(startLoginWithEmailPassword(email, password, handleBackdrop));
+	}
 
-//             <Grid item xs={12} sm={12}>
-//               <Button
-//                 disabled={isAutheticate}
-//                 type="submit"
-//                 variant="contained"
-//                 fullWidth
-//               >
-//                 Login
-//               </Button>
-//             </Grid>
+	// const onGoogleSigIn = () => {
+	// 	dispatch(startGoogleSignIn(email, password));
+	// };
 
-//             {/* <Grid item xs={12} sm={6}>
-//               <Button
-//                 disabled={isAutheticate}
-//                 variant="contained"
-//                 fullWidth
-//                 onClick={onGoogleSigIn}
-//               >
-//                 <Google />
-//                 <Typography sx={{ ml: 1 }}>Google</Typography>
-//               </Button>
-//             </Grid> */}
+	return (
+		<>
+			<LoadingBackdrop />
+			<form onSubmit={onSubmit} style={{margin: "3rem 0"}}>
+				<Grid justifyContent={"center"} container spacing={3}>
+					<Grid>
+						<Typography variant="h3" textAlign={"center"} sx={{fontSize: "1.75rem", fontWeight: 600, color: "#181C32"}}>
+							PLATAFORMA<br />
+							DE ARQUITECTURA
+						</Typography>
+					</Grid>
+					<Grid item xs={12}>
+						<TextField
+							label="Correo"
+							type="email"
+							placeholder="email@domain.com"
+							fullWidth
+							// autoComplete="off"
+							name="email"
+							// value={email}
+							// onChange={onInputChange}
+						/>
+					</Grid>
+					<Grid item xs={12} textAlign="end">
+						<a
+							href="#"
+							style={{
+								color: "#3699FF",
+								fontSize: "1.03rem",
+								fontWeight: "600",
+								outline: "0"
+							}}
+							onClick={() => dispatch(setAuthView({ authView: "register" }))}
+						>
+							¿ Olvidaste tu contraseña ?
+						</a>
+						<TextField
+							sx={{ mt: ".3rem" }}
+							label="Contraseña"
+							type="password"
+							placeholder="Contraseña"
+							fullWidth
+							autoComplete="off"
+							name="password"
+							required
+							InputLabelProps={{ required: false }}
+							// value={password}
+							// onChange={onInputChange}
+						/>
+					</Grid>
 
-//             <Grid container direction="row" justifyContent="end">
-//               <Link
-//                 component={RouterLink}
-//                 color="inherit"
-//                 to="/auth/register"
-//                 sx={{ mt: 2 }}
-//               >
-//                 Crear una cuenta
-//               </Link>
-//             </Grid>
-//           </Grid>
-//         </Grid>
-//       </form>
-//     </AuthLayout>
-//   );
-// };
+					{/* <Grid container spacing={2} sx={{ mg: 2, mt: 1 }}> */}
+						{/* <Grid item xs={12} sm={12} display={!!errorMessage ? '' : 'none'}>
+							<Alert severity="error">
+								{errorMessage}
+							</Alert>
+						</Grid> */}
+
+						<Grid item xs={12} sm={"auto"}>
+							<Button 
+								type="submit" 
+								variant="contained"
+								// fullWidth
+								sx={{
+									padding: ".75rem 1.5rem",
+									backgroundColor: "#1BC5BD",
+									borderRadius: "0.42rem",
+									textTransform: "unset",
+									fontSize: "1rem",
+									color: "#ffffff",
+									letterSpacing: ".7px",
+									fontWeight: "600",
+									"&:hover": {
+										backgroundColor: "#19b4ac"
+									},
+								}}
+								disabled={isAutheticate}
+							>
+								Ingresar
+							</Button>
+						</Grid>
+
+						
+						{/* <Grid item xs={12} sm={6}>
+							<Button
+							disabled={isAutheticate}
+							variant="contained"
+							fullWidth
+							onClick={onGoogleSigIn}
+							>
+							<Google />
+							<Typography sx={{ ml: 1 }}>Google</Typography>
+							</Button>
+						</Grid> */}
+
+						
+						<Grid item xs={12} textAlign={"center"}>
+							<Link
+								to="/auth/register"
+								style={{
+									color: "#3699FF",
+									fontSize: "1.03rem",
+									fontWeight: "600",
+									outline: 0
+								}}
+							>
+								¿ No tienes cuenta ? Registrate.
+							</Link>
+						</Grid>
+					</Grid>
+				{/* </Grid>s */}
+			</form>
+		</>
+	)
+}

@@ -1,12 +1,72 @@
-import { useLocation } from "react-router-dom";
-import TopNavBar from "../components/TopNavBar";
-import ToolsBar from "./components/ToolsBar/ToolsBar";
+import { useLocation, useParams } from "react-router-dom";
+import MuiAppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import styled from "@mui/material/styles/styled";
+import ToolsBarComponent from "./components/ToolsBar/ToolsBar";
 import Sidebar from "./components/Sidebar/Sidebar";
 import Settings from "./components/Settings/Settings";
 import Plan3D from "./Plan3D/Plan3D";
+import { UserPopover } from "../components";
+import { useState } from "react";
+import { useEffect } from "react";
+import { getProjectByID } from "../../services/projectsService";
 
 export default function PlanIndex() {
-	const { state } = useLocation();
+	// const { state } = useLocation();
+
+	const [state, setState] = useState(null);
+	const params = useParams();
+
+	useEffect(() => {
+		getProjectByID(params.id)
+			.then(
+				(res) => setState(res.data.project),
+				(err) => console.log(err)
+			);
+	}, [])
+
+	if (!state) {
+		return (
+			<>
+				<AppBar
+					position="fixed"
+					sx={{
+						backgroundColor: "#ffffff",
+						boxShadow: "0px 0px 40px 0px rgb(82 63 105 / 10%)",
+						WebkitBoxShadow: "0px 0px 40px 0px rgb(82 63 105 / 10%)",
+					}}
+				>
+					<Toolbar>
+						<div
+							style={{
+								width: "100%",
+								display: "flex",
+								justifyContent: "space-between",
+								alignItems: "center",
+							}}
+						>
+							<ToolsBarComponent />
+							<div></div>
+							<UserPopover />
+						</div>
+					</Toolbar>
+				</AppBar>
+				{/* <Settings data={state} /> */}
+
+				{/* <Plan3D
+					result_data={result_data}
+					classroom_measurements={classroom_measurements}
+					construction_info={construction_info}
+					baths_amount={baths_amount}
+					data={data}
+				/> */}
+
+				<div style={{ width: window.innerWidth - 278, height: window.innerHeight - 80, marginTop: "5.6rem", marginLeft: ".7rem" }}>
+					<div>Cargando...</div>
+				</div>
+			</>
+		)
+	}
 
 	let aforoData = JSON.parse(state.aforo);
 	
@@ -81,10 +141,29 @@ export default function PlanIndex() {
 
 	return (
 		<>
-			<TopNavBar>
-				<ToolsBar />
-			</TopNavBar>
-
+			<AppBar
+				position="fixed"
+				sx={{
+					backgroundColor: "#ffffff",
+					boxShadow: "0px 0px 40px 0px rgb(82 63 105 / 10%)",
+					WebkitBoxShadow: "0px 0px 40px 0px rgb(82 63 105 / 10%)",
+				}}
+			>
+				<Toolbar>
+					<div
+						style={{
+							width: "100%",
+							display: "flex",
+							justifyContent: "space-between",
+							alignItems: "center",
+						}}
+					>
+						<ToolsBarComponent />
+						<div></div>
+						<UserPopover />
+					</div>
+				</Toolbar>
+			</AppBar>
 			{/* <Settings data={state} /> */}
 
 			<Sidebar
@@ -94,13 +173,33 @@ export default function PlanIndex() {
 				state={state}
 			/>
 
-			<Plan3D
-				result_data={result_data}
-				classroom_measurements={classroom_measurements}
-				construction_info={construction_info}
-				baths_amount={baths_amount}
-				data={data}
-			/>
+			<div style={{ width: window.innerWidth - 278, height: window.innerHeight - 80, marginTop: "5.6rem", marginLeft: ".7rem" }}>
+				<Plan3D
+					result_data={result_data}
+					classroom_measurements={classroom_measurements}
+					construction_info={construction_info}
+					baths_amount={baths_amount}
+					data={data}
+				/>
+			</div>
 		</>
 	)
 }
+
+const AppBar = styled(MuiAppBar, {
+	shouldForwardProp: (prop) => prop !== "open",
+  })(({ theme, open }) => ({
+	//   zIndex: theme.zIndex.drawer + 1,
+	transition: theme.transitions.create(["width", "margin"], {
+		easing: theme.transitions.easing.sharp,
+		duration: theme.transitions.duration.leavingScreen,
+	}),
+	...(open && {
+		marginLeft: drawerWidth,
+		width: `calc(100% - ${drawerWidth}px)`,
+		transition: theme.transitions.create(["width", "margin"], {
+		easing: theme.transitions.easing.sharp,
+		duration: theme.transitions.duration.enteringScreen,
+		}),
+	}),
+}));

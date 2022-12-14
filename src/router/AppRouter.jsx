@@ -1,29 +1,35 @@
+import { useEffect } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
-import { ArqPlataformRouter } from "./../app/router";
+import { ArqPlataformRouter } from "./../app/router/ArqPlataformRouter";
 import { AuthLayout } from "../auth/layouts/AuthLayout";
-import { useSelector } from "react-redux";
 import { useAuthStore } from './../hooks/useCheckAuth';
 import { CheckingAuth } from '../ui';
-import { useEffect } from 'react';
 import PlanIndex from "../app/Builder/PlanIndex";
 
 export const AppRouter = () => {
-  const { status, useCheckAuth  } = useAuthStore();
+  const { status, useCheckAuth } = useAuthStore();
 
   useEffect(() => {
-	useCheckAuth();
+	  useCheckAuth();
   }, []);
 
-  if (status === "checking") return <CheckingAuth />;
+  if (status === "checking") return <CheckingAuth />
+  
   return (
     <Routes>
       {/*Login y Register */}
-  {(status === 'authenticated')
-    ? <Route path="/*" element={<ArqPlataformRouter />} /> 
-    : <Route path="/auth/*" element={<AuthLayout />} />
-  }
-  <Route path="/*" element={<Navigate to='/auth/' />} />
-      <Route path="/three" element={<PlanIndex />} />
+      {(status === "authenticated")
+        ? (
+          <>
+            <Route path="/*" element={<ArqPlataformRouter />} />
+            <Route path="/proyecto/:slug/:id" element={<PlanIndex />} />
+          </>
+        )
+        : (
+          <Route path="/auth/*" element={<AuthLayout />} />
+        )
+      }
+      <Route path="/*" element={<Navigate to="/auth" />} />
     </Routes>
-  );
-};
+  )
+}

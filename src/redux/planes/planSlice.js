@@ -5,17 +5,15 @@ const initialState = {
   planes : []
 }
 
-export const  planSlice = createSlice({
+export const planSlice = createSlice({
   name: 'plan',
   initialState,
   reducers: {
-	getPlanes:(state,action) =>{
-    state.status = 'get-planes',
-    state.planes = action.payload
-	}
-  
-  
-  },
-})
+    getPlanes:(state, action) =>{
+      state.status = 'get-planes',
+      state.planes = action.payload
+    }
+  }
+});
 
-export const { getPlanes  } =  planSlice.actions
+export const { getPlanes } = planSlice.actions;

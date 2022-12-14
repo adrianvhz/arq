@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { Shape, TextureLoader, RepeatWrapping } from "three";
+import { Shape, TextureLoader, RepeatWrapping, CullFaceFrontBack } from "three";
 import { useTexture } from "@react-three/drei";
 import textureImg from "../../../../../../assets/textures/bricksx256.jpg";
 // import { useLoader } from "@react-three/fiber";
@@ -7,9 +7,9 @@ import textureImg from "../../../../../../assets/textures/bricksx256.jpg";
 // import columnNormalImg from "../../../../../../assets/textures/column/base.jpg";
 
 export default function Column({ position, classroom_height, increment_scale }) {
-	// (0.25)^2
-	let width = 0.25;
-	let length = 0.25;
+	// (0.30)^2
+	let width = 0.30;
+	let length = 0.30;
 	let height = classroom_height;
 
 	/**
@@ -24,16 +24,6 @@ export default function Column({ position, classroom_height, increment_scale }) 
 		bevelEnabled: false
 	}
 
-	// var columnTexture = useLoader(TextureLoader, columnImg);
-	// columnTexture.repeat.set(.3, .3);
-	// columnTexture.rotation = Math.PI / 2;
-    // columnTexture.wrapS = columnTexture.wrapT = RepeatWrapping;
-
-	// var columnNormalTexture = useLoader(TextureLoader, columnNormalImg);
-	// columnNormalTexture.repeat.set(.3, .3);
-	// columnNormalTexture.rotation = Math.PI / 2;
-    // columnNormalTexture.wrapS = columnNormalTexture.wrapT = RepeatWrapping;
-	
 	shape.moveTo(0, 0);
 	shape.lineTo(0, width);
 	shape.lineTo(length, width);
@@ -52,7 +42,7 @@ export default function Column({ position, classroom_height, increment_scale }) 
 			position={position}
 		>
 			<extrudeGeometry ref={geometry} args={[shape, extrudeSettings]} />
-			<meshStandardMaterial />{/* map={columnTexture} normalMap={columnNormalTexture} */}
+			<meshStandardMaterial shadowSide={CullFaceFrontBack} />{/* map={columnTexture} normalMap={columnNormalTexture} */}
 		</mesh>
 	)
 }

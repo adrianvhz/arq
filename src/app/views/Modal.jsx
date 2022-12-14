@@ -1,10 +1,9 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
-import PlantillasMaestra from './PlantillasMaestra';
-import { useState } from 'react';
+import { useState } from "react";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import Modal from "@mui/material/Modal";
+import { Home } from "../pages/Home";
 
 const style = {
     position: 'absolute',
@@ -20,7 +19,7 @@ const style = {
     p: 4,
 };
 
-export default function ModalTests() {
+export default function ModalTest() {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -36,8 +35,7 @@ export default function ModalTests() {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                    <PlantillasMaestra />
-
+                    <Home />
                 </Box>
             </Modal>
         </div>

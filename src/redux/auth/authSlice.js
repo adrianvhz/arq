@@ -44,7 +44,7 @@ export const  authSlice = createSlice({
 			state.errorMessage = payload?.errorMessage
 		},
 
-		updatePerfil: (state,{ payload }) => {
+		updatePerfil: (state, { payload }) => {
 			state.successMessage =  payload.successMessage
 		},
 
@@ -67,4 +67,11 @@ export const  authSlice = createSlice({
 	},
 })
 
-export const { login, logout, checkingCredentials, setAuthView, setAuthModal, loginFail,updatePerfil  } =  authSlice.actions;
+export const {
+	login,
+	logout,
+	checkingCredentials,
+	setAuthView,
+	setAuthModal,
+	loginFail,
+	updatePerfil } = authSlice.actions;

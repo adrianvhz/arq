@@ -2,13 +2,14 @@ import Column from "./Column";
 
 export default function Columns({ classroom, wall_thickness, increment_scale }) {
 	let xPos = {
-		1: 7.7,
+		1: 0,
 		2: (classroom.length / 2) - wall_thickness,
-		3: classroom.length - 20,
+		3: classroom.length - 15.1,
 	}
-	let yPos = -0.5;
-	let zPosFront = classroom.width - wall_thickness - 0.4; // VERTICAL
-	let zPosBack = 20.2; // VERTICAL
+	let yPos = 0;
+
+	let zPosFront = classroom.width; // VERTICAL
+	let zPosBack = 15; // VERTICAL
 
 	let columns = [  // x = horizontal | z = vertical
 		[xPos[1], yPos, zPosFront], // front-LEFT column

@@ -3,6 +3,7 @@ import { authSlice, registerSlice } from './auth';
 import { buildingSlice } from './building/buildingSlice';
 import { mainSlice } from './main/mainSlice';
 import { planSlice } from './planes';
+import { projectSlice } from './projects/projectSlice';
 
 export const store = configureStore({
 	reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
 		auth: authSlice.reducer,
 		main: mainSlice.reducer,
 		plan: planSlice.reducer,
-		building: buildingSlice.reducer
+		building: buildingSlice.reducer,
+		project: projectSlice.reducer
 	}
 });

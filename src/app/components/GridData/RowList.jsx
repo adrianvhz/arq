@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useNavigate } from "react-router-dom";
 import moment from 'moment';
 import SchoolIcon from '@mui/icons-material/School';
@@ -12,7 +12,6 @@ import Box from "@mui/material/Box";
 import Icon from "@mui/material/Icon";
 import LocationCityIcon from '@mui/icons-material/LocationCity';
 import { deleteProjects } from '../../../services/projectsService';
-import "./styles.css";
 
 const styleGrid = {
     border: "1.5px solid #AFAFAF",
@@ -22,7 +21,7 @@ const styleGrid = {
     minWidth: "20px",
 }
 
-export const RowList = ({ row, index, data, setMutate }) => {
+export const RowList = ({ row, index, projectsFiltrados, setMutate, initialShow }) => {
     
     const getIcon = (icon) => {
         switch (icon) {
@@ -37,7 +36,7 @@ export const RowList = ({ row, index, data, setMutate }) => {
         }
     }
 
-    const [show, setShow] = useState(false);
+    const [show, setShow] = useState(initialShow);
     const navigate = useNavigate();
 
     const formatDate = (date) => {
@@ -65,15 +64,15 @@ export const RowList = ({ row, index, data, setMutate }) => {
                     <Box sx={{ ...styleGrid, width: "5%", minWidth: "50px" }}>
                         <Icon >{getIcon(row.type_id)}</Icon>
                     </Box>
-                    <Box sx={{ ...styleGrid, minWidth: "180px", width: "20%" }} onClick={() => setShow(!show)} className="cursor">
+                    <Box sx={{ ...styleGrid, minWidth: "180px", width: "20%", cursor: "pointer" }} onClick={() => setShow(!show)}>
                         <div style={{
                             display: "flex", justifyContent: "space-between",
                         }}>
                             <span>
                                 {row.name}
                             </span>
-                            {!show ? <KeyboardArrowDownIcon onClick={() => setShow(!show)} className="cursor" /> :
-                                <KeyboardArrowLeftIcon onClick={() => setShow(!show)} className="cursor" />}
+                            {!show ? <KeyboardArrowDownIcon onClick={() => setShow(!show)} sx={{ cursor: "pointer" }} /> :
+                                <KeyboardArrowLeftIcon onClick={() => setShow(!show)} sx={{ cursor: "pointer" }} />}
 
                         </div>
                     </Box>
@@ -100,55 +99,55 @@ export const RowList = ({ row, index, data, setMutate }) => {
                 </div>
 
             }
-            {show && data.map((
-                row2, index) => {
-                return (
-                    <div key={index}>
-                        {row2.parent_id == row.id &&
-                            <div style={{
-                                width: "100%",
-                                display: "flex",
-                                background: "#F3F6F9"
-                            }}>
+            {show && projectsFiltrados.map(
+				(row2, index) => {
+					return (
+						<div key={index}>
+							{row2.parent_id == row.id &&
+								<div style={{
+									width: "100%",
+									display: "flex",
+									background: "#F3F6F9"
+								}}>
 
-                                <Box sx={{ ...styleGrid, width: "5%", minWidth: "50px" }}>
-                                    {row2.id}
-                                </Box>
-                                <Box sx={{ ...styleGrid, width: "5%", minWidth: "50px" }}>
-                                    <Icon>{getIcon(row2.type_id)}</Icon>
-                                </Box>
-                                <Box sx={{ ...styleGrid, minWidth: "180px", width: "20%" }}
-                                    className="row-project-name cursor"
-                                    onClick={() => navigate("/proyecto/colegios/" + row2.id, {state: row2})}    
-                                >
-                                    {row2.name}
-                                </Box>
-                                <Box sx={{ ...styleGrid, minWidth: "100px", width: "10%" }}>
-                                    {row2.ubication}
-                                </Box>
-                                <Box sx={{ ...styleGrid, minWidth: "150px", width: "10%" }}>
-                                    {row2.manager}
-                                </Box>
-                                <Box sx={{ ...styleGrid, minWidth: "120px", width: "15%" }}>
-                                    {formatDate(row2.createdAt)}
-                                </Box>
-                                <Box sx={{ ...styleGrid, minWidth: "120px", width: "15%" }}>
-                                    {formatDate(row2.updatedAt)}
-                                </Box>
-                                <Box sx={{ ...styleGrid, minWidth: "150px", width: "20%" }}>
-                                    {row2.client}
-                                </Box>
-                                <Box sx={{ ...styleGrid, minWidth: "50px", width: "10%" }}>
-                                    <NewProject onRow data={row2} setMutate={setMutate} />
-                                    <GroupsIcon />
-                                    <DeleteIcon onClick={handleDelete(row2.id)} />
-                                </Box>
-                            </div>
-                        }
-                    </div>
-                )
-            }
+									<Box sx={{ ...styleGrid, width: "5%", minWidth: "50px" }}>
+										{row2.id}
+									</Box>
+									<Box sx={{ ...styleGrid, width: "5%", minWidth: "50px" }}>
+										<Icon>{getIcon(row2.type_id)}</Icon>
+									</Box>
+									<Box
+										sx={{ ...styleGrid, minWidth: "180px", width: "20%", color: "#3699FF", "&:hover": { color: "#005ebf" }, cursor: "pointer" }}
+										onClick={() => navigate("/proyecto/colegios/" + row2.id, { state: row2 })}
+									>
+										{row2.name}
+									</Box>
+									<Box sx={{ ...styleGrid, minWidth: "100px", width: "10%" }}>
+										{row2.ubication}
+									</Box>
+									<Box sx={{ ...styleGrid, minWidth: "150px", width: "10%" }}>
+										{row2.manager}
+									</Box>
+									<Box sx={{ ...styleGrid, minWidth: "120px", width: "15%" }}>
+										{formatDate(row2.createdAt)}
+									</Box>
+									<Box sx={{ ...styleGrid, minWidth: "120px", width: "15%" }}>
+										{formatDate(row2.updatedAt)}
+									</Box>
+									<Box sx={{ ...styleGrid, minWidth: "150px", width: "20%" }}>
+										{row2.client}
+									</Box>
+									<Box sx={{ ...styleGrid, minWidth: "50px", width: "10%" }}>
+										<NewProject onRow data={row2} setMutate={setMutate} />
+										<GroupsIcon />
+										<DeleteIcon onClick={handleDelete(row2.id)} />
+									</Box>
+								</div>
+							}
+						</div>
+					)
+            	}
             )}
-        </div >
+        </div>
     )
 }

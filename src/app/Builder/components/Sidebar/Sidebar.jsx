@@ -39,7 +39,7 @@ export default function Sidebar({ result_data, classroom_measurements, construct
 				<li className="sidebar-item">
 					{/* <a href="#" className="sidebar-anchor">Medidas de Aula</a> */}
 					<span className="sidebar-anchor">Medidas de Aula</span>
-					<p>Columna: 0.25m<span style={{fontSize: "1.5rem"}}>²</span></p>
+					<p>Columna: 0.25m</p>
 					<p>Largo: {classroom_measurements.muro_horizontal}</p>
 					<p>Ancho: {classroom_measurements.muro_vertical}</p>
 				</li>

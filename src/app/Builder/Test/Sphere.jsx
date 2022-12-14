@@ -1,5 +1,5 @@
 import { useFrame } from "@react-three/fiber";
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useSphere } from "@react-three/cannon";
 import { Material, MeshLambertMaterial } from "three";
 
@@ -15,7 +15,7 @@ export default function Sphere(props)
     return (
         <mesh
         receiveShadow
-        castShadow
+        // castShadow
         // @ts-ignore
         ref={ref}>
             <sphereGeometry args={[1, 32, 16]} />

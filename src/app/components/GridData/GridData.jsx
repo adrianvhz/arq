@@ -1,52 +1,29 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import moment from 'moment';
 import Grid from '@mui/material/Grid';
-import { RowList } from './RowList';
-import Box from "@mui/material/Box";
+import TableProjects from './TableProjects';
 
-const styleGrid = {
-    border: "1.5px solid #AFAFAF",
-    // width: "100%",
-    fontSize: "14px",
-    padding: "8px 6px",
-    minWidth: "20px",
-    fontWeight: 600,
-}
-
-const containerCustom = {
-    // marginLeft: "2rem",
-    // marginRight: "2rem",
-    width: "100%",
-}
-
-const dataBoxGrid = {
-    width: "100%",
-    display: "flex"
-
-
-}
-const GridData = (data) => {
-
-    const [dataFiltrada, setDataFiltrada] = useState([])
+const GridData = ({ projects, typeProject, setMutate }) => {
+    const [projectsFiltrados, setProjectsFiltrados] = useState([]); // este array se cambia a undefined por el call api
     const [fechaInicio, setFechaInicio] = useState('')
     const [fechaFin, setFechaFin] = useState('')
 
     const options = (e) => {
         switch (e) {
             case "0":
-                setDataFiltrada(data.data)
+                setProjectsFiltrados(projects)
                 break;
             case "10":
-                const dataCortada = dataFiltrada.slice(0, 10)
-                setDataFiltrada(dataCortada)
+                const projectsCortados1 = projectsFiltrados.slice(0, 10)
+                setProjectsFiltrados(projectsCortados1)
                 break
             case "50":
-                const dataCortada2 = dataFiltrada.slice(0, 50)
-                setDataFiltrada(dataCortada2)
+                const projectsCortados2 = projectsFiltrados.slice(0, 50)
+                setProjectsFiltrados(projectsCortados2)
                 break
             case "100":
-                const dataCortada3 = dataFiltrada.slice(0, 100)
-                setDataFiltrada(dataCortada3)
+                const projectsCortados3 = projectsFiltrados.slice(0, 100)
+                setProjectsFiltrados(projectsCortados3)
                 break
 
             default:
@@ -56,8 +33,8 @@ const GridData = (data) => {
     }
 
     const dataFilter = (value) => {
-        const filtro = data.data.filter((item) => item.name.toLowerCase().includes(value.toLowerCase()))
-        setDataFiltrada(filtro)
+        const filtro = projects.filter((item) => item.name.toLowerCase().includes(value.toLowerCase()))
+        setProjectsFiltrados(filtro)
     }
 
     function toMs(dateStr) {
@@ -66,22 +43,19 @@ const GridData = (data) => {
     }
 
 
-
     //filtro por rango de fechas
     const dataFilterDateRange = () => {
 
         if (fechaInicio && fechaFin) {
-            const filtro = data.data.filter((item) => {
+            const filtro = projects.filter((item) => {
                 let date = moment(item.createdAt).format('DD/MM/YYYY')
                 date = toMs(date)
                 return date >= toMs(fechaInicio) && date <= toMs(fechaFin)
             })
-            setDataFiltrada(filtro)
+            setProjectsFiltrados(filtro)
 
         }
     }
-
-
 
     useEffect(() => {
         if (fechaInicio && fechaFin && fechaInicio !== 'Invalid date' && fechaFin !== 'Invalid date') {
@@ -89,18 +63,17 @@ const GridData = (data) => {
             return
         }
         else {
-            setDataFiltrada(data.data)
+            setProjectsFiltrados(projects)
         }
     }, [fechaInicio && fechaFin])
 
 
     useEffect(() => {
-        setDataFiltrada(data.data)
-    }, [data.data])
+        setProjectsFiltrados(projects)
+    }, [projects])
 
     return (
         <div style={{ marginLeft: "2rem", marginRight: "2rem" }} >
-
             <Grid container spacing={3} sx={{ marginBottom: "1.75rem" }}>
                 <Grid item xs={12} sm={6} lg={4}>
                     <label>Buscar</label>
@@ -108,7 +81,7 @@ const GridData = (data) => {
                 </Grid>
                 <Grid item xs={12} sm={6} lg={3}>
                     <label>Desde</label>
-                    <input type="date" className="" style={{ width: "100%" }}
+                    <input type="date" style={{ width: "100%" }}
                         // onChange={(e) => dataFilterDate(moment(e.target.value).format('DD/MM/YYYY'))} 
                         onChange={(e) => setFechaInicio(moment(e.target.value).format('DD/MM/YYYY'))}
 
@@ -117,7 +90,7 @@ const GridData = (data) => {
                 </Grid>
                 <Grid xs={12} item sm={6} lg={3}>
                     <label>Hasta</label>
-                    <input type="date" className="" style={{ width: "100%" }}
+                    <input type="date" style={{ width: "100%" }}
                         onChange={(e) => setFechaFin(moment(e.target.value).format('DD/MM/YYYY'))}
 
                     />
@@ -132,53 +105,14 @@ const GridData = (data) => {
                     </select>
                 </Grid>
             </Grid>
-            <Box sx={{
-                width: "100%",
-                overflowX: "auto",
-            }}>
-
-                <div style={dataBoxGrid}>
-                    <Box sx={{ ...styleGrid, width: "5%", minWidth: "50px" }}>
-                        ID
-                    </Box>
-                    <Box sx={{ ...styleGrid, width: "5%", minWidth: "50px" }}>
-                        Tipo
-                    </Box>
-                    <Box sx={{ ...styleGrid, minWidth: "180px", width: "20%" }}>
-                        Nombre del Proyecto
-                    </Box>
-                    <Box sx={{ ...styleGrid, minWidth: "100px", width: "10%" }}>
-                        Ubicacion
-                    </Box>
-                    <Box sx={{ ...styleGrid, minWidth: "150px", width: "10%" }}>
-                        Responsable
-                    </Box>
-                    <Box sx={{ ...styleGrid, minWidth: "120px", width: "15%" }}>
-                        Fecha de Elab.
-                    </Box>
-                    <Box sx={{ ...styleGrid, minWidth: "120px", width: "15%" }}>
-                        Fecha de Act.
-                    </Box>
-                    <Box sx={{ ...styleGrid, minWidth: "150px", width: "20%" }}>
-                        Nombre del Cliente
-                    </Box>
-                    <Box sx={{ ...styleGrid, minWidth: "50px", width: "10%" }}>
-                        Acciones
-                    </Box>
-                </div>
-
-
-                {dataFiltrada.map((row, index) =>
-                    <RowList key={index} row={row} index={index} data={dataFiltrada} icon={data.typeProject.icon} setMutate={data.setMutate} />
-                )}
-            </Box>
-
-
-
-
-
+            
+			<TableProjects
+				projectsFiltrados={projectsFiltrados}
+				typeProject={typeProject}
+				setMutate={setMutate}
+			/>
         </div>
     )
 }
 
-export default GridData
+export default GridData;

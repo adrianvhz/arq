@@ -54,7 +54,8 @@ export default function InitConfig() {
 
 	return (
 		<>
-			<color attach="background" args={[0xebebeb]} />
+			{/* <color attach="background" args={[0xebebeb]} /> */}
+			<color attach="background" args={["#edf7fb"]} />
 
 			{view === "2D" && (
 				<OrthographicCamera
@@ -85,8 +86,9 @@ export default function InitConfig() {
 
 			<directionalLight
 				args={[0xffffff, 0.5]}
-				position={[10, 19, 0]}
-				castShadow
+				position={[10, 19, 50]}
+				// position={[10, 19, 0]}
+				// castShadow
 				shadow-mapSize={[2048, 2048]}
 				ref={ref}
 			>

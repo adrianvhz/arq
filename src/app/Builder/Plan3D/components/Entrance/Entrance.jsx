@@ -6,7 +6,11 @@ export default function Entrance({ position, rotation, classroom }) {
 			position={position}
 			rotation={rotation}
 		>
-			<Roof classroom={classroom} />
+			<Roof
+				position={[0, classroom.height + classroom.bigas.horizontal.height, 0]}
+				classroom={classroom}
+				extraRoff={50}
+			/>
 		</object3D>
 	)
 }

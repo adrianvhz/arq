@@ -1,4 +1,4 @@
-import { Scene, Matrix4, TextureLoader, Shape, RepeatWrapping, Vector2, DoubleSide, Color } from "three";
+import { Scene, Matrix4, TextureLoader, Shape, RepeatWrapping, CullFaceFrontBack } from "three";
 import { useState, useRef, useMemo } from "react";
 import { Canvas, useThree, createPortal, useLoader, extend } from "@react-three/fiber";
 import { useCamera } from "@react-three/drei";
@@ -26,11 +26,20 @@ export default function Plan3D({ result_data, classroom_measurements, constructi
     
     let amount_classrooms = result_data.aulas; // 30
 
-    // +0.200006 is the thickness calculated in the default extrude (0.2 bevelThickness), change this value if more or less bevel is required.
     let classroom = {
-        length: (classroom_measurements.muro_horizontal * increment_scale) + (wall_thickness * 2) + 0.200006,
-        width: (classroom_measurements.muro_vertical * increment_scale) + (wall_thickness * 2) + 0.200006,
-        height: 2.5 * increment_scale
+        length: (classroom_measurements.muro_horizontal * increment_scale) + (wall_thickness * 2),
+        width: (classroom_measurements.muro_vertical * increment_scale) + (wall_thickness * 2),
+        height: 2.2 * increment_scale,
+		bigas: {
+			horizontal: {
+				width: 0.30 * increment_scale,
+				height: 0.60 * increment_scale
+			},
+			vertical: {
+				width: 0.30 * increment_scale,
+				height: 0.40 * increment_scale
+			}
+		}
     }
 
 	let bathroom = {
@@ -96,17 +105,15 @@ export default function Plan3D({ result_data, classroom_measurements, constructi
     // perspective.near = 4;
 
     return (
-        <Canvas
+        <Canvas 
             camera={{
                 fov: 65, // 60
                 aspect: window.innerWidth / window.innerHeight,
                 position: [3202.3188734998785, 858.758291437268, -42.78855655034773],
                 rotation: ["-1.6205812315008037", "1.3084828063007592", "1.6223414925263104", "XYZ"],
-                far: 7000,
+                far: 7000, // 3200
                 near: 4
             }}
-            
-            style={{width: window.innerWidth - 278, height: window.innerHeight - 80, marginTop: "5.6rem", marginLeft: ".7rem"}}
         >
             <InitConfig />
             
@@ -142,7 +149,7 @@ export default function Plan3D({ result_data, classroom_measurements, constructi
                 wall_thickness={wall_thickness}
             /> */}
 
-            <SoccerFieldView
+            {/* <SoccerFieldView
                 terrain={terrain}
                 amount_classrooms={amount_classrooms}
                 classroom={classroom}
@@ -155,7 +162,7 @@ export default function Plan3D({ result_data, classroom_measurements, constructi
                 position={[-terrain.width / 2, 0, (terrain.width / 2) - classroom.width]}
                 rotation={[-Math.PI / 2, 0, 0]}
                 color={0x5a5a5a}
-            />
+            /> */}
 
             <TerrainView
                 width={terrain.width}

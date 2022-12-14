@@ -1,5 +1,5 @@
+import { useState, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
-import React, { useRef, useState } from "react";
 import { useBox } from "@react-three/cannon";
 import { Material, MeshLambertMaterial } from "three";
 
@@ -20,7 +20,7 @@ export default function Box(props)
     return (
         <mesh
             receiveShadow
-            castShadow
+            // castShadow
             // @ts-ignore
             ref={ref}
             scale={clicked ? 1.5 : 1}
